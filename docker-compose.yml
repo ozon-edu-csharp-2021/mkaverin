@@ -1,26 +1,26 @@
-version: '3.8'
+ version: '3.8'
 
-sevices:
+ services:
   merchandise-service:
-  image: 'ghcr.io/ozon-edu-csharp-2021/stock-api:main'
-  hostname: merchandise_service
-  ports:
+   image: 'merchandise-service'
+   hostname: merchandise_service
+   ports:
     - "8080:80"
-  depends_on:
-    - supply_service
-    - emailing_service
-    - employees_service
-    - stock_api
+   depends_on:
+    - supply
+    - emailing
+    - employees
+    - stock
 
-  supply-service:
-    image: 'ghcr.io/ozon-edu-csharp-2021/supply-service:main'
-    hostname: supply_service
-  emailing-service:
-    image: 'ghcr.io/ozon-edu-csharp-2021/emailing-service:main'
-    hostname: emailing_service
-  employees-service:
-    image: 'ghcr.io/ozon-edu-csharp-2021/employees-service:main'
-    hostname: employees_service
-  stock-api:
-    image: 'ghcr.io/ozon-edu-csharp-2021/stock-api:main'
-    hostname: stock_api
+  supply:
+   image: 'ghcr.io/ozon-edu-csharp-2021/supply-service:main'
+   hostname: supply
+  emailing:
+   image: 'ghcr.io/ozon-edu-csharp-2021/emailing-service:main'
+   hostname: emailing
+  employees:
+   image: 'ghcr.io/ozon-edu-csharp-2021/employees-service:main'
+   hostname: employees
+  stock:
+   image: 'ghcr.io/ozon-edu-csharp-2021/stock-api:main'
+   hostname: stock
