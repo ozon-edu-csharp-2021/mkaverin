@@ -2,7 +2,7 @@
 
  services:
   merchandise-service:
-   build: .
+   build: ..
    hostname: merchandise_service
    ports:
     - "8080:80"
