@@ -3,6 +3,11 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
 		<Nullable>enable</Nullable>
+		<Version>1.1.0</Version>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WebApi.Infrastructure\WebApi.Infrastructure.csproj" />
+    </ItemGroup>
 
 </Project>
