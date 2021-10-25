@@ -10,21 +10,28 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{319B7DD0-C5C4-45DD-909F-A20005E8EEA7}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		Dockerfile = Dockerfile
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService", "src\OzonEdu.MerchandiseService\OzonEdu.MerchandiseService.csproj", "{55533F97-A06C-4443-BD2E-D4F9EA0E10D6}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5C536DB4-26ED-4F75-AF78-DFF4178927AD} = {5C536DB4-26ED-4F75-AF78-DFF4178927AD}
+		{E58190C9-47BD-419A-A50C-CACC53D3CFA5} = {E58190C9-47BD-419A-A50C-CACC53D3CFA5}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{2F7C607A-4058-4DD1-A5B2-8C4E9A6A1C30}"
 	ProjectSection(SolutionItems) = preProject
-		docker-compose.yml = docker-compose.yml
+		deploy\docker-compose.yml = deploy\docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Infrastructure", "src\WebApi.Infrastructure\WebApi.Infrastructure.csproj", "{5C536DB4-26ED-4F75-AF78-DFF4178927AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.Grpc", "src\OzonEdu.MerchandiseService.Grpc\OzonEdu.MerchandiseService.Grpc.csproj", "{E58190C9-47BD-419A-A50C-CACC53D3CFA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.HttpClients", "src\OzonEdu.MerchandiseService.HttpClient\OzonEdu.MerchandiseService.HttpClients.csproj", "{EF919267-3421-431D-9AC9-220A1C606BCB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{55533F97-A06C-4443-BD2E-D4F9EA0E10D6} = {55533F97-A06C-4443-BD2E-D4F9EA0E10D6}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +47,14 @@ Global
 		{5C536DB4-26ED-4F75-AF78-DFF4178927AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C536DB4-26ED-4F75-AF78-DFF4178927AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C536DB4-26ED-4F75-AF78-DFF4178927AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E58190C9-47BD-419A-A50C-CACC53D3CFA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E58190C9-47BD-419A-A50C-CACC53D3CFA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E58190C9-47BD-419A-A50C-CACC53D3CFA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E58190C9-47BD-419A-A50C-CACC53D3CFA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF919267-3421-431D-9AC9-220A1C606BCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF919267-3421-431D-9AC9-220A1C606BCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF919267-3421-431D-9AC9-220A1C606BCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF919267-3421-431D-9AC9-220A1C606BCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +62,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{55533F97-A06C-4443-BD2E-D4F9EA0E10D6} = {31FA52EB-9A7E-4C90-999E-B247845045BA}
 		{5C536DB4-26ED-4F75-AF78-DFF4178927AD} = {31FA52EB-9A7E-4C90-999E-B247845045BA}
+		{E58190C9-47BD-419A-A50C-CACC53D3CFA5} = {31FA52EB-9A7E-4C90-999E-B247845045BA}
+		{EF919267-3421-431D-9AC9-220A1C606BCB} = {31FA52EB-9A7E-4C90-999E-B247845045BA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF01EE88-010B-40BE-954E-EEA5155AE3BE}

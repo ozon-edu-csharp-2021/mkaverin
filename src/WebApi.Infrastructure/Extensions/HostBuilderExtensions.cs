@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using WebApi.Infrastructure.Filters;
 using WebApi.Infrastructure.StartupFilters;
+using WebApi.Interceptors;
 
 namespace WebApi.Infrastructure.Extensions
 {
@@ -16,6 +17,8 @@ namespace WebApi.Infrastructure.Extensions
                 _ = services.AddControllers(options => options.Filters.Add<GlobalExceptionFilter>());
 
                 _ = services.AddSingleton<IStartupFilter, LoggingStartupFilter>();
+
+                _ = services.AddGrpc(options => options.Interceptors.Add<LoggingInterceptor>());
 
                 _ = services.AddSingleton<IStartupFilter, TerminalStartupFilter>();
 
