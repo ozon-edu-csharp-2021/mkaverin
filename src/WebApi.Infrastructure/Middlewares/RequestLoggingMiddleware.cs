@@ -34,13 +34,25 @@ namespace WebApi.Infrastructure.Middlewares
                     StringBuilder builder = new(Environment.NewLine);
                     foreach (KeyValuePair<string, StringValues> header in context.Request.Headers)
                     {
-                        _ = builder.AppendLine($"{header.Key}:{header.Value}");
+                        _ = builder.AppendLine($"\t {header.Key}:{header.Value}");
+                    }
+
+                    var bodyAsText = "Not body";
+                    if (context.Request.ContentLength > 0)
+                    {
+                        context.Request.EnableBuffering();
+
+                        var buffer = new byte[context.Request.ContentLength.Value];
+                        _ = await context.Request.Body.ReadAsync(buffer, 0, buffer.Length);
+                        bodyAsText = Encoding.UTF8.GetString(buffer);
+                        context.Request.Body.Position = 0;
                     }
 
                     _logger.LogInformation($"Request logged:{Environment.NewLine}" +
-                                           $"Route: {context.Request.Path} " +
-                                           $"QueryString: {context.Request.QueryString} " +
-                                           $"Headers: {builder} ");
+                                           $"Route: {context.Request.Path} {Environment.NewLine}" +
+                                           $"QueryString: {context.Request.QueryString} {Environment.NewLine}" +
+                                           $"Headers: {builder} " +
+                                           $"Body: {bodyAsText} ");
                 }
             }
             catch (Exception e)

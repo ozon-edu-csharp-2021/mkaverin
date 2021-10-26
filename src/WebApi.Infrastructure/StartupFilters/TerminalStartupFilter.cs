@@ -12,8 +12,8 @@ namespace WebApi.Infrastructure.StartupFilters
             return app =>
             {
                 _ = app.Map("/version", builder => builder.UseMiddleware<VersionMiddleware>());
-                _ = app.Map("/ready", builder => builder.UseMiddleware<HealthChecksMiddleware>());
-                _ = app.Map("/live", builder => builder.UseMiddleware<HealthChecksMiddleware>());
+                _ = app.Map("/ready", builder => builder.UseMiddleware<ReadyChecksMiddleware>());
+                _ = app.Map("/live", builder => builder.UseMiddleware<LiveChecksMiddleware>());
                 next(app);
             };
         }

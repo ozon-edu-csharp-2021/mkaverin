@@ -3,15 +3,15 @@ using System.Threading.Tasks;
 
 namespace WebApi.Infrastructure.Middlewares
 {
-    class HealthChecksMiddleware
+    class LiveChecksMiddleware
     {
-        public HealthChecksMiddleware(RequestDelegate next)
+        public LiveChecksMiddleware(RequestDelegate next)
         {
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
-
+            await context.Response.WriteAsync("Live");
         }
     }
 }

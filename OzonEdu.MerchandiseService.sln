@@ -26,12 +26,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{2F7C60
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Infrastructure", "src\WebApi.Infrastructure\WebApi.Infrastructure.csproj", "{5C536DB4-26ED-4F75-AF78-DFF4178927AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.Grpc", "src\OzonEdu.MerchandiseService.Grpc\OzonEdu.MerchandiseService.Grpc.csproj", "{E58190C9-47BD-419A-A50C-CACC53D3CFA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.Grpc", "src\OzonEdu.MerchandiseService.Grpc\OzonEdu.MerchandiseService.Grpc.csproj", "{E58190C9-47BD-419A-A50C-CACC53D3CFA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.HttpClients", "src\OzonEdu.MerchandiseService.HttpClient\OzonEdu.MerchandiseService.HttpClients.csproj", "{EF919267-3421-431D-9AC9-220A1C606BCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.HttpClients", "src\OzonEdu.MerchandiseService.HttpClient\OzonEdu.MerchandiseService.HttpClients.csproj", "{EF919267-3421-431D-9AC9-220A1C606BCB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{55533F97-A06C-4443-BD2E-D4F9EA0E10D6} = {55533F97-A06C-4443-BD2E-D4F9EA0E10D6}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.HttpModels", "src\OzonEdu.MerchandiseService.HttpModels\OzonEdu.MerchandiseService.HttpModels.csproj", "{12294DE5-D0F8-43C5-82DB-7F1AD01C3E2E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{EF919267-3421-431D-9AC9-220A1C606BCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF919267-3421-431D-9AC9-220A1C606BCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF919267-3421-431D-9AC9-220A1C606BCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12294DE5-D0F8-43C5-82DB-7F1AD01C3E2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12294DE5-D0F8-43C5-82DB-7F1AD01C3E2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12294DE5-D0F8-43C5-82DB-7F1AD01C3E2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12294DE5-D0F8-43C5-82DB-7F1AD01C3E2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +70,7 @@ Global
 		{5C536DB4-26ED-4F75-AF78-DFF4178927AD} = {31FA52EB-9A7E-4C90-999E-B247845045BA}
 		{E58190C9-47BD-419A-A50C-CACC53D3CFA5} = {31FA52EB-9A7E-4C90-999E-B247845045BA}
 		{EF919267-3421-431D-9AC9-220A1C606BCB} = {31FA52EB-9A7E-4C90-999E-B247845045BA}
+		{12294DE5-D0F8-43C5-82DB-7F1AD01C3E2E} = {31FA52EB-9A7E-4C90-999E-B247845045BA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF01EE88-010B-40BE-954E-EEA5155AE3BE}

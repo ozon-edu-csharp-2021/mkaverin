@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OzonEdu.MerchandiseService.Models;
+using OzonEdu.MerchandiseService.HttpModels.DataTransferObjects;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
