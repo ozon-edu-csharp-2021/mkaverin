@@ -1,5 +1,6 @@
 ﻿using Grpc.Core;
 using OzonEdu.MerchandiseService.Grpc;
+using System;
 using System.Threading.Tasks;
 
 namespace OzonEdu.MerchandiseService.GrpcServices
@@ -13,12 +14,12 @@ namespace OzonEdu.MerchandiseService.GrpcServices
 
         public override Task<GetInfoMerchResponse> GetInfoMerch(GetInfoMerchRequest request, ServerCallContext context)
         {
-            return base.GetInfoMerch(request, context);
+            throw new NotImplementedException();
         }
 
         public override Task<RequestMerchResponse> RequestMerch(RequestMerchRequest request, ServerCallContext context)
         {
-            return base.RequestMerch(request, context);
+            throw new NotImplementedException();
         }
     }
 }

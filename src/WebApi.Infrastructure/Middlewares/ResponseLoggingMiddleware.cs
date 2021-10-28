@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,15 +26,14 @@ namespace WebApi.Infrastructure.Middlewares
         {
             await LogResponse(context);
         }
+       
         private async Task LogResponse(HttpContext context)
         {
-            var originalBodyStream = context.Response.Body;
-
-            try
+            if (context.Request.ContentType != "application/grpc")
             {
-                if (context.Request.ContentType == null || (context.Request.ContentType != null && !context.Request.ContentType.Equals("application/grpc")))
+                var originalBodyStream = context.Response.Body;
+                try
                 {
-                   var  responseBody = "Not body";
                     using var memoryStream = new MemoryStream();
                     context.Response.Body = memoryStream;
 
@@ -41,52 +41,42 @@ namespace WebApi.Infrastructure.Middlewares
                     await _next(context);
                     sw.Stop();
 
-                    memoryStream.Position = 0;
-                    var reader = new StreamReader(memoryStream);
-                     responseBody = await reader.ReadToEndAsync();
-
-                    memoryStream.Position = 0;
+                    var responseBody = await GetResponseBody(context.Response);
                     await memoryStream.CopyToAsync(originalBodyStream);
 
-                    StringBuilder builder = new(Environment.NewLine);
-                    foreach (KeyValuePair<string, StringValues> header in context.Response.Headers)
-                    {
-                        _ = builder.AppendLine($"\t {header.Key}:{header.Value}");
-                    }
+                    var headers = GetResponseHeaders(context);
 
                     _logger.LogInformation($"Response logged:{Environment.NewLine}" +
                                            $"Route: {context.Request.Path} {Environment.NewLine}" +
                                            $"QueryString: {context.Request.QueryString} {Environment.NewLine}" +
                                            $"Elapsed: {sw.Elapsed.TotalMilliseconds:0.0000} ms {Environment.NewLine}" +
-                                           $"Headers: {builder} " +
+                                           $"Headers: {headers} " +
                                            $"Body: {responseBody}");
+
+                }
+                catch (Exception)
+                {
+                    context.Response.Body = originalBodyStream;
                 }
             }
-            finally
+        }
+
+        private async Task<string> GetResponseBody(HttpResponse response)
+        {
+            response.Body.Seek(0, SeekOrigin.Begin);
+            string responseBody = await new StreamReader(response.Body).ReadToEndAsync();
+            response.Body.Seek(0, SeekOrigin.Begin);
+            return $"{responseBody}";
+        }
+        private StringBuilder GetResponseHeaders(HttpContext context)
+        {
+            StringBuilder builder = new(Environment.NewLine);
+            foreach (KeyValuePair<string, StringValues> header in context.Response.Headers)
             {
-                context.Response.Body = originalBodyStream;
+                builder.AppendLine($"\t {header.Key}:{header.Value}");
             }
 
-            //try
-            //{
-            //    if (context.Request.ContentType == null || (context.Request.ContentType != null && !context.Request.ContentType.Equals("application/grpc")))
-            //    {
-            //        StringBuilder builder = new(Environment.NewLine);
-            //        foreach (KeyValuePair<string, StringValues> header in context.Response.Headers)
-            //        {
-            //            _ = builder.AppendLine($"{header.Key}:{header.Value}");
-            //        }
-
-            //        _logger.LogInformation($"Response logged:{Environment.NewLine}" +
-            //                               $"Route: {context.Request.Path} " +
-            //                               $"QueryString: {context.Request.QueryString} " +
-            //                               $"Headers: {builder} ");
-            //    }
-            //}
-            //catch (Exception e)
-            //{
-            //    _logger.LogError(e, "Could not log response");
-            //}
+            return builder;
         }
     }
 }

@@ -29,36 +29,47 @@ namespace WebApi.Infrastructure.Middlewares
         {
             try
             {
-                if (context.Request.ContentType == null || (context.Request.ContentType != null && !context.Request.ContentType.Equals("application/grpc")))
+                if (context.Request.ContentType != "application/grpc")
                 {
-                    StringBuilder builder = new(Environment.NewLine);
-                    foreach (KeyValuePair<string, StringValues> header in context.Request.Headers)
-                    {
-                        _ = builder.AppendLine($"\t {header.Key}:{header.Value}");
-                    }
-
-                    var bodyAsText = "Not body";
-                    if (context.Request.ContentLength > 0)
-                    {
-                        context.Request.EnableBuffering();
-
-                        var buffer = new byte[context.Request.ContentLength.Value];
-                        _ = await context.Request.Body.ReadAsync(buffer, 0, buffer.Length);
-                        bodyAsText = Encoding.UTF8.GetString(buffer);
-                        context.Request.Body.Position = 0;
-                    }
+                    var headers = GetRequestHeaders(context);
+                    var body = await GetRequestBody(context);
 
                     _logger.LogInformation($"Request logged:{Environment.NewLine}" +
                                            $"Route: {context.Request.Path} {Environment.NewLine}" +
                                            $"QueryString: {context.Request.QueryString} {Environment.NewLine}" +
-                                           $"Headers: {builder} " +
-                                           $"Body: {bodyAsText} ");
+                                           $"Headers: {headers} " +
+                                           $"Body: {body} ");
                 }
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "Could not log request");
             }
+        }
+
+        private async Task<string> GetRequestBody(HttpContext context)
+        {
+            var bodyAsText = "Not body";
+            if (context.Request.ContentLength > 0)
+            {
+                context.Request.EnableBuffering();
+
+                var buffer = new byte[context.Request.ContentLength.Value];
+                await context.Request.Body.ReadAsync(buffer, 0, buffer.Length);
+                bodyAsText = Encoding.UTF8.GetString(buffer);
+                context.Request.Body.Position = 0;
+            }
+
+            return bodyAsText;
+        }
+        private StringBuilder GetRequestHeaders(HttpContext context)
+        {
+            StringBuilder builder = new(Environment.NewLine);
+            foreach (KeyValuePair<string, StringValues> header in context.Request.Headers)
+            {
+                builder.AppendLine($"\t {header.Key}:{header.Value}");
+            }
+            return builder;
         }
     }
 }

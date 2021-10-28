@@ -16,14 +16,14 @@ namespace OzonEdu.MerchandiseService.Controllers
 
         }
 
-        [HttpPost("requestmerch")]
+        [HttpPost("RequestMerch")]
         public async Task<RequestMerchResponseDto> RequestMerch(RequestMerchRequestDto requestDto, CancellationToken token)
         {
             throw new NotImplementedException();
         }
 
-        [HttpPost("getinfomerch")]
-        public async Task<GetInfoMerchResponseDto> GetInfoMerch(GetInfoMerchRequestDto requestDto, CancellationToken token)
+        [HttpGet("GetInfoMerch")]
+        public async Task<GetInfoMerchResponseDto> GetInfoMerch([FromQuery] GetInfoMerchRequestDto requestDto, CancellationToken token)
         {
             throw new NotImplementedException();
         }

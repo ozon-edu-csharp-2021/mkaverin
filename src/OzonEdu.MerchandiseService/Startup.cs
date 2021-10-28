@@ -19,11 +19,11 @@ namespace OzonEdu.MerchandiseService
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            _ = app.UseRouting();
-            _ = app.UseEndpoints(endpoints =>
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
               {
-                  _ = endpoints.MapGrpcService<MerchandiseGrpService>();
-                  _ = endpoints.MapControllers();
+                  endpoints.MapGrpcService<MerchandiseGrpService>();
+                  endpoints.MapControllers();
               });
         }
     }

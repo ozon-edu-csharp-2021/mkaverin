@@ -10,8 +10,8 @@ namespace WebApi.Infrastructure.StartupFilters
         {
             return app =>
             {
-                _ = app.UseSwagger();
-                _ = app.UseSwaggerUI();
+                app.UseSwagger();
+                app.UseSwaggerUI();
                 next(app);
             };
         }

@@ -12,19 +12,19 @@ namespace WebApi.Infrastructure.Extensions
     {
         public static IHostBuilder AddInfrastructure(this IHostBuilder builder)
         {
-            _ = builder.ConfigureServices(services =>
+            builder.ConfigureServices(services =>
             {
-                _ = services.AddControllers(options => options.Filters.Add<GlobalExceptionFilter>());
+                services.AddControllers(options => options.Filters.Add<GlobalExceptionFilter>());
 
-                _ = services.AddSingleton<IStartupFilter, LoggingStartupFilter>();
+                services.AddSingleton<IStartupFilter, LoggingStartupFilter>();
 
-                _ = services.AddGrpc(options => options.Interceptors.Add<LoggingInterceptor>());
+                services.AddGrpc(options => options.Interceptors.Add<LoggingInterceptor>());
 
-                _ = services.AddSingleton<IStartupFilter, TerminalStartupFilter>();
+                services.AddSingleton<IStartupFilter, TerminalStartupFilter>();
 
-                _ = services.AddSingleton<IStartupFilter, SwaggerStartupFilter>();
+                services.AddSingleton<IStartupFilter, SwaggerStartupFilter>();
 
-                _ = services.AddSwaggerGen(options =>
+                services.AddSwaggerGen(options =>
                 {
                     options.SwaggerDoc("v1", new OpenApiInfo { Title = "OzonEdu.MerchandiseService", Version = "v1" });
                     options.CustomSchemaIds(x => x.FullName);
