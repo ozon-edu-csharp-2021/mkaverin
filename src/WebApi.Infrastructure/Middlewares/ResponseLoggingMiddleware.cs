@@ -52,9 +52,12 @@ namespace WebApi.Infrastructure.Middlewares
                                            $"Elapsed: {sw.Elapsed.TotalMilliseconds:0.0000} ms {Environment.NewLine}" +
                                            $"Headers: {headers} " +
                                            $"Body: {responseBody}");
-
                 }
-                catch (Exception)
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Could not log response");
+                }
+                finally
                 {
                     context.Response.Body = originalBodyStream;
                 }
