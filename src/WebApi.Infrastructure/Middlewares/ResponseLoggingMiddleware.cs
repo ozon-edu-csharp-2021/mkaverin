@@ -16,7 +16,7 @@ namespace WebApi.Infrastructure.Middlewares
         private readonly RequestDelegate _next;
         private readonly ILogger<ResponseLoggingMiddleware> _logger;
 
-        public ResponseLoggingMiddleware(RequestDelegate next, ILogger<ResponseLoggingMiddleware> logger)
+        public ResponseLoggingMiddleware(RequestDelegate next, ILogger<ResponseLoggingMiddleware> logger, )
         {
             _next = next;
             _logger = logger;
@@ -26,10 +26,10 @@ namespace WebApi.Infrastructure.Middlewares
         {
             await LogResponse(context);
         }
-       
+
         private async Task LogResponse(HttpContext context)
         {
-            if (context.Request.ContentType != "application/grpc")
+            if (!IsGrpcRequest(context.Request))
             {
                 var originalBodyStream = context.Response.Body;
                 try
@@ -63,6 +63,7 @@ namespace WebApi.Infrastructure.Middlewares
                 }
             }
         }
+        private bool IsGrpcRequest(HttpRequest request) => request.ContentType == "application/grpc";
 
         private async Task<string> GetResponseBody(HttpResponse response)
         {

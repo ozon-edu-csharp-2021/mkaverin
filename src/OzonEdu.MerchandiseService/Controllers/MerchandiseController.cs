@@ -8,7 +8,6 @@ namespace OzonEdu.MerchandiseService.Controllers
 {
     [ApiController]
     [Route("v1/api/merch")]
-    [Produces("application/json")]
     public class MerchandiseController : ControllerBase
     {
         public MerchandiseController()
@@ -22,7 +21,7 @@ namespace OzonEdu.MerchandiseService.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpGet("GetInfoMerch")]
+        [HttpGet("InfoMerch")]
         public async Task<GetInfoMerchResponseDto> GetInfoMerch([FromQuery] GetInfoMerchRequestDto requestDto, CancellationToken token)
         {
             throw new NotImplementedException();

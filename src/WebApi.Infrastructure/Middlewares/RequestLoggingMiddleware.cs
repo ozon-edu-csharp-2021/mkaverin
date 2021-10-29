@@ -29,7 +29,7 @@ namespace WebApi.Infrastructure.Middlewares
         {
             try
             {
-                if (context.Request.ContentType != "application/grpc")
+                if (!IsGrpcRequest(context.Request))
                 {
                     var headers = GetRequestHeaders(context);
                     var body = await GetRequestBody(context);
@@ -46,6 +46,7 @@ namespace WebApi.Infrastructure.Middlewares
                 _logger.LogError(e, "Could not log request");
             }
         }
+        private bool IsGrpcRequest(HttpRequest request) => request.ContentType == "application/grpc";
 
         private async Task<string> GetRequestBody(HttpContext context)
         {
