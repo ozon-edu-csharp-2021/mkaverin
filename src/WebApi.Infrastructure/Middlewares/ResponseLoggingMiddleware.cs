@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,7 +15,7 @@ namespace WebApi.Infrastructure.Middlewares
         private readonly RequestDelegate _next;
         private readonly ILogger<ResponseLoggingMiddleware> _logger;
 
-        public ResponseLoggingMiddleware(RequestDelegate next, ILogger<ResponseLoggingMiddleware> logger, )
+        public ResponseLoggingMiddleware(RequestDelegate next, ILogger<ResponseLoggingMiddleware> logger)
         {
             _next = next;
             _logger = logger;
