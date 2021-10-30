@@ -8,8 +8,8 @@ namespace OzonEdu.MerchandiseService.HttpClients
 {
     public interface IMerchHttpClient
     {
-        Task<RequestMerchResponseDto> RequestMerch(RequestMerchRequestDto requestDto, CancellationToken token);
-        Task<GetInfoMerchResponseDto> GetInfoMerch(GetInfoMerchRequestDto requestDto, CancellationToken token);
+        Task<RequestMerchResponseDto> RequestMerchAsync(RequestMerchRequestDto requestDto, CancellationToken token);
+        Task<GetInfoMerchResponseDto> GetInfoMerchAsync(GetInfoMerchRequestDto requestDto, CancellationToken token);
     }
 
     public class MerchHttpClient : IMerchHttpClient
@@ -21,13 +21,13 @@ namespace OzonEdu.MerchandiseService.HttpClients
             _httpClient = httpClient;
         }
 
-        public async Task<RequestMerchResponseDto> RequestMerch(RequestMerchRequestDto requestDto, CancellationToken token) =>
-             await BasicRequestProcessing<RequestMerchRequestDto, RequestMerchResponseDto>("v1/api/merch/requestmerch", requestDto, token);
+        public async Task<RequestMerchResponseDto> RequestMerchAsync(RequestMerchRequestDto requestDto, CancellationToken token) =>
+             await BasicRequestProcessingAsync<RequestMerchRequestDto, RequestMerchResponseDto>("v1/api/merch/RequestMerch", requestDto, token);
 
-        public async Task<GetInfoMerchResponseDto> GetInfoMerch(GetInfoMerchRequestDto requestDto, CancellationToken token) =>
-             await BasicRequestProcessing<GetInfoMerchRequestDto, GetInfoMerchResponseDto>("v1/api/merch/getinfomerch", requestDto, token);
+        public async Task<GetInfoMerchResponseDto> GetInfoMerchAsync(GetInfoMerchRequestDto requestDto, CancellationToken token) =>
+             await BasicRequestProcessingAsync<GetInfoMerchRequestDto, GetInfoMerchResponseDto>("v1/api/merch/InfoMerch", requestDto, token);
 
-        private async Task<TResponse> BasicRequestProcessing<TRequest, TResponse>(string route, TRequest requestDto, CancellationToken token)
+        private async Task<TResponse> BasicRequestProcessingAsync<TRequest, TResponse>(string route, TRequest requestDto, CancellationToken token)
         {
             string json = JsonConvert.SerializeObject(requestDto);
             StringContent httpContent = new(json, System.Text.Encoding.UTF8, "application/json");

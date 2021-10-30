@@ -11,8 +11,7 @@ namespace WebApi.Infrastructure.StartupFilters
         {
             return app =>
             {
-                app.UseMiddleware<RequestLoggingMiddleware>();
-                app.UseMiddleware<ResponseLoggingMiddleware>();
+                app.UseMiddleware<RequestResponseLoggingMiddleware>();
                 next(app);
             };
         }
