@@ -13,6 +13,6 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate
             MerchItems = merchItems;
         }
         public MerchType MerchType { get; private set; }
-        public List<MerchItem> MerchItems { get; }
+        public List<MerchItem> MerchItems { get; private set; }
     }
 }

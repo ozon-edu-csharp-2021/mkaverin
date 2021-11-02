@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderMerchAggregate
 {
-    public class MerchandiseRequestDate : ValueObject
+    public class DeliveryDate : ValueObject
     {
         public DateTimeOffset Value { get; }
-        public MerchandiseRequestDate(DateTimeOffset date)
+        public DeliveryDate(DateTimeOffset date)
         {
             Value = date;
         }
