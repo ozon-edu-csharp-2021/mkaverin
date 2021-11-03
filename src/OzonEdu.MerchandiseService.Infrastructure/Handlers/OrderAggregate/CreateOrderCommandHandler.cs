@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.Exceptions;
 using OzonEdu.MerchandiseService.Infrastructure.Commands;
@@ -18,10 +18,8 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.OrderAggregate
         private readonly IMediator _mediator;
         public CreateOrderCommandHandler(IMediator mediator, IOrderRepository orderRepository, IMerchPackRepository merchPackRepository)
         {
-            _orderRepository = orderRepository ??
-                                         throw new ArgumentNullException($"{nameof(orderRepository)}");
-            _merchPackRepository = merchPackRepository ??
-                                       throw new ArgumentNullException($"{nameof(merchPackRepository)}");
+            _orderRepository = orderRepository ??  throw new ArgumentNullException($"{nameof(orderRepository)}");
+            _merchPackRepository = merchPackRepository ?? throw new ArgumentNullException($"{nameof(merchPackRepository)}");
             _mediator = mediator;
         }
 

@@ -1,4 +1,4 @@
-﻿using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate;
+﻿using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.Events;
 using OzonEdu.MerchandiseService.Domain.Exceptions.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.Models;
@@ -6,7 +6,7 @@ using System;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 {
-    public class Order : Entity
+    public sealed class Order : Entity
     {
         public Order(OrderDate date, EmployeeId idEmployee,
             MerchPack merchPack, Source source)
@@ -23,7 +23,6 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         public Source Source { get; private set; }
         public Status Status { get; private set; }
         public DeliveryDate? DeliveryDate { get; private set; }
-
 
         public void ChangeStatusToDone(DateTimeOffset date)
         {
@@ -51,7 +50,6 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             Status = Status.InQueue;
             AddHRNotificationEndedMerchDamainEvent(MerchPack);
         }
-
         public void ChangeStatusAfterSupply()
         {
             if (!Status.Equals(Status.InQueue))

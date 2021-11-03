@@ -1,10 +1,9 @@
 ﻿using CSharpCourse.Core.Lib.Enums;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate;
 using OzonEdu.MerchandiseService.Domain.Contracts;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
+namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
 {
     /// <summary>
     /// Репозиторий для управления сущностью <see cref="MerchPack"/>

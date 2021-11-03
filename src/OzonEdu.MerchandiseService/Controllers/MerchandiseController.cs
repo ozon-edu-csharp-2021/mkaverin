@@ -1,7 +1,6 @@
 ﻿using CSharpCourse.Core.Lib.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchItemAggregate;
 using OzonEdu.MerchandiseService.HttpModels.DataTransferObjects;
 using OzonEdu.MerchandiseService.Infrastructure.Queries.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
@@ -10,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 
 namespace OzonEdu.MerchandiseService.Controllers
 {
@@ -82,15 +82,15 @@ namespace OzonEdu.MerchandiseService.Controllers
             return Ok(response);
         }
 
-        private List<Item> MappingListMerchItems(List<MerchItem> items)
+        private List<Item> MappingListMerchItems(Dictionary<Sku, Quantity> merchItems)
         {
             List<Item> resultItems = new();
-            foreach (MerchItem item in items)
+            foreach (var item in merchItems)
             {
                 resultItems.Add(new Item()
                 {
-                    Sku = item.Sku.Value,
-                    Quantity = item.Quantity.Value
+                    Sku = item.Key.Value,
+                    Quantity = item.Value.Value
                 });
             }
             return resultItems;

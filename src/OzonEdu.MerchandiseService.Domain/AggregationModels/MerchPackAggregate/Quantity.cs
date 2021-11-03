@@ -1,7 +1,8 @@
 ﻿using OzonEdu.MerchandiseService.Domain.Models;
+using System;
 using System.Collections.Generic;
 
-namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchItemAggregate
+namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
 {
     public class Quantity : ValueObject
     {
@@ -9,6 +10,8 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchItemAggregate
 
         public Quantity(int value)
         {
+            if (value <= 0)
+                throw new ArgumentException(nameof(Quantity));
             Value = value;
         }
 

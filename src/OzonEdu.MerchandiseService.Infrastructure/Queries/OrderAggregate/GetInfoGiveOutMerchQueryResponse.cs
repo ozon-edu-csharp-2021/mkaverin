@@ -1,4 +1,4 @@
-﻿using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate;
+﻿using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using System;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.Queries.OrderAggregate

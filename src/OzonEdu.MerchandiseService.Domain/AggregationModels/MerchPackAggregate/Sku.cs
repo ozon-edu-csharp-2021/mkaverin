@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using OzonEdu.MerchandiseService.Domain.Models;
 
-namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchItemAggregate
+namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
 {
     public class Sku : ValueObject
     {
@@ -9,6 +10,8 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchItemAggregate
         
         public Sku(long sku)
         {
+            if (sku <= 0)
+                throw new ArgumentException(nameof(Sku));
             Value = sku;
         }
         protected override IEnumerable<object> GetEqualityComponents()
