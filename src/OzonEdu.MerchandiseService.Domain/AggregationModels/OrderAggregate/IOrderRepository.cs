@@ -4,19 +4,19 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchandiseRequestAggregate
+namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 {
     /// <summary>
-    /// Репозиторий для управления сущностью <see cref="MerchandiseRequest"/>
+    /// Репозиторий для управления сущностью <see cref="Order"/>
     /// </summary>
-    public interface IMerchandiseRequestRepository : IRepository<MerchandiseRequest>
+    public interface IOrderRepository : IRepository<Order>
     {
         /// <summary>
         /// Получить все заявки в Статусе InQueue
         /// </summary>
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Список заявок</returns>
-        Task<List<MerchandiseRequest>> GetAllMerchandiseRequestInStatusInQueueAsync(
+        Task<List<Order>> GetAllOrderInStatusInQueueAsync(
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchandiseRequest
         /// <param name="employeeId">Id Сотрудника</param>
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Список заявок</returns>
-        Task<List<MerchandiseRequest>> GetAllMerchandiseRequestByEmployeeIdAsync(EmployeeId employeeId,
+        Task<List<Order>> GetAllOrderByEmployeeIdAsync(EmployeeId employeeId,
             CancellationToken cancellationToken = default);
         
         /// <summary>
@@ -34,7 +34,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchandiseRequest
         /// <param name="id">Идентификатор заявки</param>
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Объект заявки</returns>
-        Task<MerchandiseRequest> FindByIdAsync(int id,
+        Task<Order> FindByIdAsync(int id,
             CancellationToken cancellationToken = default);
     }
 }

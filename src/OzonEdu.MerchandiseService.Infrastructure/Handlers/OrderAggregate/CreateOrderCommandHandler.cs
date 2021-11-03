@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchandiseRequestAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderMerchAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.Queries.StockItemAggregate;
 using OzonEdu.StockApi.Domain.Exceptions;
@@ -9,24 +9,24 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.MerchandiseRequestAggregate
+namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.OrderAggregate
 {
-    internal class CreateMerchandiseRequestCommandHandler : IRequestHandler<CreateMerchandiseRequestCommand, int>
+    internal class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, int>
     {
 
-        public readonly IMerchandiseRequestRepository _merchandiseRequestRepository;
+        public readonly IOrderRepository _orderRepository;
         public readonly IMerchPackRepository _merchPackRepository;
         private readonly IMediator _mediator;
-        public CreateMerchandiseRequestCommandHandler(IMediator mediator, IMerchandiseRequestRepository merchandiseRequestRepository, IMerchPackRepository merchPackRepository)
+        public CreateOrderCommandHandler(IMediator mediator, IOrderRepository orderRepository, IMerchPackRepository merchPackRepository)
         {
-            _merchandiseRequestRepository = merchandiseRequestRepository ??
-                                         throw new ArgumentNullException($"{nameof(merchandiseRequestRepository)}");
+            _orderRepository = orderRepository ??
+                                         throw new ArgumentNullException($"{nameof(orderRepository)}");
             _merchPackRepository = merchPackRepository ??
                                        throw new ArgumentNullException($"{nameof(merchPackRepository)}");
             _mediator = mediator;
         }
 
-        public async Task<int> Handle(CreateMerchandiseRequestCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
             CheckGiveOutMerchByIdEmployeeQuery query = new()
             {
@@ -40,14 +40,14 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.MerchandiseRequestA
             }
 
             MerchPack merchPack = await _merchPackRepository.FindByTypeAsync(request.MerchType);
-            MerchandiseRequest requestMR = new(date: new(DateTimeOffset.UtcNow),
+            Order requestMR = new(date: new(DateTimeOffset.UtcNow),
                                                 idEmployee: new(request.IdEmployee),
                                                 merchPack: merchPack,
                                                 source: request.Sourse);
 
-            MerchandiseRequest createdMerchandiseRequest = await _merchandiseRequestRepository.CreateAsync(requestMR, cancellationToken);
-            await _merchandiseRequestRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
-            return createdMerchandiseRequest.Id;
+            Order createdOrder = await _orderRepository.CreateAsync(requestMR, cancellationToken);
+            await _orderRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            return createdOrder.Id;
         }
     }
 }

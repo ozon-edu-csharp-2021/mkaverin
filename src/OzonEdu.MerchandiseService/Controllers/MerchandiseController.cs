@@ -32,17 +32,17 @@ namespace OzonEdu.MerchandiseService.Controllers
                 throw new ArgumentException(nameof(requestDto.MerchType));
             }
 
-            CreateMerchandiseRequestCommand? createCommand = new()
+            CreateOrderCommand? createCommand = new()
             {
                 MerchType = (MerchType)requestDto.MerchType,
                 IdEmployee = requestDto.IdEmployee,
                 Sourse = Source.External
             };
-            int merchandiseRequestId = await _mediator.Send(createCommand, token);
+            int orderId = await _mediator.Send(createCommand, token);
 
-            GiveOutMerchandiseRequestCommand? giveOutCommand = new()
+            GiveOutOrderCommand? giveOutCommand = new()
             {
-                MerchandiseRequestId = merchandiseRequestId
+                OrderId = orderId
             };
             bool result = await _mediator.Send(giveOutCommand, token);
 

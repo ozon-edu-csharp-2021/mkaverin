@@ -5,7 +5,7 @@ using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 
 namespace OzonEdu.StockApi.Infrastructure.Commands
 {
-    public class CreateMerchandiseRequestCommand : IRequest<int>
+    public class CreateOrderCommand : IRequest<int>
     {
         public long IdEmployee { get; set; }
         public MerchType MerchType { get; set; }

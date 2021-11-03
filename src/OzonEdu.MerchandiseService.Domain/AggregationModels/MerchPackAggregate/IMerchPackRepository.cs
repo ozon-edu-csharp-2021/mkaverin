@@ -4,7 +4,7 @@ using OzonEdu.MerchandiseService.Domain.Contracts;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchandiseRequestAggregate
+namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 {
     /// <summary>
     /// Репозиторий для управления сущностью <see cref="MerchPack"/>
