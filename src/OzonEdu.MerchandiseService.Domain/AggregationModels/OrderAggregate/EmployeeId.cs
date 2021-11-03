@@ -1,7 +1,7 @@
 ﻿using OzonEdu.MerchandiseService.Domain.Models;
 using System.Collections.Generic;
 
-namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderMerchAggregate
+namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 {
     public sealed class EmployeeId : ValueObject
     {

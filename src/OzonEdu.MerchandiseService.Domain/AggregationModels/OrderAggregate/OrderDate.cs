@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderMerchAggregate
+namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 {
     public class OrderDate : ValueObject
     {

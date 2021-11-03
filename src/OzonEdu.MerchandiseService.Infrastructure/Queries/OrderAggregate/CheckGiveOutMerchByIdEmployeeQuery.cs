@@ -1,7 +1,7 @@
 ﻿using CSharpCourse.Core.Lib.Enums;
 using MediatR;
 
-namespace OzonEdu.MerchandiseService.Infrastructure.Queries.StockItemAggregate
+namespace OzonEdu.MerchandiseService.Infrastructure.Queries.OrderAggregate
 {
     public class CheckGiveOutMerchByIdEmployeeQuery : IRequest<bool>
     {

@@ -1,9 +1,9 @@
 ﻿using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate;
 using System;
 
-namespace OzonEdu.MerchandiseService.Infrastructure.Queries.StockItemAggregate
+namespace OzonEdu.MerchandiseService.Infrastructure.Queries.OrderAggregate
 {
-    public class GetInformationIssuedMerchQueryResponse
+    public class GetInfoGiveOutMerchQueryResponse
     {
         public DeliveryMerch[] DeliveryMerch { get; init; }
     }
@@ -11,6 +11,6 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Queries.StockItemAggregate
     public class DeliveryMerch
     {
         public DateTimeOffset DeliveryDate { get; init; }
-        public MerchPack merchPack { get; init; }
+        public MerchPack MerchPack { get; init; }
     }
 }

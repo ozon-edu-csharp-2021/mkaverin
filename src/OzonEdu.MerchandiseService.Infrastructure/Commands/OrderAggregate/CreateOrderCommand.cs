@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using CSharpCourse.Core.Lib.Enums;
+﻿using CSharpCourse.Core.Lib.Enums;
 using MediatR;
-using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 
-namespace OzonEdu.StockApi.Infrastructure.Commands
+namespace OzonEdu.MerchandiseService.Infrastructure.Commands
 {
     public class CreateOrderCommand : IRequest<int>
     {

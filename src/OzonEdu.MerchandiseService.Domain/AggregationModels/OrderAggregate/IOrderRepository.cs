@@ -1,5 +1,4 @@
-﻿using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderMerchAggregate;
-using OzonEdu.MerchandiseService.Domain.Contracts;
+﻿using OzonEdu.MerchandiseService.Domain.Contracts;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,7 +26,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         /// <returns>Список заявок</returns>
         Task<List<Order>> GetAllOrderByEmployeeIdAsync(EmployeeId employeeId,
             CancellationToken cancellationToken = default);
-        
+
         /// <summary>
         /// Получить заявку по идентификатору
         /// </summary>

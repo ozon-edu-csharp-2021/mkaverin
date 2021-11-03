@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace OzonEdu.StockApi.Infrastructure.Commands
+namespace OzonEdu.MerchandiseService.Infrastructure.Commands
 {
     public class GiveOutOrderCommand : IRequest<bool>
     {

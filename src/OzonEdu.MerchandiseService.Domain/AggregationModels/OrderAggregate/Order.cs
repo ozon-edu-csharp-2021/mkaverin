@@ -2,10 +2,9 @@
 using OzonEdu.MerchandiseService.Domain.Events;
 using OzonEdu.MerchandiseService.Domain.Exceptions.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.Models;
-using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using System;
 
-namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderMerchAggregate
+namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 {
     public class Order : Entity
     {
@@ -29,9 +28,14 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderMerchAggregat
         public void ChangeStatusToDone(DateTimeOffset date)
         {
             if (Status.Equals(Status.Done))
+            {
                 throw new OrderStatusException($"Request in done. Change status unavailable");
+            }
+
             if (Status.Equals(Status.Notified))
+            {
                 throw new OrderStatusException($"Request in Notified. Change status unavailable");
+            }
 
             Status = Status.Done;
             DeliveryDate = new DeliveryDate(date);
@@ -40,7 +44,9 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderMerchAggregat
         public void ChangeStatusToInQueue()
         {
             if (!Status.Equals(Status.New))
+            {
                 throw new OrderStatusException($"Request not status in New. Change status unavailable");
+            }
 
             Status = Status.InQueue;
             AddHRNotificationEndedMerchDamainEvent(MerchPack);
@@ -49,7 +55,9 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderMerchAggregat
         public void ChangeStatusAfterSupply()
         {
             if (!Status.Equals(Status.InQueue))
+            {
                 throw new OrderStatusException($"Request not in status inQueue. Change status unavailable");
+            }
 
             if (Source.Equals(Source.External))
             {
@@ -68,13 +76,13 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderMerchAggregat
         }
         private void AddEmployeeNotificationAboutSupplyDamainEvent(EmployeeId employeeId)
         {
-            var domainEvent = new EmployeeNotificationAboutSupplyDamainEvent(employeeId);
+            EmployeeNotificationAboutSupplyDamainEvent domainEvent = new EmployeeNotificationAboutSupplyDamainEvent(employeeId);
             AddDomainEvent(domainEvent);
         }
 
         private void AddHRNotificationEndedMerchDamainEvent(MerchPack merchPack)
         {
-            var domainEvent = new HRNotificationEndedMerchDamainEvent(merchPack);
+            HRNotificationEndedMerchDamainEvent domainEvent = new HRNotificationEndedMerchDamainEvent(merchPack);
             AddDomainEvent(domainEvent);
         }
         private void AddRepeatGiveOutOrderCommandDamainEvent(int id)

@@ -1,8 +1,6 @@
 ﻿using MediatR;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderMerchAggregate;
-using OzonEdu.MerchandiseService.Infrastructure.Queries.StockItemAggregate;
-using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
+using OzonEdu.MerchandiseService.Infrastructure.Queries.OrderAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,10 +1,9 @@
 ﻿using MediatR;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderMerchAggregate;
-using OzonEdu.MerchandiseService.Infrastructure.Queries.StockItemAggregate;
-using OzonEdu.StockApi.Domain.Exceptions;
-using OzonEdu.StockApi.Domain.Exceptions.StockItemAggregate;
-using OzonEdu.StockApi.Infrastructure.Commands;
+using OzonEdu.MerchandiseService.Domain.Exceptions;
+using OzonEdu.MerchandiseService.Domain.Exceptions.OrderAggregate;
+using OzonEdu.MerchandiseService.Infrastructure.Commands;
+using OzonEdu.MerchandiseService.Infrastructure.Queries.OrderAggregate;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

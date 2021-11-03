@@ -1,6 +1,6 @@
 ﻿using OzonEdu.MerchandiseService.Domain.Models;
 
-namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
+namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 {
     public class Status : Enumeration
     {

@@ -1,8 +1,6 @@
 ﻿using MediatR;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderMerchAggregate;
-using OzonEdu.MerchandiseService.Infrastructure.Queries.StockItemAggregate;
-using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
+using OzonEdu.MerchandiseService.Infrastructure.Queries.OrderAggregate;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -10,22 +8,21 @@ using System.Threading.Tasks;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.OrderAggregate
 {
-    public class GetInformationIssuedMerchQueryHandler : IRequestHandler<GetInformationIssuedMerchQuery, GetInformationIssuedMerchQueryResponse>
+    public class GetInformationIssuedMerchQueryHandler : IRequestHandler<GetInfoGiveOutMerchQuery, GetInfoGiveOutMerchQueryResponse>
     {
         public readonly IOrderRepository _orderRepository;
 
         public GetInformationIssuedMerchQueryHandler(IOrderRepository orderRepository)
         {
-            _orderRepository = orderRepository ??
-                                         throw new ArgumentNullException($"{nameof(orderRepository)}");
+            _orderRepository = orderRepository ?? throw new ArgumentNullException($"{nameof(orderRepository)}");
         }
 
-        public async Task<GetInformationIssuedMerchQueryResponse> Handle(GetInformationIssuedMerchQuery request, CancellationToken cancellationToken)
+        public async Task<GetInfoGiveOutMerchQueryResponse> Handle(GetInfoGiveOutMerchQuery request, CancellationToken cancellationToken)
         {
             EmployeeId employeeIdRequest = new(request.EmployeeId);
             List<Order> orders = await _orderRepository.GetAllOrderByEmployeeIdAsync(employeeIdRequest);
-            #region Mapping
-            GetInformationIssuedMerchQueryResponse result = new()
+            #region Mapping result
+            GetInfoGiveOutMerchQueryResponse result = new()
             {
                 DeliveryMerch = new DeliveryMerch[orders.Count]
             };
@@ -36,7 +33,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.OrderAggregate
                     result.DeliveryMerch[i] = new DeliveryMerch()
                     {
                         DeliveryDate = orders[i].DeliveryDate.Value,
-                        merchPack = orders[i].MerchPack
+                        MerchPack = orders[i].MerchPack
                     };
                 }
             }

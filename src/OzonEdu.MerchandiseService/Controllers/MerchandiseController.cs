@@ -3,9 +3,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchItemAggregate;
 using OzonEdu.MerchandiseService.HttpModels.DataTransferObjects;
-using OzonEdu.MerchandiseService.Infrastructure.Queries.StockItemAggregate;
-using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
-using OzonEdu.StockApi.Infrastructure.Commands;
+using OzonEdu.MerchandiseService.Infrastructure.Queries.OrderAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
+using OzonEdu.MerchandiseService.Infrastructure.Commands;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -32,7 +32,7 @@ namespace OzonEdu.MerchandiseService.Controllers
                 throw new ArgumentException(nameof(requestDto.MerchType));
             }
 
-            CreateOrderCommand? createCommand = new()
+            CreateOrderCommand createCommand = new()
             {
                 MerchType = (MerchType)requestDto.MerchType,
                 IdEmployee = requestDto.IdEmployee,
@@ -40,7 +40,7 @@ namespace OzonEdu.MerchandiseService.Controllers
             };
             int orderId = await _mediator.Send(createCommand, token);
 
-            GiveOutOrderCommand? giveOutCommand = new()
+            GiveOutOrderCommand giveOutCommand = new()
             {
                 OrderId = orderId
             };
@@ -52,11 +52,11 @@ namespace OzonEdu.MerchandiseService.Controllers
         [HttpGet("InfoMerch")]
         public async Task<ActionResult<GetInfoMerchResponseDto>> GetInfoMerch([FromQuery] GetInfoMerchRequestDto requestDto, CancellationToken token)
         {
-            GetInformationIssuedMerchQuery? query = new()
+            GetInfoGiveOutMerchQuery? query = new()
             {
                 EmployeeId = requestDto.IdEmployee
             };
-            GetInformationIssuedMerchQueryResponse? result = await _mediator.Send(query, token);
+            GetInfoGiveOutMerchQueryResponse? result = await _mediator.Send(query, token);
             if (result.DeliveryMerch.Length == 0)
             {
                 return NotFound();
@@ -73,8 +73,8 @@ namespace OzonEdu.MerchandiseService.Controllers
                     DeliveryDate = result.DeliveryMerch[i].DeliveryDate,
                     MerchPack = new()
                     {
-                        MerchType = result.DeliveryMerch[i].merchPack.MerchType.ToString(),
-                        MerchItems = MappingListMerchItems(result.DeliveryMerch[i].merchPack.MerchItems)
+                        MerchType = result.DeliveryMerch[i].MerchPack.MerchType.ToString(),
+                        MerchItems = MappingListMerchItems(result.DeliveryMerch[i].MerchPack.MerchItems)
                     }
                 };
             }
@@ -84,8 +84,8 @@ namespace OzonEdu.MerchandiseService.Controllers
 
         private List<Item> MappingListMerchItems(List<MerchItem> items)
         {
-            List<Item>? resultItems = new();
-            foreach (MerchItem? item in items)
+            List<Item> resultItems = new();
+            foreach (MerchItem item in items)
             {
                 resultItems.Add(new Item()
                 {
