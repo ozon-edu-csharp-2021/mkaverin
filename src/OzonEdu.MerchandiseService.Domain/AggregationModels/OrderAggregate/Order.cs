@@ -28,12 +28,12 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         {
             if (Status.Equals(Status.Done))
             {
-                throw new OrderStatusException($"Request in done. Change status unavailable");
+                throw new OrderStatusException("Request in done. Change status unavailable");
             }
 
             if (Status.Equals(Status.Notified))
             {
-                throw new OrderStatusException($"Request in Notified. Change status unavailable");
+                throw new OrderStatusException("Request in Notified. Change status unavailable");
             }
 
             Status = Status.Done;
@@ -44,7 +44,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         {
             if (!Status.Equals(Status.New))
             {
-                throw new OrderStatusException($"Request not status in New. Change status unavailable");
+                throw new OrderStatusException("Request not status in New. Change status unavailable");
             }
 
             Status = Status.InQueue;
@@ -54,12 +54,11 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         {
             if (!Status.Equals(Status.InQueue))
             {
-                throw new OrderStatusException($"Request not in status inQueue. Change status unavailable");
+                throw new OrderStatusException("Request not in status inQueue. Change status unavailable");
             }
 
             if (Source.Equals(Source.External))
             {
-
                 Status = Status.Notified;
                 AddEmployeeNotificationAboutSupplyDamainEvent(EmployeeId);
             }

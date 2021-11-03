@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.OrderAggregate
 {
-    internal class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, int>
+    public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, int>
     {
 
         public readonly IOrderRepository _orderRepository;

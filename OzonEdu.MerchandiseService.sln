@@ -40,7 +40,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.Domain.Tests", "tests\OzonEdu.MerchandiseService.Domain.Tests\OzonEdu.MerchandiseService.Domain.Tests.csproj", "{7543426F-5185-4939-8D23-FF97610A6102}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.Infrastructure", "src\OzonEdu.MerchandiseService.Infrastructure\OzonEdu.MerchandiseService.Infrastructure.csproj", "{36D128AC-00E0-4066-B5E5-47C1D375A53C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.Infrastructure", "src\OzonEdu.MerchandiseService.Infrastructure\OzonEdu.MerchandiseService.Infrastructure.csproj", "{36D128AC-00E0-4066-B5E5-47C1D375A53C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.Stubs", "tests\OzonEdu.MerchandiseService.StubsRepository\OzonEdu.MerchandiseService.Stubs.csproj", "{49B3D280-2F91-4FB9-AE40-226027614346}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +82,10 @@ Global
 		{36D128AC-00E0-4066-B5E5-47C1D375A53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36D128AC-00E0-4066-B5E5-47C1D375A53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36D128AC-00E0-4066-B5E5-47C1D375A53C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49B3D280-2F91-4FB9-AE40-226027614346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49B3D280-2F91-4FB9-AE40-226027614346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49B3D280-2F91-4FB9-AE40-226027614346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49B3D280-2F91-4FB9-AE40-226027614346}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,6 +99,7 @@ Global
 		{ED76E26B-3F7E-40E0-8629-B83CCDFC5FC9} = {31FA52EB-9A7E-4C90-999E-B247845045BA}
 		{7543426F-5185-4939-8D23-FF97610A6102} = {8C565CD4-A72D-4617-BD3E-26F0150C2B3E}
 		{36D128AC-00E0-4066-B5E5-47C1D375A53C} = {31FA52EB-9A7E-4C90-999E-B247845045BA}
+		{49B3D280-2F91-4FB9-AE40-226027614346} = {8C565CD4-A72D-4617-BD3E-26F0150C2B3E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF01EE88-010B-40BE-954E-EEA5155AE3BE}
