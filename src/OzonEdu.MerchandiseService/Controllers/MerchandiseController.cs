@@ -1,15 +1,15 @@
-﻿using CSharpCourse.Core.Lib.Enums;
+﻿using AutoMapper;
+using CSharpCourse.Core.Lib.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OzonEdu.MerchandiseService.HttpModels.DataTransferObjects;
-using OzonEdu.MerchandiseService.Infrastructure.Queries.OrderAggregate;
+using OzonEdu.MerchandiseService.ApplicationServices.Commands;
+using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
-using OzonEdu.MerchandiseService.Infrastructure.Commands;
+using OzonEdu.MerchandiseService.HttpModels.DataTransferObjects;
+using OzonEdu.MerchandiseService.HttpModels.DataTransferObjects.GetInfoMerchResponseDto;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 
 namespace OzonEdu.MerchandiseService.Controllers
 {
@@ -18,33 +18,25 @@ namespace OzonEdu.MerchandiseService.Controllers
     public class MerchandiseController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public MerchandiseController(IMediator mediator)
+        private readonly IMapper _mapper;
+        public MerchandiseController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpPost("RequestMerch")]
         public async Task<ActionResult<RequestMerchResponseDto>> RequestMerch(RequestMerchRequestDto requestDto, CancellationToken token)
         {
-            bool checkMerchType = Enum.IsDefined(typeof(MerchType), requestDto.MerchType);
-            if (!checkMerchType)
-            {
+            if (!Enum.IsDefined(typeof(MerchType), requestDto.MerchType))
                 throw new ArgumentException(nameof(requestDto.MerchType));
-            }
 
-            CreateOrderCommand createCommand = new()
-            {
-                MerchType = (MerchType)requestDto.MerchType,
-                IdEmployee = requestDto.IdEmployee,
-                Sourse = Source.External
-            };
+            CreateOrderCommand? createCommand = _mapper.Map<CreateOrderCommand>(requestDto);
+            createCommand.Sourse = Source.External;
+
             int orderId = await _mediator.Send(createCommand, token);
 
-            GiveOutOrderCommand giveOutCommand = new()
-            {
-                OrderId = orderId
-            };
-            bool result = await _mediator.Send(giveOutCommand, token);
+            bool result = await _mediator.Send(new GiveOutOrderCommand(orderId), token);
 
             return Ok(result);
         }
@@ -52,48 +44,13 @@ namespace OzonEdu.MerchandiseService.Controllers
         [HttpGet("InfoMerch")]
         public async Task<ActionResult<GetInfoMerchResponseDto>> GetInfoMerch([FromQuery] GetInfoMerchRequestDto requestDto, CancellationToken token)
         {
-            GetInfoGiveOutMerchQuery? query = new()
-            {
-                EmployeeId = requestDto.IdEmployee
-            };
+            GetInfoGiveOutMerchQuery? query = _mapper.Map<GetInfoGiveOutMerchQuery>(requestDto);
             GetInfoGiveOutMerchQueryResponse? result = await _mediator.Send(query, token);
             if (result.DeliveryMerch.Length == 0)
-            {
                 return NotFound();
-            }
-            #region Mapping response
-            GetInfoMerchResponseDto response = new()
-            {
-                DeliveryMerch = new MerchDelivery[result.DeliveryMerch.Length]
-            };
-            for (int i = 0; i < result.DeliveryMerch.Length; i++)
-            {
-                response.DeliveryMerch[i] = new()
-                {
-                    DeliveryDate = result.DeliveryMerch[i].DeliveryDate,
-                    MerchPack = new()
-                    {
-                        MerchType = result.DeliveryMerch[i].MerchPack.MerchType.ToString(),
-                        MerchItems = MappingListMerchItems(result.DeliveryMerch[i].MerchPack.MerchItems)
-                    }
-                };
-            }
-            #endregion
-            return Ok(response);
-        }
 
-        private List<Item> MappingListMerchItems(Dictionary<Sku, Quantity> merchItems)
-        {
-            List<Item> resultItems = new();
-            foreach (var item in merchItems)
-            {
-                resultItems.Add(new Item()
-                {
-                    Sku = item.Key.Value,
-                    Quantity = item.Value.Value
-                });
-            }
-            return resultItems;
+            GetInfoMerchResponseDto? response = _mapper.Map<GetInfoMerchResponseDto>(result);
+            return Ok(response);
         }
     }
 }

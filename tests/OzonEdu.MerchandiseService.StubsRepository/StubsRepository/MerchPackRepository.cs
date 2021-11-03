@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
+namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
 {
     public class MerchPackRepository : IMerchPackRepository
     {

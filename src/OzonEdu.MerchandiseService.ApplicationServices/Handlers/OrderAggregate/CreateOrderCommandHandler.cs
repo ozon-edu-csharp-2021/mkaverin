@@ -1,14 +1,14 @@
 ﻿using MediatR;
+using OzonEdu.MerchandiseService.ApplicationServices.Commands;
+using OzonEdu.MerchandiseService.ApplicationServices.Exceptions;
+using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
-using OzonEdu.MerchandiseService.Domain.Exceptions;
-using OzonEdu.MerchandiseService.Infrastructure.Commands;
-using OzonEdu.MerchandiseService.Infrastructure.Queries.OrderAggregate;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.OrderAggregate
+namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 {
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, int>
     {
@@ -18,16 +18,16 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.OrderAggregate
         private readonly IMediator _mediator;
         public CreateOrderCommandHandler(IMediator mediator, IOrderRepository orderRepository, IMerchPackRepository merchPackRepository)
         {
-            _orderRepository = orderRepository ??  throw new ArgumentNullException($"{nameof(orderRepository)}");
+            _orderRepository = orderRepository ?? throw new ArgumentNullException($"{nameof(orderRepository)}");
             _merchPackRepository = merchPackRepository ?? throw new ArgumentNullException($"{nameof(merchPackRepository)}");
             _mediator = mediator;
         }
 
         public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            CheckGiveOutMerchByIdEmployeeQuery query = new()
+            CheckGiveOutMerchByEmployeeIdQuery query = new()
             {
-                EmployeeId = request.IdEmployee,
+                EmployeeId = request.EmployeeId,
                 MerchType = request.MerchType
             };
             bool checkGiveOut = await _mediator.Send(query, cancellationToken);
@@ -38,7 +38,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.OrderAggregate
 
             MerchPack merchPack = await _merchPackRepository.FindByTypeAsync(request.MerchType);
             Order requestMR = new(date: new(DateTimeOffset.UtcNow),
-                                                idEmployee: new(request.IdEmployee),
+                                                employeeId: new(request.EmployeeId),
                                                 merchPack: merchPack,
                                                 source: request.Sourse);
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OzonEdu.MerchandiseService.Domain.Exceptions
+namespace OzonEdu.MerchandiseService.ApplicationServices.Exceptions
 {
     public class MerchAlreadyGiveOutException : Exception
     {

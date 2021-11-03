@@ -11,7 +11,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
     public class OrderAggregateTests
     {
         [Fact]
-        public void CreateOrderSuccess()
+        public void CreateOrder_SendValidValues_ShouldReturnsOrderInStatusNew()
         {
             //Arrange
 
@@ -26,13 +26,13 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
                                      { new(112255), new(1) }
                            }),
                        Source.External);
-            
+
             //Assert
             Assert.Equal(order.Status, Status.New);
         }
 
         [Fact]
-        public void ChangeStatusToDoneOrderSuccess()
+        public void ChangeStatusToDone_SendValidValues_ShouldReturnsOrderInStatusDone()
         {
             //Arrange
             Order order = new(new(DateTimeOffset.Parse("03.11.2021")),
@@ -45,17 +45,17 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
                                      { new(112255), new(1) }
                           }),
                       Source.External);
-            
+
             //Act
             order.ChangeStatusToDone(DateTimeOffset.Parse("03.11.2021"));
-           
+
             //Assert
             Assert.Equal(order.Status, Status.Done);
             Assert.Equal(order.DeliveryDate.Value, DateTimeOffset.Parse("03.11.2021"));
         }
 
         [Fact]
-        public void ChangeStatusToInQueueOrderSuccess()
+        public void ChangeStatusToInQueue_SendValidValues_ShouldReturnsOrderInStatusInQueue()
         {
             //Arrange
             Order order = new(new(DateTimeOffset.Parse("03.11.2021")),
@@ -75,9 +75,9 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Assert
             Assert.Equal(order.Status, Status.InQueue);
         }
-        
+
         [Fact]
-        public void ChangeStatusAfterSupplyExternalOrderSuccess()
+        public void ChangeStatusAfterSupply_SendExternalOrders_ShouldReturnsOrderInStatusNotified()
         {
             //Arrange
             Order order = new(new(DateTimeOffset.Parse("03.11.2021")),
@@ -100,7 +100,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
         }
 
         [Fact]
-        public void ChangeStatusAfterSupplyInternalOrderSuccess()
+        public void ChangeStatusAfterSupply_SendInternalOrders_ShouldReturnsOrderStatusNotChange()
         {
             //Arrange
             Order order = new(new(DateTimeOffset.Parse("03.11.2021")),
@@ -123,7 +123,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
         }
 
         [Fact]
-        public void ChangeStatusAfterSupply_SentInvalidStatus_OrderStatusException()
+        public void ChangeStatusAfterSupply_SentInvalidStatus_ShouldReturnsOrderStatusException()
         {
             //Arrange
             Order order = new(new(DateTimeOffset.Parse("03.11.2021")),
@@ -138,37 +138,14 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
                       Source.Internal);
 
             //Act
-            var ex = Assert.Throws<OrderStatusException>(() => order.ChangeStatusAfterSupply());
+            void act() => order.ChangeStatusAfterSupply();
 
             //Assert
-            Assert.Equal("Request not in status inQueue. Change status unavailable", ex.Message);
+            Assert.Throws<OrderStatusException>(act);
         }
 
         [Fact]
-        public void ChangeStatusToInQueue_SentInvalidStatus_OrderStatusException()
-        {
-            //Arrange
-            Order order = new(new(DateTimeOffset.Parse("03.11.2021")),
-                      new(123),
-                      new MerchPack(
-                          MerchType.WelcomePack,
-                          new Dictionary<Sku, Quantity>() {
-                                     { new(112233), new(2) } ,
-                                     { new(112244), new(1) } ,
-                                     { new(112255), new(1) }
-                          }),
-                      Source.Internal);
-            order.ChangeStatusToDone(DateTimeOffset.Parse("03.11.2021"));
-
-            //Act
-            var ex = Assert.Throws<OrderStatusException>(() => order.ChangeStatusToInQueue());
-
-            //Assert
-            Assert.Equal("Request not status in New. Change status unavailable", ex.Message);
-        }
-
-        [Fact]
-        public void ChangeStatusToDone_OrderInDone_OrderStatusException()
+        public void ChangeStatusToInQueue_SentInvalidStatus_ShouldReturnsOrderStatusException()
         {
             //Arrange
             Order order = new(new(DateTimeOffset.Parse("03.11.2021")),
@@ -184,14 +161,37 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             order.ChangeStatusToDone(DateTimeOffset.Parse("03.11.2021"));
 
             //Act
-            var ex = Assert.Throws<OrderStatusException>(() => order.ChangeStatusToDone(DateTimeOffset.Parse("03.11.2021")));
+            void act() => order.ChangeStatusToInQueue();
 
             //Assert
-            Assert.Equal("Request in done. Change status unavailable", ex.Message);
+            Assert.Throws<OrderStatusException>(act);
         }
 
         [Fact]
-        public void ChangeStatusToDone_OrderInNotified_OrderStatusException()
+        public void ChangeStatusToDone_OrderInDone_ShouldReturnsOrderStatusException()
+        {
+            //Arrange
+            Order order = new(new(DateTimeOffset.Parse("03.11.2021")),
+                      new(123),
+                      new MerchPack(
+                          MerchType.WelcomePack,
+                          new Dictionary<Sku, Quantity>() {
+                                     { new(112233), new(2) } ,
+                                     { new(112244), new(1) } ,
+                                     { new(112255), new(1) }
+                          }),
+                      Source.Internal);
+            order.ChangeStatusToDone(DateTimeOffset.Parse("03.11.2021"));
+
+            //Act
+            void act() => order.ChangeStatusToDone(DateTimeOffset.Parse("03.11.2021"));
+
+            //Assert
+            Assert.Throws<OrderStatusException>(act);
+        }
+
+        [Fact]
+        public void ChangeStatusToDone_OrderInNotified_ShouldReturnsOrderStatusException()
         {
             //Arrange
             Order order = new(new(DateTimeOffset.Parse("03.11.2021")),
@@ -208,10 +208,10 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             order.ChangeStatusAfterSupply();
 
             //Act
-            var ex = Assert.Throws<OrderStatusException>(() => order.ChangeStatusToDone(DateTimeOffset.Parse("03.11.2021")));
+            void act() => order.ChangeStatusToDone(DateTimeOffset.Parse("03.11.2021"));
 
             //Assert
-            Assert.Equal("Request in Notified. Change status unavailable", ex.Message);
+            Assert.Throws<OrderStatusException>(act);
         }
     }
 }

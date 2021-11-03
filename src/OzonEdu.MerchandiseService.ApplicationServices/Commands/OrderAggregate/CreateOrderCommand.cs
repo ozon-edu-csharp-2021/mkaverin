@@ -2,11 +2,11 @@
 using MediatR;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 
-namespace OzonEdu.MerchandiseService.Infrastructure.Commands
+namespace OzonEdu.MerchandiseService.ApplicationServices.Commands
 {
     public class CreateOrderCommand : IRequest<int>
     {
-        public long IdEmployee { get; set; }
+        public long EmployeeId { get; set; }
         public MerchType MerchType { get; set; }
         public Source Sourse { get; set; }
 

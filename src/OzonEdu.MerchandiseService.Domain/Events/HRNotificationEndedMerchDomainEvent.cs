@@ -3,10 +3,10 @@ using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 
 namespace OzonEdu.MerchandiseService.Domain.Events
 {
-    public class HRNotificationEndedMerchDamainEvent : INotification
+    public class HRNotificationEndedMerchDomainEvent : INotification
     {
         public MerchPack MerchPack { get; }
-        public HRNotificationEndedMerchDamainEvent(MerchPack merchPack)
+        public HRNotificationEndedMerchDomainEvent(MerchPack merchPack)
         {
             MerchPack = merchPack;
         }

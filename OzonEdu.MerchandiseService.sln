@@ -40,7 +40,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.Domain.Tests", "tests\OzonEdu.MerchandiseService.Domain.Tests\OzonEdu.MerchandiseService.Domain.Tests.csproj", "{7543426F-5185-4939-8D23-FF97610A6102}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.Infrastructure", "src\OzonEdu.MerchandiseService.Infrastructure\OzonEdu.MerchandiseService.Infrastructure.csproj", "{36D128AC-00E0-4066-B5E5-47C1D375A53C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.ApplicationServices", "src\OzonEdu.MerchandiseService.ApplicationServices\OzonEdu.MerchandiseService.ApplicationServices.csproj", "{36D128AC-00E0-4066-B5E5-47C1D375A53C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.Stubs", "tests\OzonEdu.MerchandiseService.StubsRepository\OzonEdu.MerchandiseService.Stubs.csproj", "{49B3D280-2F91-4FB9-AE40-226027614346}"
 EndProject

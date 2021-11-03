@@ -1,18 +1,19 @@
 ﻿using MediatR;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
-using OzonEdu.MerchandiseService.Infrastructure.Queries.OrderAggregate;
+using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
-namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.OrderAggregate
+namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 {
-    public class GetInformationIssuedMerchQueryHandler : IRequestHandler<GetInfoGiveOutMerchQuery, GetInfoGiveOutMerchQueryResponse>
+    public class GetInfoGiveOutMerchQueryHandler : IRequestHandler<GetInfoGiveOutMerchQuery, GetInfoGiveOutMerchQueryResponse>
     {
         public readonly IOrderRepository _orderRepository;
 
-        public GetInformationIssuedMerchQueryHandler(IOrderRepository orderRepository)
+        public GetInfoGiveOutMerchQueryHandler(IOrderRepository orderRepository)
         {
             _orderRepository = orderRepository ?? throw new ArgumentNullException($"{nameof(orderRepository)}");
         }
@@ -21,19 +22,20 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.OrderAggregate
         {
             EmployeeId employeeIdRequest = new(request.EmployeeId);
             List<Order> orders = await _orderRepository.GetAllOrderByEmployeeIdAsync(employeeIdRequest);
+            var ordersDone = orders.Where(o => o.Status.Equals(Status.Done)).ToList();
             #region Mapping result
             GetInfoGiveOutMerchQueryResponse result = new()
             {
-                DeliveryMerch = new DeliveryMerch[orders.Count]
+                DeliveryMerch = new DeliveryMerch[ordersDone.Count]
             };
-            for (int i = 0; i < orders.Count; i++)
+            for (int i = 0; i < ordersDone.Count; i++)
             {
-                if (orders[i].Status == Status.Done)
+                if (ordersDone[i].Status == Status.Done)
                 {
                     result.DeliveryMerch[i] = new DeliveryMerch()
                     {
-                        DeliveryDate = orders[i].DeliveryDate.Value,
-                        MerchPack = orders[i].MerchPack
+                        DeliveryDate = ordersDone[i].DeliveryDate.Value,
+                        MerchPack = ordersDone[i].MerchPack
                     };
                 }
             }

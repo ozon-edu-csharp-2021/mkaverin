@@ -11,11 +11,11 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
     public interface IOrderRepository : IRepository<Order>
     {
         /// <summary>
-        /// Получить все заявки в Статусе InQueue
+        /// Получить все заявки в определенном статусе
         /// </summary>
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Список заявок</returns>
-        Task<List<Order>> GetAllOrderInStatusInQueueAsync(
+        Task<List<Order>> GetAllOrderInStatusInQueueAsync(Status status,
             CancellationToken cancellationToken = default);
 
         /// <summary>

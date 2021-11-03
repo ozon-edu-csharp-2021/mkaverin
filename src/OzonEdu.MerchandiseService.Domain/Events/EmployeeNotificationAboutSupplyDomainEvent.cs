@@ -3,11 +3,11 @@ using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 
 namespace OzonEdu.MerchandiseService.Domain.Events
 {
-    public class EmployeeNotificationAboutSupplyDamainEvent : INotification
+    public class EmployeeNotificationAboutSupplyDomainEvent : INotification
     {
         public EmployeeId EmployeeId { get; }
 
-        public EmployeeNotificationAboutSupplyDamainEvent(EmployeeId employeeId)
+        public EmployeeNotificationAboutSupplyDomainEvent(EmployeeId employeeId)
         {
             EmployeeId = employeeId;
         }

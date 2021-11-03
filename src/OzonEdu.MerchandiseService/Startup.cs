@@ -6,8 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using OzonEdu.MerchandiseService.GrpcServices;
-using OzonEdu.MerchandiseService.Infrastructure.Handlers.OrderAggregate;
-using OzonEdu.MerchandiseService.Infrastructure.Stubs;
+using OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate;
+using OzonEdu.MerchandiseService.ApplicationServices.Stubs;
 
 namespace OzonEdu.MerchandiseService
 {
@@ -21,6 +21,7 @@ namespace OzonEdu.MerchandiseService
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
             services.AddMediatR(typeof(CreateOrderCommandHandler).Assembly);
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IMerchPackRepository, MerchPackRepository>();

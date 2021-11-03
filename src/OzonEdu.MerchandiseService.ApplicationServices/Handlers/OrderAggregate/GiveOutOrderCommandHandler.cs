@@ -1,14 +1,13 @@
 ﻿using MediatR;
+using OzonEdu.MerchandiseService.ApplicationServices.Commands;
+using OzonEdu.MerchandiseService.ApplicationServices.Exceptions;
+using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
-using OzonEdu.MerchandiseService.Domain.Exceptions;
-using OzonEdu.MerchandiseService.Domain.Exceptions.OrderAggregate;
-using OzonEdu.MerchandiseService.Infrastructure.Commands;
-using OzonEdu.MerchandiseService.Infrastructure.Queries.OrderAggregate;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.OrderAggregate
+namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 {
     internal class GiveOutOrderCommandHandler : IRequestHandler<GiveOutOrderCommand, bool>
     {
@@ -29,7 +28,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.OrderAggregate
                 throw new NoOrderException($"No order with id {request.OrderId}");
             }
 
-            CheckGiveOutMerchByIdEmployeeQuery query = new()
+            CheckGiveOutMerchByEmployeeIdQuery query = new()
             {
                 EmployeeId = order.EmployeeId.Value,
                 MerchType = order.MerchPack.MerchType
@@ -40,16 +39,17 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.OrderAggregate
                 throw new MerchAlreadyGiveOutException("The employee has already been issued merch");
             }
 
-            //Обращаемся к сервису StockApi узнаем есть ли товар на складе
-            //Если нету то вызываем 
-            order.ChangeStatusToInQueue();
-            return false;
-
-            //Если есть 
-            //Обращаемся к сервису StockApi и резервируем товар на складе
-            //вызываем 
-            order.ChangeStatusToDone(DateTimeOffset.UtcNow);
-            return true;
+            // Обращаемся к сервису StockApi узнаем есть ли товар на складе
+            if (true)
+            {
+                order.ChangeStatusToDone(DateTimeOffset.UtcNow);
+                return true;
+            }
+            else
+            {
+                order.ChangeStatusToInQueue();
+                return false;
+            }
         }
     }
 }

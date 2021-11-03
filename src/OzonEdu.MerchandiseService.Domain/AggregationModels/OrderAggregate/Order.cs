@@ -8,11 +8,11 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 {
     public sealed class Order : Entity
     {
-        public Order(OrderDate date, EmployeeId idEmployee,
+        public Order(OrderDate date, EmployeeId employeeId,
             MerchPack merchPack, Source source)
         {
             Date = date;
-            EmployeeId = idEmployee;
+            EmployeeId = employeeId;
             MerchPack = merchPack;
             Source = source;
             Status = Status.New;
@@ -22,7 +22,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         public MerchPack MerchPack { get; private set; }
         public Source Source { get; private set; }
         public Status Status { get; private set; }
-        public DeliveryDate? DeliveryDate { get; private set; }
+        public DeliveryDate DeliveryDate { get; private set; }
 
         public void ChangeStatusToDone(DateTimeOffset date)
         {
@@ -48,7 +48,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             }
 
             Status = Status.InQueue;
-            AddHRNotificationEndedMerchDamainEvent(MerchPack);
+            AddHRNotificationEndedMerchDomainEvent(MerchPack);
         }
         public void ChangeStatusAfterSupply()
         {
@@ -60,7 +60,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             if (Source.Equals(Source.External))
             {
                 Status = Status.Notified;
-                AddEmployeeNotificationAboutSupplyDamainEvent(EmployeeId);
+                AddEmployeeNotificationAboutSupplyDomainEvent(EmployeeId);
             }
             if (Source.Equals(Source.Internal))
             {
@@ -68,23 +68,23 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
                 //Только я не пойму как отсюда вызвать GiveOutOrderCommand
                 //Могу предположить что можно добавить DomainEvent, а он в свою очередь вызовет GiveOutOrderCommand
                 //Но как это сделать в DomainEvent пока не знаю
-                AddRepeatGiveOutOrderCommandDamainEvent(Id);
+                AddRepeatGiveOutOrderCommandDomainEvent(Id);
             }
         }
-        private void AddEmployeeNotificationAboutSupplyDamainEvent(EmployeeId employeeId)
+        private void AddEmployeeNotificationAboutSupplyDomainEvent(EmployeeId employeeId)
         {
-            EmployeeNotificationAboutSupplyDamainEvent domainEvent = new EmployeeNotificationAboutSupplyDamainEvent(employeeId);
+            EmployeeNotificationAboutSupplyDomainEvent domainEvent = new(employeeId);
             AddDomainEvent(domainEvent);
         }
 
-        private void AddHRNotificationEndedMerchDamainEvent(MerchPack merchPack)
+        private void AddHRNotificationEndedMerchDomainEvent(MerchPack merchPack)
         {
-            HRNotificationEndedMerchDamainEvent domainEvent = new HRNotificationEndedMerchDamainEvent(merchPack);
+            HRNotificationEndedMerchDomainEvent domainEvent = new(merchPack);
             AddDomainEvent(domainEvent);
         }
-        private void AddRepeatGiveOutOrderCommandDamainEvent(int id)
+        private void AddRepeatGiveOutOrderCommandDomainEvent(int id)
         {
-            //var domainEvent = new RepeatGiveOutOrderCommandDamainEvent(id);
+            //var domainEvent = new RepeatGiveOutOrderCommandDomainEvent(id);
             //AddDomainEvent(domainEvent);
         }
     }

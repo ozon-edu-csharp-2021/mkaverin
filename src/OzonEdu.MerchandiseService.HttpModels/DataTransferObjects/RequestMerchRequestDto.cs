@@ -2,7 +2,7 @@
 {
     public class RequestMerchRequestDto
     {
-        public long IdEmployee { get; set; }
+        public long EmployeeId { get; set; }
         public int MerchType { get; set; }
     }
 }

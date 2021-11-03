@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace OzonEdu.MerchandiseService.Infrastructure.Queries.OrderAggregate
+namespace OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate
 {
     public class GetInfoGiveOutMerchQuery : IRequest<GetInfoGiveOutMerchQueryResponse>
     {
