@@ -10,7 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{319B7DD0-C5C4-45DD-909F-A20005E8EEA7}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		Canvas.drawio = Canvas.drawio
+		canvas.drawio = canvas.drawio
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -42,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.ApplicationServices", "src\OzonEdu.MerchandiseService.ApplicationServices\OzonEdu.MerchandiseService.ApplicationServices.csproj", "{36D128AC-00E0-4066-B5E5-47C1D375A53C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.Stubs", "tests\OzonEdu.MerchandiseService.StubsRepository\OzonEdu.MerchandiseService.Stubs.csproj", "{49B3D280-2F91-4FB9-AE40-226027614346}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.Stubs", "tests\OzonEdu.MerchandiseService.StubsRepository\OzonEdu.MerchandiseService.Stubs.csproj", "{49B3D280-2F91-4FB9-AE40-226027614346}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
