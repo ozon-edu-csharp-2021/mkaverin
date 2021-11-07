@@ -15,7 +15,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             EmployeeId = employeeId;
             MerchPack = merchPack;
             Source = source;
-            Status = Status.New;
+            Status = new Status(StatusType.New);
         }
         public OrderDate Date { get; private set; }
         public EmployeeId EmployeeId { get; private set; }
@@ -26,43 +26,43 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 
         public void ChangeStatusToDone(DateTimeOffset date)
         {
-            if (Status.Equals(Status.Done))
+            if (Status.Type.Equals(StatusType.Done))
             {
                 throw new OrderStatusException("Request in done. Change status unavailable");
             }
 
-            if (Status.Equals(Status.Notified))
+            if (Status.Type.Equals(StatusType.Notified))
             {
                 throw new OrderStatusException("Request in Notified. Change status unavailable");
             }
 
-            Status = Status.Done;
+            Status = new Status(StatusType.Done);
             DeliveryDate = new DeliveryDate(date);
         }
 
         public void ChangeStatusToInQueue()
         {
-            if (!Status.Equals(Status.New))
+            if (!Status.Type.Equals(StatusType.New))
             {
                 throw new OrderStatusException("Request not status in New. Change status unavailable");
             }
 
-            Status = Status.InQueue;
+            Status = new Status(StatusType.InQueue);
             AddHRNotificationEndedMerchDomainEvent(MerchPack);
         }
         public void ChangeStatusAfterSupply()
         {
-            if (!Status.Equals(Status.InQueue))
+            if (!Status.Type.Equals(StatusType.InQueue))
             {
                 throw new OrderStatusException("Request not in status inQueue. Change status unavailable");
             }
 
-            if (Source.Equals(Source.External))
+            if (Source.Type.Equals(SourceType.External))
             {
-                Status = Status.Notified;
+                Status = new Status(StatusType.Notified);
                 AddEmployeeNotificationAboutSupplyDomainEvent(EmployeeId);
             }
-            if (Source.Equals(Source.Internal))
+            if (Source.Type.Equals(SourceType.Internal))
             {
                 //Нужно повторить запрос в сток апи на выдачу товара
                 //Только я не пойму как отсюда вызвать GiveOutOrderCommand

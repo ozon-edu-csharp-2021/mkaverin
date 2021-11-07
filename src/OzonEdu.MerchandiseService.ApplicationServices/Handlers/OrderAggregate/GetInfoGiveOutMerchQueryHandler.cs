@@ -1,11 +1,10 @@
 ﻿using MediatR;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 {
@@ -20,24 +19,19 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 
         public async Task<GetInfoGiveOutMerchQueryResponse> Handle(GetInfoGiveOutMerchQuery request, CancellationToken cancellationToken)
         {
-            EmployeeId employeeIdRequest = new(request.EmployeeId);
-            List<Order> orders = await _orderRepository.GetAllOrderByEmployeeIdAsync(employeeIdRequest);
-            var ordersDone = orders.Where(o => o.Status.Equals(Status.Done)).ToList();
+            List<Order> ordersDone = await _orderRepository.GetAllOrderByEmployeeIdAsync(request.EmployeeId, new Status(StatusType.Done));
             #region Mapping result
             GetInfoGiveOutMerchQueryResponse result = new()
             {
                 DeliveryMerch = new DeliveryMerch[ordersDone.Count]
             };
-            for (int i = 0; i < ordersDone.Count; i++)
+            for (var i = 0; i < ordersDone.Count; i++)
             {
-                if (ordersDone[i].Status == Status.Done)
+                result.DeliveryMerch[i] = new DeliveryMerch()
                 {
-                    result.DeliveryMerch[i] = new DeliveryMerch()
-                    {
-                        DeliveryDate = ordersDone[i].DeliveryDate.Value,
-                        MerchPack = ordersDone[i].MerchPack
-                    };
-                }
+                    DeliveryDate = ordersDone[i].DeliveryDate.Value,
+                    MerchPack = ordersDone[i].MerchPack
+                };
             }
             #endregion
             return result;

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
 {
-    public class OrderRepository : IOrderRepository
+    public class OrderRepositoryStub : IOrderRepository
     {
         public IUnitOfWork UnitOfWork => throw new NotImplementedException();
 
@@ -24,12 +24,15 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
             throw new NotImplementedException();
         }
 
-        public async Task<List<Order>> GetAllOrderByEmployeeIdAsync(EmployeeId employeeId, CancellationToken cancellationToken = default)
+        public async Task<List<Order>> GetAllOrderByEmployeeIdAsync(long employeeId, Status status = null, CancellationToken cancellationToken = default)
         {
-            return GetListOrders().Where(e => e.EmployeeId.Equals(employeeId)).ToList();
+            var data = GetListOrders()
+                .Where(e => e.EmployeeId.Equals(new EmployeeId(employeeId)))
+                .Where(o => status is null || o.Status.Type.Equals(status.Type));
+            return data.ToList();
         }
 
-        public Task<List<Order>> GetAllOrderInStatusInQueueAsync(Status status, CancellationToken cancellationToken = default)
+        public Task<List<Order>> GetAllOrderInStatusAsync(Status status, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -38,14 +41,11 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
         {
             throw new NotImplementedException();
         }
-
-
-
         private List<Order> GetListOrders()
         {
             List<Order> orders = new();
-
-            Order order1 = new(new(DateTimeOffset.Parse("03.10.2020")),
+            DateTimeOffset orderDate1 = new(2020, 10, 3, 14, 30, 0, new TimeSpan(0, 0, 0));
+            Order order1 = new(new(orderDate1),
                        new(1),
                        new MerchPack(
                            MerchType.WelcomePack,
@@ -54,11 +54,12 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
                                      { new(22), new(1) } ,
                                      { new(33), new(1) }
                            }),
-                       Source.External);
-            order1.ChangeStatusToDone(DateTimeOffset.Parse("05.10.2020"));
+                      new( SourceType.External));
+            order1.ChangeStatusToDone(orderDate1.AddDays(2));
             orders.Add(order1);
 
-            Order order2 = new(new(DateTimeOffset.Parse("03.08.2021")),
+            DateTimeOffset orderDate2 = new(2020, 8, 3, 14, 30, 0, new TimeSpan(0, 0, 0));
+            Order order2 = new(new(orderDate2),
                     new(1),
                     new MerchPack(
                         MerchType.ConferenceSpeakerPack,
@@ -67,12 +68,13 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
                                      { new(22), new(1) } ,
                                      { new(33), new(1) }
                         }),
-                    Source.External);
+                    new(SourceType.External));
             order2.ChangeStatusToInQueue();
             order2.ChangeStatusAfterSupply();
             orders.Add(order2);
 
-            Order order3 = new(new(DateTimeOffset.Parse("03.10.2021")),
+            DateTimeOffset orderDate3 = new(2020, 10, 3, 14, 30, 0, new TimeSpan(0, 0, 0));
+            Order order3 = new(new(orderDate3),
                      new(1),
                      new MerchPack(
                          MerchType.ConferenceSpeakerPack,
@@ -81,12 +83,12 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
                                      { new(22), new(1) } ,
                                      { new(33), new(1) }
                          }),
-                     Source.External);
-            order3.ChangeStatusToDone(DateTimeOffset.Parse("05.10.2021"));
+                     new(SourceType.External));
+            order3.ChangeStatusToDone(orderDate3.AddDays(2));
             orders.Add(order3);
 
-
-            Order order4 = new(new(DateTimeOffset.Parse("03.01.2021")),
+            DateTimeOffset orderDate4 = new(2021, 1, 3, 14, 30, 0, new TimeSpan(0, 0, 0));
+            Order order4 = new(new(orderDate4),
                        new(2),
                        new MerchPack(
                            MerchType.VeteranPack,
@@ -95,18 +97,9 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
                                      { new(22), new(1) } ,
                                      { new(33), new(1) }
                            }),
-                       Source.External);
-            order4.ChangeStatusToDone(DateTimeOffset.Parse("30.01.2021"));
+                       new(SourceType.External));
+            order4.ChangeStatusToDone(orderDate4.AddDays(10));
             orders.Add(order4);
-
-
-
-
-
-
-
-
-
 
             return orders;
         }

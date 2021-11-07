@@ -15,16 +15,17 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         /// </summary>
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Список заявок</returns>
-        Task<List<Order>> GetAllOrderInStatusInQueueAsync(Status status,
+        Task<List<Order>> GetAllOrderInStatusAsync(Status status,
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Получить все заявки по id Сотрудника
+        /// Получить все заявки по id Сотрудника в определнном статусе
         /// </summary>
         /// <param name="employeeId">Id Сотрудника</param>
+        /// <param name="status">Статус заказа</param>
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Список заявок</returns>
-        Task<List<Order>> GetAllOrderByEmployeeIdAsync(EmployeeId employeeId,
+        Task<List<Order>> GetAllOrderByEmployeeIdAsync(long employeeId, Status status = null,
             CancellationToken cancellationToken = default);
 
         /// <summary>

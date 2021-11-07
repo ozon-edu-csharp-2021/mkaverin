@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
 {
-    public class MerchPackRepository : IMerchPackRepository
+    public class MerchPackRepositoryStub : IMerchPackRepository
     {
         public IUnitOfWork UnitOfWork => throw new NotImplementedException();
 

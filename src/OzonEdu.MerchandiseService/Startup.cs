@@ -23,8 +23,8 @@ namespace OzonEdu.MerchandiseService
         {
             services.AddAutoMapper(typeof(Startup));
             services.AddMediatR(typeof(CreateOrderCommandHandler).Assembly);
-            services.AddScoped<IOrderRepository, OrderRepository>();
-            services.AddScoped<IMerchPackRepository, MerchPackRepository>();
+            services.AddScoped<IOrderRepository, OrderRepositoryStub>();
+            services.AddScoped<IMerchPackRepository, MerchPackRepositoryStub>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

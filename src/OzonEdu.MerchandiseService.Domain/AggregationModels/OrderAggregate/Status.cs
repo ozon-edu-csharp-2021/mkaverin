@@ -1,15 +1,27 @@
-﻿using OzonEdu.MerchandiseService.Domain.Models;
+﻿using OzonEdu.MerchandiseService.Domain.Exceptions.OrderAggregate;
+using OzonEdu.MerchandiseService.Domain.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 {
-    public class Status : Enumeration
+    public class Status : Entity
     {
-        public static Status New = new(1, nameof(New));
-        public static Status InQueue = new(2, nameof(InQueue));
-        public static Status Done = new(3, nameof(Done));
-        public static Status Notified = new(4, nameof(Notified));
-        public Status(int id, string name) : base(id, name)
+        public StatusType Type { get; }
+
+        private static IEnumerable<StatusType> List() =>
+             new[] { StatusType.New, StatusType.InQueue, StatusType.Notified, StatusType.Done };
+
+        public Status(StatusType type)
         {
+            var state = List().SingleOrDefault(s => s == type);
+
+            if (state == null)
+                throw new OrderStatusException($"Possible values for StatusType: {String.Join(",", List().Select(s => s.Name))}");
+
+            Type = state;
         }
+
     }
 }

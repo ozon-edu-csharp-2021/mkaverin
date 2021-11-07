@@ -21,20 +21,19 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 
         public async Task<bool> Handle(CheckGiveOutMerchByEmployeeIdQuery request, CancellationToken cancellationToken)
         {
-            EmployeeId employeeIdRequest = new(request.EmployeeId);
-            List<Order> orders = await _orderRepository.GetAllOrderByEmployeeIdAsync(employeeIdRequest);
+            List<Order> orders = await _orderRepository.GetAllOrderByEmployeeIdAsync(request.EmployeeId,new Status(StatusType.Done));
 
             List<Order> checkGiveOut = orders
-                .Where(r => IsYearPassedBetweenDates(r.DeliveryDate.Value, DateTimeOffset.UtcNow))
-                .Where(r => r.MerchPack.MerchType == request.MerchType && r.Status == Status.Done).ToList();
+                .Where(r => IsYearPassedBetweenDates(r.DeliveryDate.Value, DateTimeOffset.UtcNow.Date))
+                .Where(r => r.MerchPack.MerchType == request.MerchType).ToList();
 
             return checkGiveOut.Any();
         }
 
         private bool IsYearPassedBetweenDates(DateTimeOffset deliveryDate, DateTimeOffset today)
         {
-            int betweenYear = today.Year - deliveryDate.Year;
-            return today.AddYears(-betweenYear) > deliveryDate;
+            var betweenYear = today.Year - deliveryDate.Year;
+            return today.AddYears(-betweenYear).Date >= deliveryDate.Date;
         }
     }
 }
