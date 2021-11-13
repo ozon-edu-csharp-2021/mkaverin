@@ -15,11 +15,13 @@ namespace OzonEdu.MerchandiseService.GrpcServices
         public override Task<GetInfoMerchResponse> GetInfoMerch(GetInfoMerchRequest request, ServerCallContext context)
         {
             throw new NotImplementedException();
+            //Тут общение с кафкой. Пока не проходили
         }
 
         public override Task<RequestMerchResponse> RequestMerch(RequestMerchRequest request, ServerCallContext context)
         {
             throw new NotImplementedException();
+            //Тут общение с кафкой. Пока не проходили
         }
     }
 }

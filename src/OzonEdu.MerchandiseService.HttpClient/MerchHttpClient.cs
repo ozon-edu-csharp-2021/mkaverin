@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using OzonEdu.MerchandiseService.HttpModels.DataTransferObjects;
+using OzonEdu.MerchandiseService.HttpModels.DataTransferObjects.GetInfoMerchResponseDto;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;

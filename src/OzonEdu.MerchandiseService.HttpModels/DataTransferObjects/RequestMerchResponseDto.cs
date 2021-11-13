@@ -2,5 +2,6 @@
 {
     public class RequestMerchResponseDto
     {
+        public bool Result { get; set; }
     }
 }
