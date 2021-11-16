@@ -6,11 +6,25 @@
    hostname: merchandise_service
    ports:
     - "8080:80"
+   environment:
+    DatabaseConnectionOptions__ConnectionString: "Host=host.docker.internal;Port=5426;Database=merchandise-service;Username=postgres;Password=merchandiseServicePassword"
    depends_on:
+    - merchandise-service-bd
     - supply
     - emailing
     - employees
     - stock
+
+  merchandise-service-bd:
+   image: postgres:latest
+   ports:
+    - "5426:5432"
+   environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: merchandiseServicePassword
+      POSTGRES_DB: merchandise-service
+   command: "-c log_statement=all"
+
 
   supply:
    image: 'ghcr.io/ozon-edu-csharp-2021/supply-service:main'
