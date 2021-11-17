@@ -2,24 +2,26 @@ using FluentMigrator;
 
 namespace OzonEdu.MerchandiseService.Migrator.Migrations
 {
-    [Migration(1)]
-    public class OrderTable : Migration
+    [Migration(4)]
+    public class SourceTable : Migration
     {
+        private readonly string NameTable = "source";
         public override void Up()
         {
-            if (!TableExists("merchandise_order"))
+            if (!TableExists(NameTable))
             {
-                Create.Table("merchandise_order")
+                Create.Table(NameTable)
                     .WithColumn("id").AsInt64().Identity().PrimaryKey()
-                    .WithColumn("creation_date").AsDateTimeOffset().NotNullable()
-                    .WithColumn("employee_id").AsInt32().NotNullable()
-                    .WithColumn("merch_pack_id").AsInt32().NotNullable();
+                    .WithColumn("name").AsString().NotNullable();
             }
         }
 
         public override void Down()
         {
-            Delete.Table("merchandise_order");
+            if (TableExists(NameTable))
+            {
+                Delete.Table(NameTable);
+            }
         }
         private bool TableExists(string tableName, string tdmSchema = "public") =>
              Schema.Schema(tdmSchema).Table(tableName).Exists();

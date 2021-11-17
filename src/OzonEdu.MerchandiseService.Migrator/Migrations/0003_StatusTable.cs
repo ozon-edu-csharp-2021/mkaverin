@@ -2,19 +2,17 @@ using FluentMigrator;
 
 namespace OzonEdu.MerchandiseService.Migrator.Migrations
 {
-    [Migration(2)]
-    public class MerchPackTable : Migration
+    [Migration(3)]
+    public class StatusTable : Migration
     {
-        private readonly string NameTable = "merch_pack";
-
+        private readonly string NameTable = "status";
         public override void Up()
         {
             if (!TableExists(NameTable))
             {
                 Create.Table(NameTable)
-                   .WithColumn("id").AsInt64().Identity().PrimaryKey()
-                   .WithColumn("merch_type_id").AsInt64().NotNullable()
-                   .WithColumn("merch_items").AsCustom("jsonb").WithDefaultValue("{}").NotNullable();
+                    .WithColumn("id").AsInt64().Identity().PrimaryKey()
+                    .WithColumn("name").AsString().NotNullable();
             }
         }
 
