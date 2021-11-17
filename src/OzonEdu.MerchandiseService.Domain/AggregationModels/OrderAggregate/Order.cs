@@ -11,13 +11,13 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         public Order(OrderDate date, EmployeeId employeeId,
             MerchPack merchPack, Source source)
         {
-            Date = date;
+            CreationDate = date;
             EmployeeId = employeeId;
             MerchPack = merchPack;
             Source = source;
             Status = new Status(StatusType.New);
         }
-        public OrderDate Date { get; private set; }
+        public OrderDate CreationDate { get; private set; }
         public EmployeeId EmployeeId { get; private set; }
         public MerchPack MerchPack { get; private set; }
         public Source Source { get; private set; }

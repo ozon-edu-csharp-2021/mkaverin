@@ -1,21 +1,18 @@
  version: '3.8'
-
  services:
   merchandise-service:
-   build: ../src/OzonEdu.MerchandiseService
+   build: 
+    context: ../
+    dockerfile: Dockerfile
    hostname: merchandise_service
    ports:
     - "8080:80"
    environment:
     DatabaseConnectionOptions__ConnectionString: "Host=host.docker.internal;Port=5426;Database=merchandise-service;Username=postgres;Password=merchandiseServicePassword"
    depends_on:
-    - merchandise-service-bd
-    - supply
-    - emailing
-    - employees
-    - stock
+    - merchandise-service-db
 
-  merchandise-service-bd:
+  merchandise-service-db:
    image: postgres:latest
    ports:
     - "5426:5432"
@@ -23,18 +20,3 @@
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: merchandiseServicePassword
       POSTGRES_DB: merchandise-service
-   command: "-c log_statement=all"
-
-
-  supply:
-   image: 'ghcr.io/ozon-edu-csharp-2021/supply-service:main'
-   hostname: supply
-  emailing:
-   image: 'ghcr.io/ozon-edu-csharp-2021/emailing-service:main'
-   hostname: emailing
-  employees:
-   image: 'ghcr.io/ozon-edu-csharp-2021/employees-service:main'
-   hostname: employees
-  stock:
-   image: 'ghcr.io/ozon-edu-csharp-2021/stock-api:main'
-   hostname: stock
