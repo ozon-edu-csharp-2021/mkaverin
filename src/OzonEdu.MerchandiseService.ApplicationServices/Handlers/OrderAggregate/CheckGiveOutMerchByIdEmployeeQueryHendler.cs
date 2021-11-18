@@ -20,11 +20,12 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 
         public async Task<bool> Handle(CheckGiveOutMerchByEmployeeIdQuery request, CancellationToken cancellationToken)
         {
-            List<Order> orders = await _orderRepository.GetAllOrderByEmployeeIdAsync(request.EmployeeId);
+            List<Order> orders = await _orderRepository.GetAllOrderByEmployeeIdAsync(request.EmployeeId, cancellationToken);
             List<Order> checkGiveOut = orders
                 .Where(r => r.Status.Id == StatusType.Done.Id)
+                .Where(r => r.MerchPack.MerchType.Id == request.MerchType)
                 .Where(r => IsYearPassedBetweenDates(r.DeliveryDate.Value, DateTimeOffset.UtcNow.Date))
-                .Where(r => r.MerchPack.MerchType.Id == request.MerchType).ToList();
+                .ToList();
 
             return checkGiveOut.Any();
         }
@@ -32,7 +33,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
         private bool IsYearPassedBetweenDates(DateTimeOffset deliveryDate, DateTimeOffset today)
         {
             var betweenYear = today.Year - deliveryDate.Year;
-            return today.AddYears(-betweenYear).Date >= deliveryDate.Date;
+            return deliveryDate.Date >= today.AddYears(-betweenYear).Date;
         }
     }
 }

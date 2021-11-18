@@ -11,8 +11,8 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         /// <summary>
         /// Конструктор для Dapper
         /// </summary>
-    public Order(long id, OrderDate date, EmployeeId employeeId,
-           MerchPack merchPack, Source source, Status status, DeliveryDate deliveryDate)
+        public Order(long id, OrderDate date, EmployeeId employeeId,
+               MerchPack merchPack, Source source, Status status, DeliveryDate deliveryDate)
         {
             Id = id;
             CreationDate = date;

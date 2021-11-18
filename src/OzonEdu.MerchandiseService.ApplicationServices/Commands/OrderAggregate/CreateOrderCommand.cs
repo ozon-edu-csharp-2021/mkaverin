@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 
 namespace OzonEdu.MerchandiseService.ApplicationServices.Commands
 {
@@ -8,6 +7,5 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Commands
         public long EmployeeId { get; set; }
         public int MerchType { get; set; }
         public int Sourse { get; set; }
-
     }
 }

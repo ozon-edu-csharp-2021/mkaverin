@@ -3,16 +3,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
+using OzonEdu.MerchandiseService.ApplicationServices.Configuration;
+using OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate;
+using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure;
+using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure.Interfaces;
+using OzonEdu.MerchandiseService.ApplicationServices.Stubs;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
-using OzonEdu.MerchandiseService.GrpcServices;
-using OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate;
-using OzonEdu.MerchandiseService.ApplicationServices.Stubs;
-using OzonEdu.MerchandiseService.ApplicationServices.Configuration;
-using Npgsql;
-using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure.Interfaces;
-using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure;
 using OzonEdu.MerchandiseService.Domain.Contracts;
+using OzonEdu.MerchandiseService.GrpcServices;
 
 namespace OzonEdu.MerchandiseService
 {

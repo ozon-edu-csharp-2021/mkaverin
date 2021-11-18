@@ -2,7 +2,7 @@ using FluentMigrator;
 
 namespace OzonEdu.MerchandiseService.Migrator.Migrations
 {
-    [Migration(6)]
+    [Migration(8)]
     public class MerchandiseOrderStatusIdx : ForwardOnlyMigration
     {
         private readonly string NameTable = "merchandise_order";

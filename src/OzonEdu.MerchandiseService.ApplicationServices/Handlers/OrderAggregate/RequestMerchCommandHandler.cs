@@ -25,7 +25,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
             };
 
             var orderId = await _mediator.Send(createCommand, cancellationToken);
-            var result = await _mediator.Send(new GiveOutOrderCommand(orderId), cancellationToken);
+            var result = await _mediator.Send(new GiveOutOrderCommand { OrderId = orderId }, cancellationToken);
             return result;
         }
     }

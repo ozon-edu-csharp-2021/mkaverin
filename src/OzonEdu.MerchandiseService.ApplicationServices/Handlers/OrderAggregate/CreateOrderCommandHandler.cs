@@ -33,7 +33,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
             if (orderId != -1)
                 return orderId;
             await _unitOfWork.StartTransaction(cancellationToken);
-            MerchPack merchPack = await _merchPackRepository.FindByTypeAsync(new(request.MerchType));
+            MerchPack merchPack = await _merchPackRepository.FindByTypeAsync(new(request.MerchType), cancellationToken);
             Order requestMR = new(date: new(DateTimeOffset.UtcNow),
                                                 employeeId: new(request.EmployeeId),
                                                 merchPack: merchPack,

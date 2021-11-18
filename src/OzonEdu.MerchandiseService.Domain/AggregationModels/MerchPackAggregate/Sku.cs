@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using OzonEdu.MerchandiseService.Domain.Models;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
@@ -18,5 +19,6 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
         {
             yield return Value;
         }
+        public override string ToString() => Value.ToString();
     }
 }

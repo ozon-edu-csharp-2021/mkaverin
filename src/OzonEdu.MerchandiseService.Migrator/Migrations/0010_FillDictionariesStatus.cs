@@ -2,7 +2,7 @@ using FluentMigrator;
 
 namespace OzonEdu.MerchandiseService.Migrator.Migrations
 {
-    [Migration(8)]
+    [Migration(10)]
     public class FillDictionariesStatus : Migration
     {
         private readonly string NameTable = "status";

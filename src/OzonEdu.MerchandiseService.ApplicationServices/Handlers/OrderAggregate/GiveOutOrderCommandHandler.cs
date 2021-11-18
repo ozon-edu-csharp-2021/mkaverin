@@ -25,7 +25,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 
         public async Task<bool> Handle(GiveOutOrderCommand request, CancellationToken cancellationToken)
         {
-            Order order = await _orderRepository.FindByIdAsync(request.OrderId);
+            Order order = await _orderRepository.FindByIdAsync(request.OrderId, cancellationToken);
             if (order is null)
             {
                 throw new NoOrderException($"No order with id {request.OrderId}");
@@ -46,13 +46,13 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
             if (true)
             {
                 order.ChangeStatusToDone(DateTimeOffset.UtcNow);
-                await _orderRepository.UpdateAsync(order);
+                await _orderRepository.UpdateAsync(order, cancellationToken);
                 return true;
             }
             else
             {
                 order.ChangeStatusToInQueue();
-                await _orderRepository.UpdateAsync(order);
+                await _orderRepository.UpdateAsync(order, cancellationToken);
                 return false;
             }
             

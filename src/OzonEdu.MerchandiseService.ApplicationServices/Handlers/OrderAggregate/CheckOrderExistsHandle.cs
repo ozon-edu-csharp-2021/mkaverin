@@ -19,7 +19,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 
         public async Task<long> Handle(CheckOrderExistsQuery request, CancellationToken cancellationToken)
         {
-            List<Order> orders = await _orderRepository.GetAllOrderByEmployeeIdAsync(request.EmployeeId);
+            List<Order> orders = await _orderRepository.GetAllOrderByEmployeeIdAsync(request.EmployeeId, cancellationToken);
             Order order = orders
                 .Where(r => r.MerchPack.Id == request.MerchType)
                 .Where(r => r.Status.Id == StatusType.New.Id || r.Status.Id == StatusType.InQueue.Id)

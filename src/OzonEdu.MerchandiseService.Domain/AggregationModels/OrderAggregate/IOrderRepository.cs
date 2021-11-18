@@ -16,7 +16,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Список заявок</returns>
         Task<List<Order>> GetAllOrderInStatusAsync(Status status,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken);
 
         /// <summary>
         /// Получить все заявки по id Сотрудника 
@@ -26,7 +26,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Список заявок</returns>
         Task<List<Order>> GetAllOrderByEmployeeIdAsync(long employeeId,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken);
 
         /// <summary>
         /// Получить заявку по идентификатору
@@ -35,10 +35,10 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Объект заявки</returns>
         Task<Order> FindByIdAsync(long id,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken);
         Task<long> CreateAsync(Order order,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken);
         Task<Order> UpdateAsync(Order order,
-            CancellationToken cancellationToken = default); 
+            CancellationToken cancellationToken); 
     }
 }
