@@ -3,6 +3,8 @@ using OzonEdu.MerchandiseService.Domain.Events;
 using OzonEdu.MerchandiseService.Domain.Exceptions.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 {
@@ -22,8 +24,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             Status = status;
             DeliveryDate = deliveryDate;
         }
-        public Order(OrderDate date, EmployeeId employeeId,
-            MerchPack merchPack, Source source)
+        private Order(OrderDate date, EmployeeId employeeId, MerchPack merchPack, Source source)
         {
             CreationDate = date;
             EmployeeId = employeeId;
@@ -31,12 +32,56 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             Source = source;
             Status = new Status(StatusType.New.Id);
         }
+
         public OrderDate CreationDate { get; private set; }
         public EmployeeId EmployeeId { get; private set; }
         public MerchPack MerchPack { get; private set; }
         public Source Source { get; private set; }
         public Status Status { get; private set; }
         public DeliveryDate DeliveryDate { get; private set; }
+
+        public static Order Create(OrderDate date, EmployeeId employeeId, MerchPack merchPack, Source source,
+            IReadOnlyCollection<Order> alreadyExistedOrders)
+        {
+            Order newOrder = new(date, employeeId, merchPack, source);
+            if (CheckGiveOutMerchByEmployeeId(alreadyExistedOrders, newOrder))
+            {
+                throw new OrderException("Уже в этом году выдавали");
+            }
+
+            if (CheckOrderExists(alreadyExistedOrders, newOrder))
+            {
+                throw new OrderException("Заказ уже есть");
+            }
+            return newOrder;
+        }
+
+        private static bool CheckOrderExists(IReadOnlyCollection<Order> alreadyExistedOrders, Order newOrder)
+        {
+            var orders = alreadyExistedOrders
+              .Where(r => r.EmployeeId == newOrder.EmployeeId)
+              .Where(r => r.MerchPack == newOrder.MerchPack)
+              .Where(r => r.Status.Id == StatusType.New.Id || r.Status.Id == StatusType.InQueue.Id)
+              .ToList();
+            return orders.Any();
+        }
+
+        private static bool CheckGiveOutMerchByEmployeeId(IReadOnlyCollection<Order> alreadyExistedOrders, Order newOrder)
+        {
+            static bool IsYearPassedBetweenDates(DateTimeOffset deliveryDate, DateTimeOffset today)
+            {
+                var betweenYear = today.Year - deliveryDate.Year;
+                return deliveryDate.Date >= today.AddYears(-betweenYear).Date;
+            }
+
+            List<Order> checkGiveOut = alreadyExistedOrders
+              .Where(r => r.Status.Id == StatusType.Done.Id)
+              .Where(r => r.MerchPack == newOrder.MerchPack)
+              .Where(r => IsYearPassedBetweenDates(r.DeliveryDate.Value, DateTimeOffset.UtcNow.Date))
+              .ToList();
+
+            return checkGiveOut.Any();
+        }
 
         public void ChangeStatusToDone(DateTimeOffset date)
         {

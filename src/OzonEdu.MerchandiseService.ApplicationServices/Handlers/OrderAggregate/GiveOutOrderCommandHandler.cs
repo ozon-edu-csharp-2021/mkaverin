@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using OzonEdu.MerchandiseService.ApplicationServices.Commands;
 using OzonEdu.MerchandiseService.ApplicationServices.Exceptions;
-using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.Contracts;
 using System;
@@ -31,17 +30,6 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
                 throw new NoOrderException($"No order with id {request.OrderId}");
             }
 
-            CheckGiveOutMerchByEmployeeIdQuery query = new()
-            {
-                EmployeeId = order.EmployeeId.Value,
-                MerchType = order.MerchPack.MerchType.Type.Id
-            };
-            bool checkGiveOut = await _mediator.Send(query, cancellationToken);
-            if (checkGiveOut)
-            {
-                throw new MerchAlreadyGiveOutException("The employee has already been issued merch");
-            }
-
             // Обращаемся к сервису StockApi узнаем есть ли товар на складе
             if (true)
             {
@@ -55,7 +43,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
                 await _orderRepository.UpdateAsync(order, cancellationToken);
                 return false;
             }
-            
+
         }
     }
 }
