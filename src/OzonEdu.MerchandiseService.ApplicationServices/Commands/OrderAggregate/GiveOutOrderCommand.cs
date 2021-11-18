@@ -4,11 +4,11 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Commands
 {
     public class GiveOutOrderCommand : IRequest<bool>
     {
-        public GiveOutOrderCommand(int orderId)
+        public GiveOutOrderCommand(long orderId)
         {
             OrderId = orderId;
         }
 
-        public int OrderId { get; private set; }
+        public long OrderId { get; private set; }
     }
 }

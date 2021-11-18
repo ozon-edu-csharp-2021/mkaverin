@@ -8,6 +8,20 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 {
     public sealed class Order : Entity
     {
+        /// <summary>
+        /// Конструктор для Dapper
+        /// </summary>
+    public Order(long id, OrderDate date, EmployeeId employeeId,
+           MerchPack merchPack, Source source, Status status, DeliveryDate deliveryDate)
+        {
+            Id = id;
+            CreationDate = date;
+            EmployeeId = employeeId;
+            MerchPack = merchPack;
+            Source = source;
+            Status = status;
+            DeliveryDate = deliveryDate;
+        }
         public Order(OrderDate date, EmployeeId employeeId,
             MerchPack merchPack, Source source)
         {
@@ -15,7 +29,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             EmployeeId = employeeId;
             MerchPack = merchPack;
             Source = source;
-            Status = new Status(StatusType.New);
+            Status = new Status(StatusType.New.Id);
         }
         public OrderDate CreationDate { get; private set; }
         public EmployeeId EmployeeId { get; private set; }
@@ -36,7 +50,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
                 throw new OrderStatusException("Request in Notified. Change status unavailable");
             }
 
-            Status = new Status(StatusType.Done);
+            Status = new Status(StatusType.Done.Id);
             DeliveryDate = new DeliveryDate(date);
         }
 
@@ -47,7 +61,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
                 throw new OrderStatusException("Request not status in New. Change status unavailable");
             }
 
-            Status = new Status(StatusType.InQueue);
+            Status = new Status(StatusType.InQueue.Id);
             AddHRNotificationEndedMerchDomainEvent(MerchPack);
         }
         public void ChangeStatusAfterSupply()
@@ -59,7 +73,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 
             if (Source.Type.Equals(SourceType.External))
             {
-                Status = new Status(StatusType.Notified);
+                Status = new Status(StatusType.Notified.Id);
                 AddEmployeeNotificationAboutSupplyDomainEvent(EmployeeId);
             }
             if (Source.Type.Equals(SourceType.Internal))
@@ -82,7 +96,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             HRNotificationEndedMerchDomainEvent domainEvent = new(merchPack);
             AddDomainEvent(domainEvent);
         }
-        private void AddRepeatGiveOutOrderCommandDomainEvent(int id)
+        private void AddRepeatGiveOutOrderCommandDomainEvent(long id)
         {
             //var domainEvent = new RepeatGiveOutOrderCommandDomainEvent(id);
             //AddDomainEvent(domainEvent);

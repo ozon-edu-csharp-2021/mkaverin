@@ -13,14 +13,15 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         private static IEnumerable<SourceType> List() =>
             new[] { SourceType.External, SourceType.Internal };
 
-        public Source(SourceType type)
+        public Source(long typeId)
         {
-            var state = List().SingleOrDefault(s => s == type);
+            var state = List().SingleOrDefault(s => s.Id == typeId);
 
             if (state == null)
                 throw new OrderStatusException($"Possible values for SourceType: {String.Join(",", List().Select(s => s.Name))}");
 
             Type = state;
+            Id = Type.Id;
         }
     }
 }

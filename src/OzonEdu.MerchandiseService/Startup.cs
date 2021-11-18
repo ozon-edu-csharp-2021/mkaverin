@@ -8,6 +8,11 @@ using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using OzonEdu.MerchandiseService.GrpcServices;
 using OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate;
 using OzonEdu.MerchandiseService.ApplicationServices.Stubs;
+using OzonEdu.MerchandiseService.ApplicationServices.Configuration;
+using Npgsql;
+using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure.Interfaces;
+using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure;
+using OzonEdu.MerchandiseService.Domain.Contracts;
 
 namespace OzonEdu.MerchandiseService
 {
@@ -23,8 +28,14 @@ namespace OzonEdu.MerchandiseService
         {
             services.AddAutoMapper(typeof(Startup));
             services.AddMediatR(typeof(CreateOrderCommandHandler).Assembly);
-            services.AddScoped<IOrderRepository, OrderRepositoryStub>();
-            services.AddScoped<IMerchPackRepository, MerchPackRepositoryStub>();
+
+            services.Configure<DatabaseConnectionOptions>(Configuration.GetSection(nameof(DatabaseConnectionOptions)));
+            services.AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IChangeTracker, ChangeTracker>();
+
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IMerchPackRepository, MerchPackRepository>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

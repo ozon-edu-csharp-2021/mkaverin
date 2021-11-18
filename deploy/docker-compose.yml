@@ -20,3 +20,4 @@
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: merchandiseServicePassword
       POSTGRES_DB: merchandise-service
+   command: "-c log_statement=all"

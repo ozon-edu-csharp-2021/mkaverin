@@ -1,14 +1,13 @@
-﻿using CSharpCourse.Core.Lib.Enums;
-using MediatR;
+﻿using MediatR;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 
 namespace OzonEdu.MerchandiseService.ApplicationServices.Commands
 {
-    public class CreateOrderCommand : IRequest<int>
+    public class CreateOrderCommand : IRequest<long>
     {
         public long EmployeeId { get; set; }
-        public MerchType MerchType { get; set; }
-        public Source Sourse { get; set; }
+        public int MerchType { get; set; }
+        public int Sourse { get; set; }
 
     }
 }

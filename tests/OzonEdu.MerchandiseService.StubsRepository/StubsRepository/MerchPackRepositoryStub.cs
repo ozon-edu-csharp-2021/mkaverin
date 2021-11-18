@@ -1,5 +1,4 @@
-﻿using CSharpCourse.Core.Lib.Enums;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
+﻿using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.Contracts;
 using System;
 using System.Threading;

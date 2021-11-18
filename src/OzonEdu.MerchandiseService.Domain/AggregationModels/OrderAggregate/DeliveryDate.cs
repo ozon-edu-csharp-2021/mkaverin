@@ -9,6 +9,10 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         public DateTimeOffset Value { get; }
         public DeliveryDate(DateTimeOffset date)
         {
+            if (DateTimeOffset.MinValue == date)
+            {
+                throw new ArgumentException(nameof(date));
+            }
             Value = date;
         }
 

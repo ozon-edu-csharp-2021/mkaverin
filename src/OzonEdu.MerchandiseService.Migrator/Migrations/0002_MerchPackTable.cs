@@ -13,7 +13,7 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
             {
                 Create.Table(NameTable)
                    .WithColumn("id").AsInt64().Identity().PrimaryKey()
-                   .WithColumn("merch_type_id").AsInt64().NotNullable()
+                   .WithColumn("merch_type_id").AsInt32().NotNullable()
                    .WithColumn("merch_items").AsCustom("jsonb").WithDefaultValue("{}").NotNullable();
             }
         }
