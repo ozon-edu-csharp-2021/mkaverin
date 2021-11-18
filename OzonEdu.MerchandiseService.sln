@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.31903.286
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{31FA52EB-9A7E-4C90-999E-B247845045BA}"
 EndProject
@@ -44,8 +44,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.ApplicationServices", "src\OzonEdu.MerchandiseService.ApplicationServices\OzonEdu.MerchandiseService.ApplicationServices.csproj", "{36D128AC-00E0-4066-B5E5-47C1D375A53C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.Stubs", "tests\OzonEdu.MerchandiseService.StubsRepository\OzonEdu.MerchandiseService.Stubs.csproj", "{49B3D280-2F91-4FB9-AE40-226027614346}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OzonEdu.MerchandiseService.Migrator", "src\OzonEdu.MerchandiseService.Migrator\OzonEdu.MerchandiseService.Migrator.csproj", "{82963D93-8085-4234-9EC3-B513A8D7045A}"
 EndProject
 Global
@@ -86,10 +84,6 @@ Global
 		{36D128AC-00E0-4066-B5E5-47C1D375A53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36D128AC-00E0-4066-B5E5-47C1D375A53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36D128AC-00E0-4066-B5E5-47C1D375A53C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49B3D280-2F91-4FB9-AE40-226027614346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49B3D280-2F91-4FB9-AE40-226027614346}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49B3D280-2F91-4FB9-AE40-226027614346}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49B3D280-2F91-4FB9-AE40-226027614346}.Release|Any CPU.Build.0 = Release|Any CPU
 		{82963D93-8085-4234-9EC3-B513A8D7045A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{82963D93-8085-4234-9EC3-B513A8D7045A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82963D93-8085-4234-9EC3-B513A8D7045A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -107,7 +101,6 @@ Global
 		{ED76E26B-3F7E-40E0-8629-B83CCDFC5FC9} = {31FA52EB-9A7E-4C90-999E-B247845045BA}
 		{7543426F-5185-4939-8D23-FF97610A6102} = {8C565CD4-A72D-4617-BD3E-26F0150C2B3E}
 		{36D128AC-00E0-4066-B5E5-47C1D375A53C} = {31FA52EB-9A7E-4C90-999E-B247845045BA}
-		{49B3D280-2F91-4FB9-AE40-226027614346} = {8C565CD4-A72D-4617-BD3E-26F0150C2B3E}
 		{82963D93-8085-4234-9EC3-B513A8D7045A} = {31FA52EB-9A7E-4C90-999E-B247845045BA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

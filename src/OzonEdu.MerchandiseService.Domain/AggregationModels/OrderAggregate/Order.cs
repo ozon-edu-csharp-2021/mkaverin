@@ -46,12 +46,12 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             Order newOrder = new(date, employeeId, merchPack, source);
             if (CheckGiveOutMerchByEmployeeId(alreadyExistedOrders, newOrder))
             {
-                throw new OrderException("Уже в этом году выдавали");
+                throw new OrderException("Merch already issued this year");
             }
 
             if (CheckOrderExists(alreadyExistedOrders, newOrder))
             {
-                throw new OrderException("Заказ уже есть");
+                throw new OrderException("Order already");
             }
             return newOrder;
         }
@@ -59,10 +59,9 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         private static bool CheckOrderExists(IReadOnlyCollection<Order> alreadyExistedOrders, Order newOrder)
         {
             var orders = alreadyExistedOrders
-              .Where(r => r.EmployeeId == newOrder.EmployeeId)
-              .Where(r => r.MerchPack == newOrder.MerchPack)
-              .Where(r => r.Status.Id == StatusType.New.Id || r.Status.Id == StatusType.InQueue.Id)
-              .ToList();
+              .Where(r => r.EmployeeId.Equals(newOrder.EmployeeId))
+              .Where(r => r.MerchPack.Equals(newOrder.MerchPack))
+              .Where(r => r.Status.Id == StatusType.New.Id || r.Status.Id == StatusType.InQueue.Id);
             return orders.Any();
         }
 
@@ -70,15 +69,16 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         {
             static bool IsYearPassedBetweenDates(DateTimeOffset deliveryDate, DateTimeOffset today)
             {
-                var betweenYear = today.Year - deliveryDate.Year;
-                return deliveryDate.Date >= today.AddYears(-betweenYear).Date;
+                var year = today.Month <= 2 ? deliveryDate.Year : today.Year;
+                var countDay = DateTime.IsLeapYear(year) ? 366 : 365;
+                return (today - deliveryDate).TotalDays < countDay;
             }
 
-            List<Order> checkGiveOut = alreadyExistedOrders
-              .Where(r => r.Status.Id == StatusType.Done.Id)
-              .Where(r => r.MerchPack == newOrder.MerchPack)
-              .Where(r => IsYearPassedBetweenDates(r.DeliveryDate.Value, DateTimeOffset.UtcNow.Date))
-              .ToList();
+            var checkGiveOut = alreadyExistedOrders
+                .Where(r => r.EmployeeId.Equals(newOrder.EmployeeId))
+                .Where(r => r.Status.Id == StatusType.Done.Id)
+                .Where(r => r.MerchPack.Equals(newOrder.MerchPack))
+                .Where(r => IsYearPassedBetweenDates(r.DeliveryDate.Value, DateTimeOffset.UtcNow.Date)).ToList();
 
             return checkGiveOut.Any();
         }
