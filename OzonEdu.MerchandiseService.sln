@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{31FA52EB-9A7E-4C90-999E-B247845045BA}"
 EndProject
@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{319B7D
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		canvas.drawio = canvas.drawio
-		Dockerfile = Dockerfile
+		src\OzonEdu.MerchandiseService\Dockerfile = src\OzonEdu.MerchandiseService\Dockerfile
 		README.md = README.md
 	EndProjectSection
 EndProject
