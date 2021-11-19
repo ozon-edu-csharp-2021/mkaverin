@@ -117,7 +117,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             order.GiveOut(false, orderDate);
 
             //Act
-            order.ChangeStatusAfterSupply();
+            order.ChangeStatusNotified();
 
             //Assert
             Assert.Equal(order.Status.Type, StatusType.Notified);
@@ -136,7 +136,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             order.GiveOut(false, orderDate);
 
             //Act
-            order.ChangeStatusAfterSupply();
+            order.ChangeStatusNotified();
 
             //Assert
             Assert.Equal(order.Status.Type, StatusType.InQueue);
@@ -154,7 +154,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
                    new(SourceType.Internal.Id), AlreadyExistedOrdersStub());
 
             //Act
-            void act() => order.ChangeStatusAfterSupply();
+            void act() => order.ChangeStatusNotified();
 
             //Assert
             Assert.Throws<OrderStatusException>(act);
@@ -190,7 +190,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.External.Id), AlreadyExistedOrdersStub());
             order.GiveOut(false, orderDate);
-            order.ChangeStatusAfterSupply();
+            order.ChangeStatusNotified();
 
             //Act
             void act() => order.GiveOut(true, orderDate);

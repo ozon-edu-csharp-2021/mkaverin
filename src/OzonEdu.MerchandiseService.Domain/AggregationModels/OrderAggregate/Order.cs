@@ -104,26 +104,14 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             return checkGiveOut.Any();
         }
 
-        public void ChangeStatusAfterSupply()
+        public void ChangeStatusNotified()
         {
             if (!Status.Type.Equals(StatusType.InQueue))
             {
                 throw new OrderStatusException($"Unable in InQueue order in '{Status.Type.Name}' status");
             }
-
-            if (Source.Type.Equals(SourceType.External))
-            {
-                Status = new Status(StatusType.Notified.Id);
-                AddEmployeeNotificationAboutSupplyDomainEvent(EmployeeEmail, MerchPack);
-            }
-            if (Source.Type.Equals(SourceType.Internal))
-            {
-                //Нужно повторить запрос в сток апи на выдачу товара
-                //Только я не пойму как отсюда вызвать GiveOutOrderCommand
-                //Могу предположить что можно добавить DomainEvent, а он в свою очередь вызовет GiveOutOrderCommand
-                //Но как это сделать в DomainEvent пока не знаю
-                AddRepeatGiveOutOrderCommandDomainEvent(Id);
-            }
+            Status = new Status(StatusType.Notified.Id);
+            AddEmployeeNotificationAboutSupplyDomainEvent(EmployeeEmail, MerchPack);
         }
 
         public void Decline()
@@ -146,11 +134,6 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         {
             HRNotificationEndedMerchDomainEvent domainEvent = new(merchPack);
             AddDomainEvent(domainEvent);
-        }
-        private void AddRepeatGiveOutOrderCommandDomainEvent(long id)
-        {
-            //var domainEvent = new RepeatGiveOutOrderCommandDomainEvent(id);
-            //AddDomainEvent(domainEvent);
         }
     }
 }
