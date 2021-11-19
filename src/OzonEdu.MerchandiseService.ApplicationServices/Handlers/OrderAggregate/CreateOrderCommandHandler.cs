@@ -26,10 +26,11 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
         public async Task<long> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.StartTransaction(cancellationToken);
-            IReadOnlyCollection<Order> orders = await _orderRepository.GetAllOrderByEmployeeIdAsync(request.EmployeeId, cancellationToken);
+            IReadOnlyCollection<Order> orders = await _orderRepository.GetAllOrderByEmployeeAsync(request.EmployeeEmail, cancellationToken);
             MerchPack merchPack = await _merchPackRepository.FindByTypeAsync(new(request.MerchType), cancellationToken);
             Order requestMR = Order.Create(date: new(DateTimeOffset.UtcNow),
-                                                employeeId: new(request.EmployeeId),
+                                                employeeEmail: Email.Crate(request.EmployeeEmail),
+                                                managerEmail: Email.Crate(request.ManagerEmail),
                                                 merchPack: merchPack,
                                                 source: new(request.Sourse), orders);
 

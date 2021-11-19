@@ -19,7 +19,8 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
         {
             CreateOrderCommand createCommand = new()
             {
-                EmployeeId = request.EmployeeId,
+                EmployeeEmail = request.EmployeeEmail,
+                ManagerEmail = request.ManagerEmail,
                 MerchType = request.MerchType,
                 Sourse = SourceType.External.Id
             };

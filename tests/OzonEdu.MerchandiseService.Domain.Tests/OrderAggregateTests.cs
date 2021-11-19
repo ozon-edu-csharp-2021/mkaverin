@@ -19,7 +19,8 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             {
                 new(1,
                     new(orderDate),
-                    new(112),
+                    Email.Crate("testc1@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                     new MerchPack(MerchTypeEnum.WelcomePack.Id,
                     MerchTypeEnum.WelcomePack.Id, "{}"),
                     new(SourceType.External.Id),
@@ -29,7 +30,8 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Act
             Order order = Order.Create(
                     new(orderDate),
-                    new(123),
+                    Email.Crate("testc@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                     new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                     new(SourceType.External.Id), alreadyExistedOrders);
 
@@ -45,7 +47,8 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             {
                 new(1,
                     new(orderDate.AddYears(-1)),
-                    new(123),
+                    Email.Crate("testc@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                     new MerchPack(MerchTypeEnum.WelcomePack.Id,
                         MerchTypeEnum.WelcomePack.Id, "{}"),
                     new(SourceType.External.Id),
@@ -55,7 +58,8 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Act
             Order order = Order.Create(
                     new(orderDate),
-                    new(123),
+                    Email.Crate("testc@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                     new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                     new(SourceType.External.Id), alreadyExistedOrders);
 
@@ -69,12 +73,13 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Arrange
             Order order = Order.Create(
                    new(orderDate),
-                   new(123),
+                   Email.Crate("testc@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.External.Id), AlreadyExistedOrdersStub());
 
             // Act
-            order.ChangeStatusToDone(orderDate);
+            order.GiveOut(true, orderDate);
 
             //Assert
             Assert.Equal(order.Status.Type, StatusType.Done);
@@ -87,12 +92,13 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Arrange
             Order order = Order.Create(
                    new(orderDate),
-                   new(123),
+                   Email.Crate("testc@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.External.Id), AlreadyExistedOrdersStub());
 
             //Act
-            order.ChangeStatusToInQueue();
+            order.GiveOut(false, orderDate);
 
             //Assert
             Assert.Equal(order.Status.Type, StatusType.InQueue);
@@ -104,10 +110,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Arrange
             Order order = Order.Create(
                    new(orderDate),
-                   new(123),
+                   Email.Crate("testc@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.External.Id), AlreadyExistedOrdersStub());
-            order.ChangeStatusToInQueue();
+            order.GiveOut(false, orderDate);
 
             //Act
             order.ChangeStatusAfterSupply();
@@ -122,10 +129,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Arrange
             Order order = Order.Create(
                    new(orderDate),
-                   new(123),
+                   Email.Crate("testc@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.Internal.Id), AlreadyExistedOrdersStub());
-            order.ChangeStatusToInQueue();
+            order.GiveOut(false, orderDate);
 
             //Act
             order.ChangeStatusAfterSupply();
@@ -140,7 +148,8 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Arrange
             Order order = Order.Create(
                    new(orderDate),
-                   new(123),
+                   Email.Crate("testc@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.Internal.Id), AlreadyExistedOrdersStub());
 
@@ -152,36 +161,19 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
         }
 
         [Fact]
-        public void ChangeStatusToInQueue_SentInvalidStatus_ShouldReturnsOrderStatusException()
-        {
-            //Arrange
-            Order order = Order.Create(
-                   new(orderDate),
-                   new(123),
-                   new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
-                   new(SourceType.Internal.Id), AlreadyExistedOrdersStub());
-            order.ChangeStatusToDone(orderDate);
-
-            //Act
-            void act() => order.ChangeStatusToInQueue();
-
-            //Assert
-            Assert.Throws<OrderStatusException>(act);
-        }
-
-        [Fact]
         public void ChangeStatusToDone_OrderInDone_ShouldReturnsOrderStatusException()
         {
             //Arrange
             Order order = Order.Create(
                    new(orderDate),
-                   new(123),
+                   Email.Crate("testc@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.Internal.Id), AlreadyExistedOrdersStub());
-            order.ChangeStatusToDone(orderDate);
+            order.GiveOut(true, orderDate);
 
             //Act
-            void act() => order.ChangeStatusToDone(orderDate);
+            void act() => order.GiveOut(true, orderDate);
 
             //Assert
             Assert.Throws<OrderStatusException>(act);
@@ -193,14 +185,15 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Arrange
             Order order = Order.Create(
                    new(orderDate),
-                   new(123),
+                   Email.Crate("testc@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.External.Id), AlreadyExistedOrdersStub());
-            order.ChangeStatusToInQueue();
+            order.GiveOut(false, orderDate);
             order.ChangeStatusAfterSupply();
 
             //Act
-            void act() => order.ChangeStatusToDone(orderDate);
+            void act() => order.GiveOut(true, orderDate);
 
             //Assert
             Assert.Throws<OrderStatusException>(act);
@@ -214,7 +207,8 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Act
             void act() => Order.Create(
                    new(orderDate),
-                   new(111),
+                   Email.Crate("test1c@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.External.Id), AlreadyExistedOrdersStub());
 
@@ -223,14 +217,15 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
         }
 
         [Fact]
-        public void CreateOrder_SendOrderNotIsYearPassed_ShouldWillNotPassCheckGiveOutMerchByEmployeeId()
+        public void CreateOrder_SendOrderNotIsYearPassed_ShouldWillNotPassCheckGiveOutMerchByEmployeeEmail()
         {
             //Arrange
             var alreadyExistedOrders = new List<Order>()
             {
                 new(1,
                     new(orderDate),
-                    new(112),
+                    Email.Crate("testc@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                     new MerchPack(MerchTypeEnum.WelcomePack.Id,
                     MerchTypeEnum.WelcomePack.Id, "{}"),
                     new(SourceType.External.Id),
@@ -241,7 +236,8 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Act
             void act() => Order.Create(
                    new(orderDate.AddDays(10)),
-                   new(112),
+                   Email.Crate("testc@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.External.Id), alreadyExistedOrders);
 
@@ -255,7 +251,8 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 
             Order order1 = new(1,
                 new(orderDate),
-                new(111),
+                Email.Crate("test1c@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                 new MerchPack(MerchTypeEnum.WelcomePack.Id,
                 MerchTypeEnum.WelcomePack.Id, "{}"),
                 new(SourceType.External.Id),
@@ -264,7 +261,8 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 
             Order order2 = new(1,
                 new(orderDate),
-                new(112),
+                Email.Crate("test2c@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                 new MerchPack(MerchTypeEnum.WelcomePack.Id,
                 MerchTypeEnum.WelcomePack.Id, "{}"),
                 new(SourceType.External.Id),
@@ -273,7 +271,8 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 
             Order order3 = new(1,
                 new(orderDate),
-                new(113),
+                Email.Crate("test3c@bk.ru"),
+                    Email.Crate("men@bk.ru"),
                 new MerchPack(MerchTypeEnum.WelcomePack.Id,
                 MerchTypeEnum.WelcomePack.Id, "{}"),
                 new(SourceType.External.Id),

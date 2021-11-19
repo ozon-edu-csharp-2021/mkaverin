@@ -21,11 +21,11 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         /// <summary>
         /// Получить все заявки по id Сотрудника 
         /// </summary>
-        /// <param name="employeeId">Id Сотрудника</param>
+        /// <param name="employeeEmail">Id Сотрудника</param>
         /// <param name="status">Статус заказа</param>
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Список заявок</returns>
-        Task<List<Order>> GetAllOrderByEmployeeIdAsync(long employeeId,
+        Task<List<Order>> GetAllOrderByEmployeeAsync(string employeeEmail,
             CancellationToken cancellationToken);
 
         /// <summary>

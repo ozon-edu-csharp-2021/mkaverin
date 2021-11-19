@@ -20,7 +20,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 
         public async Task<GetInfoGiveOutMerchQueryResponse> Handle(GetInfoGiveOutMerchQuery request, CancellationToken cancellationToken)
         {
-            List<Order> orders = await _orderRepository.GetAllOrderByEmployeeIdAsync(request.EmployeeId, cancellationToken);
+            List<Order> orders = await _orderRepository.GetAllOrderByEmployeeAsync(request.EmployeeEmail, cancellationToken);
             List<Order> ordersDone = orders.Where(r => r.Status.Id == StatusType.Done.Id).ToList(); ;
 
             #region Mapping result

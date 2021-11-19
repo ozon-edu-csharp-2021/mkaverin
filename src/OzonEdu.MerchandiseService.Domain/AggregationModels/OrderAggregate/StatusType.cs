@@ -8,6 +8,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         public static StatusType InQueue = new(2, nameof(InQueue).ToLowerInvariant());
         public static StatusType Done = new(3, nameof(Done).ToLowerInvariant());
         public static StatusType Notified = new(4, nameof(Notified).ToLowerInvariant());
+        public static StatusType Declined = new(5, nameof(Declined).ToLowerInvariant());
 
         protected StatusType(int id, string name) : base(id, name)
         {

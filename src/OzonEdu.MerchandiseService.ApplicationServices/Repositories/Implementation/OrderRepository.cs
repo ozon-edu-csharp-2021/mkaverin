@@ -22,13 +22,14 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
         public async Task<long> CreateAsync(Order itemToCreate, CancellationToken cancellationToken = default)
         {
             const string sql = @"
-                INSERT INTO merchandise_order (creation_date, employee_id, merch_pack_id,source_id,status_id)
-                VALUES (@CreationDate, @EmployeeId, @MerchPackId, @SourceId, @StatusId) RETURNING id;";
+                INSERT INTO merchandise_order (creation_date, employee_email,manager_email, merch_pack_id,source_id,status_id)
+                VALUES (@CreationDate, @EmployeeEmail,@ManagerEmail, @MerchPackId, @SourceId, @StatusId) RETURNING id;";
 
             var parameters = new
             {
                 CreationDate = itemToCreate.CreationDate.Value,
-                EmployeeId = itemToCreate.EmployeeId.Value,
+                EmployeeEmail = itemToCreate.EmployeeEmail.Value,
+                ManagerEmail = itemToCreate.ManagerEmail.Value,
                 MerchPackId = itemToCreate.MerchPack.Id,
                 SourceId = itemToCreate.Source.Id,
                 StatusId = itemToCreate.Status.Id
@@ -50,7 +51,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
         {
             const string sql = @"
                 SELECT  merchandise_order.id, merchandise_order.creation_date, 
-                        merchandise_order.employee_id, merchandise_order.merch_pack_id, merchandise_order.source_id, 
+                        merchandise_order.employee_email,merchandise_order.manager_email, merchandise_order.merch_pack_id, merchandise_order.source_id, 
                         merchandise_order.status_id, merchandise_order.delivery_date,merch_pack.id, merch_pack.merch_type_id, merch_pack.merch_items
                 FROM merchandise_order
                 INNER JOIN merch_pack on merch_pack.id = merchandise_order.merch_pack_id
@@ -71,7 +72,8 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
                 (merchandiseOrder, merchPack) => new Order(
                     merchandiseOrder.id,
                     new(merchandiseOrder.creation_date),
-                    new(merchandiseOrder.employee_id),
+                    Email.Crate(merchandiseOrder.employee_email),
+                    Email.Crate(merchandiseOrder.manager_email),
                     new(merchPack.id, merchPack.merch_type_id, merchPack.merch_items),
                     new(merchandiseOrder.source_id),
                     new(merchandiseOrder.status_id),
@@ -82,19 +84,19 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
             return stockItem;
         }
 
-        public async Task<List<Order>> GetAllOrderByEmployeeIdAsync(long employeeId, CancellationToken cancellationToken = default)
+        public async Task<List<Order>> GetAllOrderByEmployeeAsync(string employeeEmail, CancellationToken cancellationToken = default)
         {
             string sql = @"
                 SELECT  merchandise_order.id, merchandise_order.creation_date, 
-                        merchandise_order.employee_id, merchandise_order.merch_pack_id, merchandise_order.source_id, 
+                        merchandise_order.employee_email,merchandise_order.manager_email, merchandise_order.merch_pack_id, merchandise_order.source_id, 
                         merchandise_order.status_id, merchandise_order.delivery_date,merch_pack.id, merch_pack.merch_type_id, merch_pack.merch_items
                 FROM merchandise_order
                 INNER JOIN merch_pack on merch_pack.id = merchandise_order.merch_pack_id
-                WHERE merchandise_order.employee_id = @EmployeeId;";
+                WHERE merchandise_order.employee_email = @EmployeeEmail;";
 
             var parameters = new
             {
-                EmployeeId = employeeId,
+                EmployeeEmail = employeeEmail,
             };
             var commandDefinition = new CommandDefinition(
                 sql,
@@ -107,7 +109,8 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
                    (merchandiseOrder, merchPack) => new Order(
                        merchandiseOrder.id,
                        new(merchandiseOrder.creation_date),
-                       new(merchandiseOrder.employee_id),
+                       Email.Crate(merchandiseOrder.employee_email),
+                       Email.Crate(merchandiseOrder.manager_email),
                        new(merchPack.id, merchPack.merch_type_id, merchPack.merch_items),
                        new(merchandiseOrder.source_id),
                        new(merchandiseOrder.status_id),
@@ -118,12 +121,12 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
             return stockItem;
         }
 
-        public async Task<List<Order>> GetAllOrderInStatusAsync(Status status, CancellationToken cancellationToken = default)
+        public async Task<List<Order>> GetAllOrderInStatusAsync(Status status, CancellationToken cancellationToken)
         {
             const string sql = @"
-                SELECT id, creation_date, employee_id, merch_pack_id, source_id, status_id, delivery_date
+                SELECT id, creation_date, employee_email, manager_email, merch_pack_id, source_id, status_id, delivery_date
                 FROM merchandise_order
-                WHERE skus.id = @Status;";
+                WHERE status_id = @Status;";
             var parameters = new
             {
                 Status = status,
@@ -145,7 +148,8 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
             const string sql = @"
                 UPDATE merchandise_order
                 SET creation_date = @CreationDate, 
-                    employee_id = @EmployeeId, 
+                    employee_email = @EmployeeEmail, 
+                    manager_email = @ManagerEmail, 
                     merch_pack_id = @MerchPackId, 
                     source_id = @SourceId,
                     status_id = @StatusId,
@@ -156,7 +160,8 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
             {
                 Id = itemToUpdate.Id,
                 CreationDate = itemToUpdate.CreationDate.Value,
-                EmployeeId = itemToUpdate.EmployeeId.Value,
+                EmployeeEmail = itemToUpdate.EmployeeEmail.Value,
+                ManagerEmail = itemToUpdate.ManagerEmail.Value,
                 MerchPackId = itemToUpdate.MerchPack.Id,
                 SourceId = itemToUpdate.Source.Id,
                 StatusId = itemToUpdate.Status.Id,

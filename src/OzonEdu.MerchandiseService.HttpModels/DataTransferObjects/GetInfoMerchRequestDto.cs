@@ -2,6 +2,6 @@
 {
     public class GetInfoMerchRequestDto
     {
-        public long EmployeeId { get; set; }
+        public string EmployeeEmail { get; set; }
     }
 }
