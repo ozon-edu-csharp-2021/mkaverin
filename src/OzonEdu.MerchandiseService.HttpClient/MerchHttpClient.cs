@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using OzonEdu.MerchandiseService.HttpModels.DataTransferObjects;
+﻿using OzonEdu.MerchandiseService.HttpModels.DataTransferObjects;
 using OzonEdu.MerchandiseService.HttpModels.DataTransferObjects.GetInfoMerchResponseDto;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,11 +30,11 @@ namespace OzonEdu.MerchandiseService.HttpClients
 
         private async Task<TResponse> BasicRequestProcessingAsync<TRequest, TResponse>(string route, TRequest requestDto, CancellationToken cancellationToken)
         {
-            string json = JsonConvert.SerializeObject(requestDto);
+            string json = JsonSerializer.Serialize(requestDto);
             StringContent httpContent = new(json, System.Text.Encoding.UTF8, "application/json");
             using HttpResponseMessage response = await _httpClient.PostAsync(route, httpContent, cancellationToken);
             string body = await response.Content.ReadAsStringAsync(cancellationToken);
-            return JsonConvert.DeserializeObject<TResponse>(body);
+            return JsonSerializer.Deserialize<TResponse>(body);
         }
     }
 }

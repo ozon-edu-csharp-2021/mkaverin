@@ -124,25 +124,6 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
         }
 
         [Fact]
-        public void ChangeStatusAfterSupply_SendInternalOrders_ShouldReturnsOrderStatusNotChange()
-        {
-            //Arrange
-            Order order = Order.Create(
-                   new(orderDate),
-                   Email.Crate("testc@bk.ru"),
-                    Email.Crate("men@bk.ru"),
-                   new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
-                   new(SourceType.Internal.Id), AlreadyExistedOrdersStub());
-            order.GiveOut(false, orderDate);
-
-            //Act
-            order.ChangeStatusNotified();
-
-            //Assert
-            Assert.Equal(order.Status.Type, StatusType.InQueue);
-        }
-
-        [Fact]
         public void ChangeStatusAfterSupply_SentInvalidStatus_ShouldReturnsOrderStatusException()
         {
             //Arrange

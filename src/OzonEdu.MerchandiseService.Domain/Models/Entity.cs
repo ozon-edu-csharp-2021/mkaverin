@@ -50,19 +50,19 @@ namespace OzonEdu.MerchandiseService.Domain.Models
                 return entity.Id == Id;
         }
 
-        //public override int GetHashCode()
-        //{
-        //    if (!IsTransient())
-        //    {
-        //        if (!_requestedHashCode.HasValue)
-        //            _requestedHashCode = HashCode.Combine(Id, 31);
+        public override int GetHashCode()
+        {
+            if (!IsTransient())
+            {
+                if (!_requestedHashCode.HasValue)
+                    _requestedHashCode = HashCode.Combine(Id, 31);
 
-        //        return _requestedHashCode.Value;
-        //    }
-        //    else
-        //        return base.GetHashCode();
+                return (int)_requestedHashCode.Value;
+            }
+            else
+                return base.GetHashCode();
 
-        //}
+        }
         public static bool operator ==(Entity left, Entity right)
         {
             if (Object.Equals(left, null))

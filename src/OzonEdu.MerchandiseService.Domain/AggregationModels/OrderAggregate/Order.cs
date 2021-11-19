@@ -26,7 +26,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             DeliveryDate = deliveryDate;
         }
         public Order(long id, Order or)
-            :this(or.CreationDate,or.EmployeeEmail, or.ManagerEmail, or.MerchPack, or.Source)
+            : this(or.CreationDate, or.EmployeeEmail, or.ManagerEmail, or.MerchPack, or.Source)
         {
             Id = id;
         }
@@ -113,7 +113,11 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         {
             if (!Status.Type.Equals(StatusType.InQueue))
             {
-                throw new OrderStatusException($"Unable in InQueue order in '{Status.Type.Name}' status");
+                throw new OrderStatusException($"Unable in notified order in '{Status.Type.Name}' status");
+            }
+            if (!Source.Equals(new Source(SourceType.External.Id)))
+            {
+                throw new OrderStatusException($"Unable in notified order in '{Source.Type.Name}' source");
             }
             Status = new Status(StatusType.Notified.Id);
             AddEmployeeNotificationAboutSupplyDomainEvent(EmployeeEmail, MerchPack);
