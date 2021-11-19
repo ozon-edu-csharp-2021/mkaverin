@@ -15,11 +15,13 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
 
-        public NewMerchandiseAppearedCommandHandler(IOrderRepository orderRepository, IUnitOfWork unitOfWork)
+        public NewMerchandiseAppearedCommandHandler(IMediator mediator, IOrderRepository orderRepository, IUnitOfWork unitOfWork)
         {
             _orderRepository = orderRepository ?? throw new ArgumentNullException($"{nameof(orderRepository)}");
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException($"{nameof(unitOfWork)}");
+            _mediator = mediator ?? throw new ArgumentNullException($"{nameof(mediator)}");
         }
 
         public async Task<Unit> Handle(NewMerchandiseAppearedCommand request, CancellationToken cancellationToken)
@@ -33,11 +35,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
             {
                 if (item.Source.Type.Equals(SourceType.External))
                 {
-                    bool isAvailable = GiveOutItems(item.MerchPack.MerchItems);
-                    item.GiveOut(isAvailable, DateTimeOffset.UtcNow);
-                    await _unitOfWork.StartTransaction(cancellationToken);
-                    await _orderRepository.UpdateAsync(item, cancellationToken);
-                    await _unitOfWork.SaveChangesAsync(cancellationToken);
+                    await _mediator.Send(new GiveOutOrderCommand { order = item }, cancellationToken);
                 }
                 if (item.Source.Type.Equals(SourceType.Internal))
                 {
@@ -52,12 +50,6 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
         }
 
         private bool GetStockItemsAvailability(Dictionary<Sku, Quantity> merchItems)
-        {
-            return true;
-        }
-
-        // Обращаемся к сервису StockApi узнаем есть ли товар на складе
-        private bool GiveOutItems(Dictionary<Sku, Quantity> merchItems)
         {
             return true;
         }

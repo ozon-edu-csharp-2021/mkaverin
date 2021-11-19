@@ -24,15 +24,12 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 
         public async Task<bool> Handle(GiveOutOrderCommand request, CancellationToken cancellationToken)
         {
-            Order order = await _orderRepository.FindByIdAsync(request.OrderId, cancellationToken);
-            if (order is null)
-            {
-                throw new NoOrderException($"No order with id {request.OrderId}");
-            }
-            bool isAvailable = GiveOutItems(order.MerchPack.MerchItems);
+            if (request.order is null || request.order.Id == 0)
+                throw new NoOrderException($"No order");
+            bool isAvailable = GiveOutItems(request.order.MerchPack.MerchItems);
 
-            order.GiveOut(isAvailable, DateTimeOffset.UtcNow);
-            await _orderRepository.UpdateAsync(order, cancellationToken);
+            request.order.GiveOut(isAvailable, DateTimeOffset.UtcNow);
+            await _orderRepository.UpdateAsync(request.order, cancellationToken);
             return isAvailable;
         }
 

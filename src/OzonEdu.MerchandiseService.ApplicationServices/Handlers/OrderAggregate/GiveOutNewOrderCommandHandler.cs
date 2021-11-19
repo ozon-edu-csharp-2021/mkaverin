@@ -10,20 +10,23 @@ using System.Threading.Tasks;
 
 namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 {
-    public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, long>
+    public class GiveOutNewOrderCommandHandler : IRequestHandler<GiveOutNewOrderCommand, bool>
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IMerchPackRepository _merchPackRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
 
-        public CreateOrderCommandHandler(IOrderRepository orderRepository, IMerchPackRepository merchPackRepository, IUnitOfWork unitOfWork)
+        public GiveOutNewOrderCommandHandler(IMediator mediator, IOrderRepository orderRepository, IMerchPackRepository merchPackRepository, IUnitOfWork unitOfWork)
         {
             _orderRepository = orderRepository ?? throw new ArgumentNullException($"{nameof(orderRepository)}");
             _merchPackRepository = merchPackRepository ?? throw new ArgumentNullException($"{nameof(merchPackRepository)}");
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException($"{nameof(unitOfWork)}");
+            _mediator = mediator ?? throw new ArgumentNullException($"{nameof(mediator)}");
+
         }
 
-        public async Task<long> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(GiveOutNewOrderCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.StartTransaction(cancellationToken);
             MerchPack merchPack = await _merchPackRepository.FindByTypeAsync(new(request.MerchType), cancellationToken);
@@ -36,7 +39,9 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 
             var createdOrderId = await _orderRepository.CreateAsync(requestMR, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return createdOrderId;
+
+            var result = await _mediator.Send(new GiveOutOrderCommand { order = new(createdOrderId, requestMR) }, cancellationToken);
+            return result;
         }
     }
 }

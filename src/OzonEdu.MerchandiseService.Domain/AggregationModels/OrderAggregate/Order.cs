@@ -25,6 +25,11 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             Status = status;
             DeliveryDate = deliveryDate;
         }
+        public Order(long id, Order or)
+            :this(or.CreationDate,or.EmployeeEmail, or.ManagerEmail, or.MerchPack, or.Source)
+        {
+            Id = id;
+        }
         private Order(OrderDate date, Email employeeEmail, Email managerEmail, MerchPack merchPack, Source source)
         {
             CreationDate = date;

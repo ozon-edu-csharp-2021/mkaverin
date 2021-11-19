@@ -24,7 +24,7 @@ namespace EncashmentService.Api
 
             _ = CreateMap<GetInfoGiveOutMerchQueryResponse, GetInfoMerchResponseDto>();
 
-            _ = CreateMap<RequestMerchRequestDto, RequestMerchCommand>();
+            _ = CreateMap<RequestMerchRequestDto, GiveOutNewOrderCommand>();
             _ = CreateMap<RequestMerchRequestDto, GiveOutOrderCommand>();
             _ = CreateMap<bool, RequestMerchResponseDto>()
                 .ForMember(e => e.Result, opt => opt.MapFrom(x => x));

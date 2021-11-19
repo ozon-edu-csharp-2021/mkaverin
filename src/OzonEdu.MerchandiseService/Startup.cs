@@ -27,7 +27,7 @@ namespace OzonEdu.MerchandiseService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
-            services.AddMediatR(typeof(CreateOrderCommandHandler).Assembly);
+            services.AddMediatR(typeof(GiveOutNewOrderCommandHandler).Assembly);
 
             services.Configure<DatabaseConnectionOptions>(Configuration.GetSection(nameof(DatabaseConnectionOptions)));
             services.AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();
