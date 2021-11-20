@@ -18,13 +18,13 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 
         public GiveOutOrderCommandHandler(IOrderRepository orderRepository, IUnitOfWork unitOfWork)
         {
-            _orderRepository = orderRepository ?? throw new ArgumentNullException($"{nameof(orderRepository)}");
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException($"{nameof(unitOfWork)}");
+            _orderRepository = orderRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<bool> Handle(GiveOutOrderCommand request, CancellationToken cancellationToken)
         {
-            if (request.order is null || request.order.Id == 0)
+            if (request.order?.Id is null or 0)
                 throw new NoOrderException($"No order");
             bool isAvailable = GiveOutItems(request.order.MerchPack.MerchItems);
 

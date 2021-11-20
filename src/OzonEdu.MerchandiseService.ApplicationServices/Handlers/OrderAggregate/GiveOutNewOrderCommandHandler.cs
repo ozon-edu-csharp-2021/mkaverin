@@ -19,10 +19,10 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 
         public GiveOutNewOrderCommandHandler(IMediator mediator, IOrderRepository orderRepository, IMerchPackRepository merchPackRepository, IUnitOfWork unitOfWork)
         {
-            _orderRepository = orderRepository ?? throw new ArgumentNullException($"{nameof(orderRepository)}");
-            _merchPackRepository = merchPackRepository ?? throw new ArgumentNullException($"{nameof(merchPackRepository)}");
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException($"{nameof(unitOfWork)}");
-            _mediator = mediator ?? throw new ArgumentNullException($"{nameof(mediator)}");
+            _orderRepository = orderRepository;
+            _merchPackRepository = merchPackRepository;
+            _unitOfWork = unitOfWork;
+            _mediator = mediator;
 
         }
 
@@ -35,7 +35,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
                                                 employeeEmail: Email.Crate(request.EmployeeEmail),
                                                 managerEmail: Email.Crate(request.ManagerEmail),
                                                 merchPack: merchPack,
-                                                source: new(request.Sourse), orders);
+                                                source: new(request.Source), orders);
 
             var createdOrderId = await _orderRepository.CreateAsync(requestMR, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);

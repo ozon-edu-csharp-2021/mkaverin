@@ -1,9 +1,9 @@
-﻿ using System.IO;
-using System.Linq;
-using FluentMigrator.Runner;
+﻿using FluentMigrator.Runner;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
+using System.IO;
+using System.Linq;
 
 namespace OzonEdu.MerchandiseService.Migrator
 {
@@ -16,7 +16,7 @@ namespace OzonEdu.MerchandiseService.Migrator
                 .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables()
                 .Build();
-            
+
             var connectionString = configuration.GetSection("DatabaseConnectionOptions:ConnectionString").Get<string>();
             var services = new ServiceCollection()
                 .AddFluentMigratorCore()
@@ -27,7 +27,7 @@ namespace OzonEdu.MerchandiseService.Migrator
                         .ScanIn(typeof(Program).Assembly)
                         .For.Migrations())
                 .AddLogging(lb => lb.AddFluentMigratorConsole());
-            
+
             var serviceProvider = services.BuildServiceProvider(false);
 
             using (serviceProvider.CreateScope())

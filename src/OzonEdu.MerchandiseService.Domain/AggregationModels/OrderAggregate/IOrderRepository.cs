@@ -1,4 +1,5 @@
-﻿using OzonEdu.MerchandiseService.Domain.Contracts;
+﻿using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
+using OzonEdu.MerchandiseService.Domain.Contracts;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,11 +12,11 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
     public interface IOrderRepository : IRepository<Order>
     {
         /// <summary>
-        /// Получить все заявки в определенном статусе
+        /// Получить все заявки в статусе в очереди за этими товарами.
         /// </summary>
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Список заявок</returns>
-        Task<List<Order>> GetAllOrderInStatusAsync(Status status,
+        Task<List<Order>> GetOrdersAwaitingDeliveryTheseItemsAsync(Dictionary<Sku, Quantity> Items,
             CancellationToken cancellationToken);
 
         /// <summary>

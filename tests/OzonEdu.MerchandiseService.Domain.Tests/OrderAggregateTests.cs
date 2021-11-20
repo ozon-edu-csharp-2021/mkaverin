@@ -25,7 +25,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
                     MerchTypeEnum.WelcomePack.Id, "{}"),
                     new(SourceType.External.Id),
                     new Status(StatusType.Done.Id),
-                    new(orderDate.AddDays(1)))
+                    DeliveryDate.Create(orderDate.AddDays(1)))
             };
             //Act
             Order order = Order.Create(
@@ -53,7 +53,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
                         MerchTypeEnum.WelcomePack.Id, "{}"),
                     new(SourceType.External.Id),
                     new Status(StatusType.Done.Id),
-                    new(orderDate.AddYears(-1).AddDays(1)))
+                    DeliveryDate.Create(orderDate.AddYears(-1).AddDays(1)))
             };
             //Act
             Order order = Order.Create(
@@ -211,7 +211,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
                     MerchTypeEnum.WelcomePack.Id, "{}"),
                     new(SourceType.External.Id),
                     new Status(StatusType.Done.Id),
-                    new(orderDate.AddDays(1)))
+                    DeliveryDate.Create(orderDate.AddDays(1)))
             };
 
             //Act
@@ -248,7 +248,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
                 MerchTypeEnum.WelcomePack.Id, "{}"),
                 new(SourceType.External.Id),
                 new Status(StatusType.Done.Id),
-                new(orderDate.AddDays(1)));
+                DeliveryDate.Create(orderDate.AddDays(1)));
 
             Order order3 = new(1,
                 new(orderDate),
@@ -258,7 +258,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
                 MerchTypeEnum.WelcomePack.Id, "{}"),
                 new(SourceType.External.Id),
                 new Status(StatusType.Done.Id),
-                new(orderDate.AddDays(1)));
+                DeliveryDate.Create(orderDate.AddDays(1)));
 
             list.Add(order1);
             list.Add(order2);

@@ -26,7 +26,7 @@ namespace OzonEdu.MerchandiseService.Controllers
         public async Task<ActionResult<RequestMerchResponseDto>> RequestMerch(RequestMerchRequestDto requestDto, CancellationToken cancellationToken)
         {
             GiveOutNewOrderCommand giveOutNewOrderCommand = _mapper.Map<GiveOutNewOrderCommand>(requestDto);
-            giveOutNewOrderCommand.Sourse = 1;
+            giveOutNewOrderCommand.Source = 1;
             var result = await _mediator.Send(giveOutNewOrderCommand, cancellationToken);
             RequestMerchResponseDto response = _mapper.Map<RequestMerchResponseDto>(result);
             return Ok(response);

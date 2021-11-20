@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using OzonEdu.MerchandiseService.ApplicationServices.Commands;
+using OzonEdu.MerchandiseService.ApplicationServices.Exceptions;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.Contracts;
@@ -19,31 +20,31 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 
         public NewMerchandiseAppearedCommandHandler(IMediator mediator, IOrderRepository orderRepository, IUnitOfWork unitOfWork)
         {
-            _orderRepository = orderRepository ?? throw new ArgumentNullException($"{nameof(orderRepository)}");
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException($"{nameof(unitOfWork)}");
-            _mediator = mediator ?? throw new ArgumentNullException($"{nameof(mediator)}");
+            _orderRepository = orderRepository;
+            _unitOfWork = unitOfWork;
+            _mediator = mediator;
         }
 
         public async Task<Unit> Handle(NewMerchandiseAppearedCommand request, CancellationToken cancellationToken)
         {
-            var all = await _orderRepository.GetAllOrderInStatusAsync(new(StatusType.InQueue.Id), cancellationToken);
-            all = all
-                .Where(o => o.MerchPack.MerchItems.Any(sku => request.Items.Contains(sku)))
-                .OrderBy(o => o.Source)
-                .ToList();
-            foreach (var item in all)
+            int ex = SourceType.External.Id;
+            var orders = await _orderRepository.GetOrdersAwaitingDeliveryTheseItemsAsync(request.Items, cancellationToken);
+            var sortOrders = orders
+                 .OrderBy(o => o.Source)
+                 .ToList();
+            foreach (var item in sortOrders)
             {
-                if (item.Source.Type.Equals(SourceType.External))
+                switch (item.Source.Type.Id)
                 {
-                    await _mediator.Send(new GiveOutOrderCommand { order = item }, cancellationToken);
-                }
-                if (item.Source.Type.Equals(SourceType.Internal))
-                {
-                    bool isAvailable = GetStockItemsAvailability(item.MerchPack.MerchItems);
-                    if (isAvailable)
-                    {
-                        item.ChangeStatusNotified();
-                    }
+                    case 1:
+                        await _mediator.Send(new GiveOutOrderCommand { order = item }, cancellationToken);
+                        break;
+                    case 2:
+                        if (GetStockItemsAvailability(item.MerchPack.MerchItems))
+                            item.ChangeStatusNotified();
+                        break;
+                    default:
+                        throw new NoSourceException("No source");
                 }
             }
             return Unit.Value;

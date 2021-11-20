@@ -15,7 +15,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
         private readonly IOrderRepository _orderRepository;
         public GetInfoGiveOutMerchQueryHandler(IOrderRepository orderRepository, IUnitOfWork unitOfWork)
         {
-            _orderRepository = orderRepository ?? throw new ArgumentNullException($"{nameof(orderRepository)}");
+            _orderRepository = orderRepository;
         }
 
         public async Task<GetInfoGiveOutMerchQueryResponse> Handle(GetInfoGiveOutMerchQuery request, CancellationToken cancellationToken)

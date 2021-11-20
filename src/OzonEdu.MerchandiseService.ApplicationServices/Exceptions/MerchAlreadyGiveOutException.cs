@@ -2,14 +2,14 @@
 
 namespace OzonEdu.MerchandiseService.ApplicationServices.Exceptions
 {
-    public class MerchAlreadyGiveOutException : Exception
+    public class NoSourceException : Exception
     {
-        public MerchAlreadyGiveOutException(string message) : base(message)
+        public NoSourceException(string message) : base(message)
         {
 
         }
 
-        public MerchAlreadyGiveOutException(string message, Exception innerException) : base(message, innerException)
+        public NoSourceException(string message, Exception innerException) : base(message, innerException)
         {
 
         }

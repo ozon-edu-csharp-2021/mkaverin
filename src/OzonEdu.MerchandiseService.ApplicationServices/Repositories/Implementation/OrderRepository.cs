@@ -1,13 +1,14 @@
 ﻿using Dapper;
 using Npgsql;
 using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure.Interfaces;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
+namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementation
 {
     public class OrderRepository : IOrderRepository
     {
@@ -77,9 +78,8 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
                     new(merchPack.id, merchPack.merch_type_id, merchPack.merch_items),
                     new(merchandiseOrder.source_id),
                     new(merchandiseOrder.status_id),
-                    merchandiseOrder.delivery_date is not null ? new(merchandiseOrder.delivery_date ?? DateTimeOffset.MinValue) : null
-
-                    ));
+                    DeliveryDate.Create(merchandiseOrder.delivery_date)
+                ));
             var stockItem = merchPack.AsList()[0];
             return stockItem;
         }
@@ -114,22 +114,23 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Stubs
                        new(merchPack.id, merchPack.merch_type_id, merchPack.merch_items),
                        new(merchandiseOrder.source_id),
                        new(merchandiseOrder.status_id),
-                       merchandiseOrder.delivery_date is not null ? new(merchandiseOrder.delivery_date ?? DateTimeOffset.MinValue) : null
+                       DeliveryDate.Create(merchandiseOrder.delivery_date)
 
                  ));
             var stockItem = pack.AsList();
             return stockItem;
         }
 
-        public async Task<List<Order>> GetAllOrderInStatusAsync(Status status, CancellationToken cancellationToken)
+        public async Task<List<Order>> GetOrdersAwaitingDeliveryTheseItemsAsync(Dictionary<Sku, Quantity> Items, CancellationToken cancellationToken)
         {
+            //TODO: Переписать запрос на пересечение подсножеств
             const string sql = @"
                 SELECT id, creation_date, employee_email, manager_email, merch_pack_id, source_id, status_id, delivery_date
                 FROM merchandise_order
                 WHERE status_id = @Status;";
             var parameters = new
             {
-                Status = status,
+                Status = "",
             };
             var commandDefinition = new CommandDefinition(
                 sql,

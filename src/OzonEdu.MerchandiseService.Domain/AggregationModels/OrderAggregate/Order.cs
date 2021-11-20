@@ -73,7 +73,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             if (isAvailable)
             {
                 Status = new Status(StatusType.Done.Id);
-                DeliveryDate = new DeliveryDate(date);
+                DeliveryDate = DeliveryDate.Create(date);
             }
             else
             {
