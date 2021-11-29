@@ -5,21 +5,20 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
     [Migration(9)]
     public class FillDictionariesSource : Migration
     {
-        private readonly string NameTable = "source";
         public override void Up()
         {
-            if (TableExists(NameTable))
+            if (TableExists(CommonConstants.NameTableSource))
             {
-                Insert.IntoTable(NameTable)
+                Insert.IntoTable(CommonConstants.NameTableSource)
                     .Row(new { id = 1, name = "External" })
                     .Row(new { id = 2, name = "Internal" });
             }
         }
         public override void Down()
         {
-            if (TableExists(NameTable))
+            if (TableExists(CommonConstants.NameTableSource))
             {
-                Delete.FromTable(NameTable)
+                Delete.FromTable(CommonConstants.NameTableSource)
                     .Row(new { id = 1 })
                     .Row(new { id = 2 });
             }

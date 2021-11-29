@@ -16,7 +16,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         /// </summary>
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Список заявок</returns>
-        Task<List<Order>> GetOrdersAwaitingDeliveryTheseItemsAsync(Dictionary<Sku, Quantity> Items,
+        Task<List<Order>> GetAllOrderInStatusAsync(Status status,
             CancellationToken cancellationToken);
 
         /// <summary>

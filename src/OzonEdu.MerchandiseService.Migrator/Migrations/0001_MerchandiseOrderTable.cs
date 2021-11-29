@@ -5,12 +5,11 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
     [Migration(1)]
     public class MerchandiseOrderTable : Migration
     {
-        private readonly string NameTable = "merchandise_order";
         public override void Up()
         {
-            if (!TableExists(NameTable))
+            if (!TableExists(CommonConstants.NameTableMerchandiseOrder))
             {
-                Create.Table(NameTable)
+                Create.Table(CommonConstants.NameTableMerchandiseOrder)
                     .WithColumn("id").AsInt64().Identity().PrimaryKey()
                     .WithColumn("creation_date").AsDateTimeOffset().NotNullable()
                     .WithColumn("employee_email").AsString().NotNullable()
@@ -24,12 +23,12 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
 
         public override void Down()
         {
-            if (TableExists(NameTable))
+            if (TableExists(CommonConstants.NameTableMerchandiseOrder))
             {
-                Delete.Table(NameTable);
+                Delete.Table(CommonConstants.NameTableMerchandiseOrder);
             }
         }
         private bool TableExists(string tableName, string tdmSchema = "public") =>
-             Schema.Schema(tdmSchema).Table(tableName).Exists();
+         Schema.Schema(tdmSchema).Table(tableName).Exists();
     }
 }

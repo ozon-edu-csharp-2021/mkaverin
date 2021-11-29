@@ -5,13 +5,12 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
     [Migration(8)]
     public class MerchandiseOrderStatusIdx : ForwardOnlyMigration
     {
-        private readonly string NameTable = "merchandise_order";
         public override void Up()
         {
-            if (TableExists(NameTable))
+            if (TableExists(CommonConstants.NameTableMerchandiseOrder))
             {
                 Create.Index("merchandise_order_status_idx")
-                    .OnTable(NameTable)
+                    .OnTable(CommonConstants.NameTableMerchandiseOrder)
                     .InSchema("public")
                     .OnColumn("status_id");
             }

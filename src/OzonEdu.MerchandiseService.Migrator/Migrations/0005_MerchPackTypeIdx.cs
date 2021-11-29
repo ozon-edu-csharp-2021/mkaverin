@@ -5,14 +5,13 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
     [Migration(5)]
     public class MerchPackTypeIdx : ForwardOnlyMigration
     {
-        private readonly string NameTable = "merch_pack";
 
         public override void Up()
         {
-            if (TableExists(NameTable))
+            if (TableExists(CommonConstants.NameTableMerchPack))
             {
                 Create.Index("merch_pack_type_idx")
-                    .OnTable(NameTable)
+                    .OnTable(CommonConstants.NameTableMerchPack)
                     .InSchema("public")
                     .OnColumn("merch_type_id");
             }

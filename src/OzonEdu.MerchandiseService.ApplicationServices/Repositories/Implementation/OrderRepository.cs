@@ -121,16 +121,15 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
             return stockItem;
         }
 
-        public async Task<List<Order>> GetOrdersAwaitingDeliveryTheseItemsAsync(Dictionary<Sku, Quantity> Items, CancellationToken cancellationToken)
+        public async Task<List<Order>> GetAllOrderInStatusAsync(Status status, CancellationToken cancellationToken)
         {
-            //TODO: Переписать запрос на пересечение подсножеств
             const string sql = @"
                 SELECT id, creation_date, employee_email, manager_email, merch_pack_id, source_id, status_id, delivery_date
                 FROM merchandise_order
                 WHERE status_id = @Status;";
             var parameters = new
             {
-                Status = "",
+                Status = status.Id,
             };
             var commandDefinition = new CommandDefinition(
                 sql,

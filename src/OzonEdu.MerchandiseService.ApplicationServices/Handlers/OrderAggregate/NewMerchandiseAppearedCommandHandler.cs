@@ -28,11 +28,12 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
         public async Task<Unit> Handle(NewMerchandiseAppearedCommand request, CancellationToken cancellationToken)
         {
             int ex = SourceType.External.Id;
-            var orders = await _orderRepository.GetOrdersAwaitingDeliveryTheseItemsAsync(request.Items, cancellationToken);
-            var sortOrders = orders
+            var orders = await _orderRepository.GetAllOrderInStatusAsync(new(StatusType.InQueue.Id), cancellationToken);
+            var filtersAndSortOrders = orders
+                 .Where(o => o.MerchPack.MerchItems.Any(sku => request.Items.Contains(sku)))
                  .OrderBy(o => o.Source)
                  .ToList();
-            foreach (var item in sortOrders)
+            foreach (var item in filtersAndSortOrders)
             {
                 switch (item.Source.Type.Id)
                 {

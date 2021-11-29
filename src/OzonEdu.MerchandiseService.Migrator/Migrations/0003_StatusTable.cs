@@ -5,12 +5,12 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
     [Migration(3)]
     public class StatusTable : Migration
     {
-        private readonly string NameTable = "status";
+    
         public override void Up()
         {
-            if (!TableExists(NameTable))
+            if (!TableExists(CommonConstants.NameTableStatus))
             {
-                Create.Table(NameTable)
+                Create.Table(CommonConstants.NameTableStatus)
                     .WithColumn("id").AsInt64().Identity().PrimaryKey()
                     .WithColumn("name").AsString().NotNullable();
             }
@@ -18,9 +18,9 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
 
         public override void Down()
         {
-            if (TableExists(NameTable))
+            if (TableExists(CommonConstants.NameTableStatus))
             {
-                Delete.Table(NameTable);
+                Delete.Table(CommonConstants.NameTableStatus);
             }
         }
         private bool TableExists(string tableName, string tdmSchema = "public") =>

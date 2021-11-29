@@ -5,13 +5,11 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
     [Migration(2)]
     public class MerchPackTable : Migration
     {
-        private readonly string NameTable = "merch_pack";
-
         public override void Up()
         {
-            if (!TableExists(NameTable))
+            if (!TableExists(CommonConstants.NameTableMerchPack))
             {
-                Create.Table(NameTable)
+                Create.Table(CommonConstants.NameTableMerchPack)
                    .WithColumn("id").AsInt64().Identity().PrimaryKey()
                    .WithColumn("merch_type_id").AsInt32().NotNullable()
                    .WithColumn("merch_items").AsCustom("jsonb").WithDefaultValue("{}").NotNullable();
@@ -20,12 +18,12 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
 
         public override void Down()
         {
-            if (TableExists(NameTable))
+            if (TableExists(CommonConstants.NameTableMerchPack))
             {
-                Delete.Table(NameTable);
+                Delete.Table(CommonConstants.NameTableMerchPack);
             }
         }
         private bool TableExists(string tableName, string tdmSchema = "public") =>
-             Schema.Schema(tdmSchema).Table(tableName).Exists();
+         Schema.Schema(tdmSchema).Table(tableName).Exists();
     }
 }

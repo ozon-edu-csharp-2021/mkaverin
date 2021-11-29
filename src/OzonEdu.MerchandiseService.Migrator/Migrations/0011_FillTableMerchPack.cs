@@ -5,12 +5,11 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
     [Migration(11)]
     public class FillTableMerchPack : Migration
     {
-        private readonly string NameTable = "merch_pack";
         public override void Up()
         {
-            if (TableExists(NameTable))
+            if (TableExists(CommonConstants.NameTableMerchPack))
             {
-                Insert.IntoTable(NameTable)
+                Insert.IntoTable(CommonConstants.NameTableMerchPack)
                     .Row(new { id = 10, merch_type_id = 10, merch_items = "{\"12341\":2,\"23722\":1}" })
                     .Row(new { id = 20, merch_type_id = 20, merch_items = "{\"12341\":2,\"23722\":1}" })
                     .Row(new { id = 30, merch_type_id = 30, merch_items = "{\"1141\":1,\"23722\":1}" })
@@ -20,9 +19,9 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
         }
         public override void Down()
         {
-            if (TableExists(NameTable))
+            if (TableExists(CommonConstants.NameTableMerchPack))
             {
-                Delete.FromTable(NameTable)
+                Delete.FromTable(CommonConstants.NameTableMerchPack)
                     .Row(new { id = 10 })
                     .Row(new { id = 20 })
                     .Row(new { id = 30 })

@@ -5,12 +5,11 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
     [Migration(10)]
     public class FillDictionariesStatus : Migration
     {
-        private readonly string NameTable = "status";
         public override void Up()
         {
-            if (TableExists(NameTable))
+            if (TableExists(CommonConstants.NameTableStatus))
             {
-                Insert.IntoTable(NameTable)
+                Insert.IntoTable(CommonConstants.NameTableStatus)
                     .Row(new { id = 1, name = "New" })
                     .Row(new { id = 2, name = "InQueue" })
                     .Row(new { id = 3, name = "Done" })
@@ -19,9 +18,9 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
         }
         public override void Down()
         {
-            if (TableExists(NameTable))
+            if (TableExists(CommonConstants.NameTableStatus))
             {
-                Delete.FromTable(NameTable)
+                Delete.FromTable(CommonConstants.NameTableStatus)
                     .Row(new { id = 1 })
                     .Row(new { id = 2 })
                     .Row(new { id = 3 })

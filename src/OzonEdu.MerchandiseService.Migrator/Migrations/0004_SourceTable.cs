@@ -5,12 +5,11 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
     [Migration(4)]
     public class SourceTable : Migration
     {
-        private readonly string NameTable = "source";
         public override void Up()
         {
-            if (!TableExists(NameTable))
+            if (!TableExists(CommonConstants.NameTableSource))
             {
-                Create.Table(NameTable)
+                Create.Table(CommonConstants.NameTableSource)
                     .WithColumn("id").AsInt64().Identity().PrimaryKey()
                     .WithColumn("name").AsString().NotNullable();
             }
@@ -18,9 +17,9 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
 
         public override void Down()
         {
-            if (TableExists(NameTable))
+            if (TableExists(CommonConstants.NameTableSource))
             {
-                Delete.Table(NameTable);
+                Delete.Table(CommonConstants.NameTableSource);
             }
         }
         private bool TableExists(string tableName, string tdmSchema = "public") =>
