@@ -13,14 +13,15 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         private static IEnumerable<StatusType> List() =>
              new[] { StatusType.New, StatusType.InQueue, StatusType.Notified, StatusType.Done };
 
-        public Status(StatusType type)
+        public Status(long id)
         {
-            var state = List().SingleOrDefault(s => s == type);
+            var state = List().SingleOrDefault(s => s.Id == id);
 
             if (state == null)
                 throw new OrderStatusException($"Possible values for StatusType: {String.Join(",", List().Select(s => s.Name))}");
 
             Type = state;
+            Id = Type.Id;
         }
 
     }

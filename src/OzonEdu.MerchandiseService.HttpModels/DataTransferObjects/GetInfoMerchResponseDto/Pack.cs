@@ -4,7 +4,7 @@ namespace OzonEdu.MerchandiseService.HttpModels.DataTransferObjects.GetInfoMerch
 {
     public class Pack
     {
-        public string MerchType { get; init; }
+        public long MerchType { get; init; }
         public List<Item> MerchItems { get; init; }
     }
 }

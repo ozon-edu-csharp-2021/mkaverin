@@ -1,5 +1,4 @@
-﻿using CSharpCourse.Core.Lib.Enums;
-using OzonEdu.MerchandiseService.Domain.Contracts;
+﻿using OzonEdu.MerchandiseService.Domain.Contracts;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +15,6 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
         /// <param name="merchType">Тип пакета мерча</param>
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Список заявок</returns>
-        Task<MerchPack> FindByTypeAsync(MerchType merchType,
-            CancellationToken cancellationToken = default);
+        Task<MerchPack> FindByTypeAsync(MerchType merchType, CancellationToken cancellationToken);
     }
 }

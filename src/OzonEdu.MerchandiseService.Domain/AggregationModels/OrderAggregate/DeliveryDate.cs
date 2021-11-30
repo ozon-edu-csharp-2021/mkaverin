@@ -7,10 +7,9 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
     public class DeliveryDate : ValueObject
     {
         public DateTimeOffset Value { get; }
-        public DeliveryDate(DateTimeOffset date)
-        {
-            Value = date;
-        }
+        private DeliveryDate(DateTimeOffset date) => Value = date;
+        public static DeliveryDate Create(DateTimeOffset? date)
+            => date is null ? null : new DeliveryDate(date ?? DateTimeOffset.MinValue);
 
         protected override IEnumerable<object> GetEqualityComponents()
         {

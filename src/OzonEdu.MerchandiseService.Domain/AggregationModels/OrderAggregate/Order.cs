@@ -3,77 +3,139 @@ using OzonEdu.MerchandiseService.Domain.Events;
 using OzonEdu.MerchandiseService.Domain.Exceptions.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 {
     public sealed class Order : Entity
     {
-        public Order(OrderDate date, EmployeeId employeeId,
-            MerchPack merchPack, Source source)
+        /// <summary>
+        /// Конструктор для Dapper
+        /// </summary>
+        public Order(long id, OrderDate date, Email employeeEmail, Email managerEmail,
+               MerchPack merchPack, Source source, Status status, DeliveryDate deliveryDate)
         {
-            Date = date;
-            EmployeeId = employeeId;
+            Id = id;
+            CreationDate = date;
+            EmployeeEmail = employeeEmail;
+            ManagerEmail = managerEmail;
             MerchPack = merchPack;
             Source = source;
-            Status = new Status(StatusType.New);
+            Status = status;
+            DeliveryDate = deliveryDate;
         }
-        public OrderDate Date { get; private set; }
-        public EmployeeId EmployeeId { get; private set; }
+        public Order(long id, Order or)
+            : this(or.CreationDate, or.EmployeeEmail, or.ManagerEmail, or.MerchPack, or.Source)
+        {
+            Id = id;
+        }
+        private Order(OrderDate date, Email employeeEmail, Email managerEmail, MerchPack merchPack, Source source)
+        {
+            CreationDate = date;
+            EmployeeEmail = employeeEmail;
+            ManagerEmail = managerEmail;
+            MerchPack = merchPack;
+            Source = source;
+            Status = new Status(StatusType.New.Id);
+        }
+
+        public OrderDate CreationDate { get; private set; }
+        public Email EmployeeEmail { get; private set; }
+        public Email ManagerEmail { get; private set; }
         public MerchPack MerchPack { get; private set; }
         public Source Source { get; private set; }
         public Status Status { get; private set; }
         public DeliveryDate DeliveryDate { get; private set; }
 
-        public void ChangeStatusToDone(DateTimeOffset date)
+        public static Order Create(OrderDate date, Email employeeEmail, Email managerEmail, MerchPack merchPack, Source source,
+            IReadOnlyCollection<Order> alreadyExistedOrders)
         {
-            if (Status.Type.Equals(StatusType.Done))
+            Order newOrder = new(date, employeeEmail, managerEmail, merchPack, source);
+            if (CheckGiveOutMerchByEmployee(alreadyExistedOrders, newOrder))
             {
-                throw new OrderStatusException("Request in done. Change status unavailable");
+                throw new OrderException("Merch already issued this year");
             }
 
-            if (Status.Type.Equals(StatusType.Notified))
+            if (CheckOrderExists(alreadyExistedOrders, newOrder))
             {
-                throw new OrderStatusException("Request in Notified. Change status unavailable");
+                throw new OrderException("Order already");
+            }
+            return newOrder;
+        }
+        public void GiveOut(bool isAvailable, DateTimeOffset date)
+        {
+            if (Status.Type.Equals(StatusType.Done) || Status.Type.Equals(StatusType.Notified) || Status.Type.Equals(StatusType.Declined))
+            {
+                throw new OrderStatusException($"Unable in GiveOut order in '{Status.Type.Name}' status");
             }
 
-            Status = new Status(StatusType.Done);
-            DeliveryDate = new DeliveryDate(date);
+            if (isAvailable)
+            {
+                Status = new Status(StatusType.Done.Id);
+                DeliveryDate = DeliveryDate.Create(date);
+            }
+            else
+            {
+                Status = new Status(StatusType.InQueue.Id);
+                AddHRNotificationEndedMerchDomainEvent(MerchPack);
+            }
         }
 
-        public void ChangeStatusToInQueue()
+        private static bool CheckOrderExists(IReadOnlyCollection<Order> alreadyExistedOrders, Order newOrder)
         {
-            if (!Status.Type.Equals(StatusType.New))
+            var orders = alreadyExistedOrders
+              .Where(r => r.EmployeeEmail.Equals(newOrder.EmployeeEmail))
+              .Where(r => r.MerchPack.Equals(newOrder.MerchPack))
+              .Where(r => r.Status.Id == StatusType.New.Id || r.Status.Id == StatusType.InQueue.Id);
+            return orders.Any();
+        }
+
+        private static bool CheckGiveOutMerchByEmployee(IReadOnlyCollection<Order> alreadyExistedOrders, Order newOrder)
+        {
+            static bool IsYearPassedBetweenDates(DateTimeOffset deliveryDate, DateTimeOffset today)
             {
-                throw new OrderStatusException("Request not status in New. Change status unavailable");
+                var year = today.Month <= 2 ? deliveryDate.Year : today.Year;
+                var countDay = DateTime.IsLeapYear(year) ? 366 : 365;
+                return (today - deliveryDate).TotalDays < countDay;
             }
 
-            Status = new Status(StatusType.InQueue);
-            AddHRNotificationEndedMerchDomainEvent(MerchPack);
+            var checkGiveOut = alreadyExistedOrders
+                .Where(r => r.EmployeeEmail.Equals(newOrder.EmployeeEmail))
+                .Where(r => r.Status.Id == StatusType.Done.Id)
+                .Where(r => r.MerchPack.Equals(newOrder.MerchPack))
+                .Where(r => IsYearPassedBetweenDates(r.DeliveryDate.Value, DateTimeOffset.UtcNow.Date)).ToList();
+
+            return checkGiveOut.Any();
         }
-        public void ChangeStatusAfterSupply()
+
+        public void ChangeStatusNotified()
         {
             if (!Status.Type.Equals(StatusType.InQueue))
             {
-                throw new OrderStatusException("Request not in status inQueue. Change status unavailable");
+                throw new OrderStatusException($"Unable in notified order in '{Status.Type.Name}' status");
+            }
+            if (!Source.Equals(new Source(SourceType.External.Id)))
+            {
+                throw new OrderStatusException($"Unable in notified order in '{Source.Type.Name}' source");
+            }
+            Status = new Status(StatusType.Notified.Id);
+            AddEmployeeNotificationAboutSupplyDomainEvent(EmployeeEmail, MerchPack);
+        }
+
+        public void Decline()
+        {
+            if (Status.Type.Equals(StatusType.Done) || Status.Type.Equals(StatusType.Notified) || Status.Type.Equals(StatusType.Declined))
+            {
+                throw new OrderStatusException($"Unable in decline order in '{Status.Type.Name}' status");
             }
 
-            if (Source.Type.Equals(SourceType.External))
-            {
-                Status = new Status(StatusType.Notified);
-                AddEmployeeNotificationAboutSupplyDomainEvent(EmployeeId);
-            }
-            if (Source.Type.Equals(SourceType.Internal))
-            {
-                //Нужно повторить запрос в сток апи на выдачу товара
-                //Только я не пойму как отсюда вызвать GiveOutOrderCommand
-                //Могу предположить что можно добавить DomainEvent, а он в свою очередь вызовет GiveOutOrderCommand
-                //Но как это сделать в DomainEvent пока не знаю
-                AddRepeatGiveOutOrderCommandDomainEvent(Id);
-            }
+            Status = new Status(StatusType.Declined.Id);
         }
-        private void AddEmployeeNotificationAboutSupplyDomainEvent(EmployeeId employeeId)
+
+        private void AddEmployeeNotificationAboutSupplyDomainEvent(Email employeeEmail, MerchPack merchPack)
         {
-            EmployeeNotificationAboutSupplyDomainEvent domainEvent = new(employeeId);
+            EmployeeNotificationAboutSupplyDomainEvent domainEvent = new(employeeEmail, merchPack);
             AddDomainEvent(domainEvent);
         }
 
@@ -81,11 +143,6 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         {
             HRNotificationEndedMerchDomainEvent domainEvent = new(merchPack);
             AddDomainEvent(domainEvent);
-        }
-        private void AddRepeatGiveOutOrderCommandDomainEvent(int id)
-        {
-            //var domainEvent = new RepeatGiveOutOrderCommandDomainEvent(id);
-            //AddDomainEvent(domainEvent);
         }
     }
 }

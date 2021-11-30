@@ -11,6 +11,7 @@ namespace WebApi.Infrastructure.Filters
             var resultObject = new
             {
                 ExceptionType = context.Exception.GetType().FullName,
+                ExceptionMessage = context.Exception.Message,
                 StackTrace = context.Exception.StackTrace
             };
 

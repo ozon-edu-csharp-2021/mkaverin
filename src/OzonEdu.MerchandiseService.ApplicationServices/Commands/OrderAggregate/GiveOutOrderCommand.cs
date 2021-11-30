@@ -1,14 +1,10 @@
 ﻿using MediatR;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 
 namespace OzonEdu.MerchandiseService.ApplicationServices.Commands
 {
     public class GiveOutOrderCommand : IRequest<bool>
     {
-        public GiveOutOrderCommand(int orderId)
-        {
-            OrderId = orderId;
-        }
-
-        public int OrderId { get; private set; }
+        public Order order { get; set; }
     }
 }

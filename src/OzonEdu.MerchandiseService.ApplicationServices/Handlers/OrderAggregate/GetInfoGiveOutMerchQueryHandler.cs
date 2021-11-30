@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
+using OzonEdu.MerchandiseService.Domain.Contracts;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,16 +12,17 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 {
     public class GetInfoGiveOutMerchQueryHandler : IRequestHandler<GetInfoGiveOutMerchQuery, GetInfoGiveOutMerchQueryResponse>
     {
-        public readonly IOrderRepository _orderRepository;
-
-        public GetInfoGiveOutMerchQueryHandler(IOrderRepository orderRepository)
+        private readonly IOrderRepository _orderRepository;
+        public GetInfoGiveOutMerchQueryHandler(IOrderRepository orderRepository, IUnitOfWork unitOfWork)
         {
-            _orderRepository = orderRepository ?? throw new ArgumentNullException($"{nameof(orderRepository)}");
+            _orderRepository = orderRepository;
         }
 
         public async Task<GetInfoGiveOutMerchQueryResponse> Handle(GetInfoGiveOutMerchQuery request, CancellationToken cancellationToken)
         {
-            List<Order> ordersDone = await _orderRepository.GetAllOrderByEmployeeIdAsync(request.EmployeeId, new Status(StatusType.Done));
+            List<Order> orders = await _orderRepository.GetAllOrderByEmployeeAsync(request.EmployeeEmail, cancellationToken);
+            List<Order> ordersDone = orders.Where(r => r.Status.Id == StatusType.Done.Id).ToList(); ;
+
             #region Mapping result
             GetInfoGiveOutMerchQueryResponse result = new()
             {

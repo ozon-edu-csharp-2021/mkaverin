@@ -4,6 +4,6 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate
 {
     public class GetInfoGiveOutMerchQuery : IRequest<GetInfoGiveOutMerchQueryResponse>
     {
-        public long EmployeeId { get; init; }
+        public string EmployeeEmail { get; init; }
     }
 }
