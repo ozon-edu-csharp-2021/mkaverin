@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using OzonEdu.MerchandiseService.Domain.Models;
+using System.Collections.Generic;
 
 namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure.Interfaces
 {
@@ -14,7 +14,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastruc
         /// <summary>
         /// Коллекция всех сущностей, которые так или иначе были использованы в репозитории.
         /// </summary>
-        IEnumerable<Entity> TrackedEntities { get; }
+        IDictionary<int, Entity> TrackedEntities { get; }
 
         /// <summary>
         /// "Записать" сущность как подлежащую "использованию" в рамках выполнения запроса.

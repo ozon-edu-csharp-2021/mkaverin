@@ -3,6 +3,7 @@ using OzonEdu.MerchandiseService.ApplicationServices.Commands;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.Contracts;
+using OzonEdu.MerchandiseService.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -32,8 +33,11 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
             MerchPack merchPack = await _merchPackRepository.FindByTypeAsync(new(request.MerchType), cancellationToken);
             IReadOnlyCollection<Order> orders = await _orderRepository.GetAllOrderByEmployeeAsync(request.EmployeeEmail, cancellationToken);
             Order requestMR = Order.Create(date: new(DateTimeOffset.UtcNow),
-                                                employeeEmail: Email.Crate(request.EmployeeEmail),
-                                                managerEmail: Email.Crate(request.ManagerEmail),
+                                                employeeEmail: Email.Create(request.EmployeeEmail),
+                                                employeeName: NameUser.Create(request.EmployeeEmail),
+                                                managerEmail: Email.Create(request.ManagerEmail),
+                                                managerName: NameUser.Create(request.ManagerEmail),
+                                                Enumeration.FromValue<ClothingSizeType>(request.ClothingSize),
                                                 merchPack: merchPack,
                                                 source: new(request.Source), orders);
 

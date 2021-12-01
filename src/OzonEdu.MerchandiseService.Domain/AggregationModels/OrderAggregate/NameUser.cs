@@ -5,22 +5,22 @@ using System.Text.RegularExpressions;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 {
-    public sealed class Email : ValueObject
+    public sealed class NameUser : ValueObject
     {
         public string Value { get; }
-        private Email(string emailString) => Value = emailString;
-        public static Email Create(string emailString)
+        private NameUser(string nameString) => Value = nameString;
+        public static NameUser Create(string nameString)
         {
-            if (IsValidEmail(emailString))
+            if (IsValidEmail(nameString))
             {
-                return new Email(emailString);
+                return new NameUser(nameString);
             }
-            throw new EmailException($"Email is invalid: {emailString}");
+            throw new NameUserException($"User Name is invalid: {nameString}");
         }
         public override string ToString() => Value;
 
         private static bool IsValidEmail(string emailString)
-            => Regex.IsMatch(emailString, "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
+            => Regex.IsMatch(emailString, "^[а-яА-Я][а-яА-Я0-9-]+$");
 
         protected override IEnumerable<object> GetEqualityComponents()
         {

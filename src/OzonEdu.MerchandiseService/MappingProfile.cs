@@ -14,7 +14,7 @@ namespace EncashmentService.Api
         {
             _ = CreateMap<GetInfoMerchRequestDto, GetInfoGiveOutMerchQuery>();
 
-            _ = CreateMap<KeyValuePair<Sku, Quantity>, Item>()
+            _ = CreateMap<KeyValuePair<ItemTypeId, Quantity>, Item>()
                 .ForMember(dest => dest.Sku, opt => opt.MapFrom(src => src.Key.Value))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Value.Value));
 

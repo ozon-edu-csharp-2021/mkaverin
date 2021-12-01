@@ -51,7 +51,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
             return Unit.Value;
         }
 
-        private bool GetStockItemsAvailability(Dictionary<Sku, Quantity> merchItems)
+        private bool GetStockItemsAvailability(Dictionary<ItemTypeId, Quantity> merchItems)
         {
             return true;
         }

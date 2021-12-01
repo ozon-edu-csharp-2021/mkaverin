@@ -1,12 +1,15 @@
-﻿using Dapper;
+﻿using CSharpCourse.Core.Lib.Enums;
+using Dapper;
 using Npgsql;
 using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure.Interfaces;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
+using OzonEdu.MerchandiseService.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ClothingSize = OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate.ClothingSize;
 
 namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementation
 {
@@ -52,7 +55,8 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
         {
             const string sql = @"
                 SELECT  merchandise_order.id, merchandise_order.creation_date, 
-                        merchandise_order.employee_email,merchandise_order.manager_email, merchandise_order.merch_pack_id, merchandise_order.source_id, 
+                        merchandise_order.employee_email,merchandise_order.employee_name,merchandise_order.manager_email,merchandise_order.manager_name,
+                        merchandise_order.clothing_size, merchandise_order.merch_pack_id, merchandise_order.source_id, 
                         merchandise_order.status_id, merchandise_order.delivery_date,merch_pack.id, merch_pack.merch_type_id, merch_pack.merch_items
                 FROM merchandise_order
                 INNER JOIN merch_pack on merch_pack.id = merchandise_order.merch_pack_id
@@ -73,8 +77,11 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
                 (merchandiseOrder, merchPack) => new Order(
                     merchandiseOrder.id,
                     new(merchandiseOrder.creation_date),
-                    Email.Crate(merchandiseOrder.employee_email),
-                    Email.Crate(merchandiseOrder.manager_email),
+                    Email.Create(merchandiseOrder.employee_email),
+                    NameUser.Create(merchandiseOrder.employee_name),
+                    Email.Create(merchandiseOrder.manager_email),
+                    NameUser.Create(merchandiseOrder.manager_name),
+                    Enumeration.FromValue<ClothingSizeType>(merchandiseOrder.clothing_size),
                     new(merchPack.id, merchPack.merch_type_id, merchPack.merch_items),
                     new(merchandiseOrder.source_id),
                     new(merchandiseOrder.status_id),
@@ -88,7 +95,8 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
         {
             string sql = @"
                 SELECT  merchandise_order.id, merchandise_order.creation_date, 
-                        merchandise_order.employee_email,merchandise_order.manager_email, merchandise_order.merch_pack_id, merchandise_order.source_id, 
+                        merchandise_order.employee_email,merchandise_order.employee_name,merchandise_order.manager_email,merchandise_order.manager_name,
+                        merchandise_order.clothing_size, merchandise_order.merch_pack_id, merchandise_order.source_id, 
                         merchandise_order.status_id, merchandise_order.delivery_date,merch_pack.id, merch_pack.merch_type_id, merch_pack.merch_items
                 FROM merchandise_order
                 INNER JOIN merch_pack on merch_pack.id = merchandise_order.merch_pack_id
@@ -109,12 +117,15 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
                    (merchandiseOrder, merchPack) => new Order(
                        merchandiseOrder.id,
                        new(merchandiseOrder.creation_date),
-                       Email.Crate(merchandiseOrder.employee_email),
-                       Email.Crate(merchandiseOrder.manager_email),
-                       new(merchPack.id, merchPack.merch_type_id, merchPack.merch_items),
-                       new(merchandiseOrder.source_id),
-                       new(merchandiseOrder.status_id),
-                       DeliveryDate.Create(merchandiseOrder.delivery_date)
+                    Email.Create(merchandiseOrder.employee_email),
+                    NameUser.Create(merchandiseOrder.employee_name),
+                    Email.Create(merchandiseOrder.manager_email),
+                    NameUser.Create(merchandiseOrder.manager_name),
+                    Enumeration.FromValue<ClothingSizeType>(merchandiseOrder.clothing_size),
+                    new(merchPack.id, merchPack.merch_type_id, merchPack.merch_items),
+                    new(merchandiseOrder.source_id),
+                    new(merchandiseOrder.status_id),
+                    DeliveryDate.Create(merchandiseOrder.delivery_date)
 
                  ));
             var stockItem = pack.AsList();
@@ -124,7 +135,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
         public async Task<List<Order>> GetAllOrderInStatusAsync(Status status, CancellationToken cancellationToken)
         {
             const string sql = @"
-                SELECT id, creation_date, employee_email, manager_email, merch_pack_id, source_id, status_id, delivery_date
+                SELECT id, creation_date, employee_email,employee_name,manager_email,manager_name, merch_pack_id, source_id, status_id, delivery_date
                 FROM merchandise_order
                 WHERE status_id = @Status;";
             var parameters = new

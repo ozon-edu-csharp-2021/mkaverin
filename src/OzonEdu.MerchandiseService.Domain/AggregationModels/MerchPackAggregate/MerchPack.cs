@@ -14,12 +14,12 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
             MerchItems = SetMerchItems(merch_items);
         }
         public MerchType MerchType { get; private set; }
-        public Dictionary<Sku, Quantity> MerchItems { get; private set; }
+        public Dictionary<ItemTypeId, Quantity> MerchItems { get; private set; }
 
-        private Dictionary<Sku, Quantity> SetMerchItems(string merchItemsJson)
+        private Dictionary<ItemTypeId, Quantity> SetMerchItems(string merchItemsJson)
         {
             var result = JsonSerializer.Deserialize<Dictionary<int, int>>(merchItemsJson);
-            var merchItems = new Dictionary<Sku, Quantity>();
+            var merchItems = new Dictionary<ItemTypeId, Quantity>();
             foreach (var item in result)
             {
                 merchItems.Add(new(item.Key), new(item.Value));
@@ -27,9 +27,9 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
             return merchItems;
         }
 
-        public void AddToMerchItems(int skuId, int quantity)
+        public void AddToMerchItems(int itemTypeId, int quantity)
         {
-            Sku sku = new(skuId);
+            ItemTypeId sku = new(itemTypeId);
             var check = MerchItems.ContainsKey(sku);
             if (check)
             {
@@ -38,24 +38,24 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
             }
             else
             {
-                MerchItems.Add(new(skuId), new(quantity));
+                MerchItems.Add(new(itemTypeId), new(quantity));
             }
         }
 
-        public void DeleteFromMerchItems(int skuId, int quantity)
+        public void DeleteFromMerchItems(int itemTypeId, int quantity)
         {
-            Sku sku = new(skuId);
-            var check = MerchItems.ContainsKey(sku);
+            ItemTypeId item = new(itemTypeId);
+            var check = MerchItems.ContainsKey(item);
             if (check)
             {
-                var value = MerchItems[sku].Value;
+                var value = MerchItems[item].Value;
                 if (value > quantity)
                 {
-                    MerchItems[sku] = new(value - quantity);
+                    MerchItems[item] = new(value - quantity);
                 }
                 else
                 {
-                    MerchItems.Remove(sku);
+                    MerchItems.Remove(item);
                 }
             }
             else

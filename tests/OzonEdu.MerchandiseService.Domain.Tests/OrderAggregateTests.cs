@@ -1,6 +1,7 @@
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.Exceptions.OrderAggregate;
+using OzonEdu.MerchandiseService.Domain.Models;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -19,8 +20,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             {
                 new(1,
                     new(orderDate),
-                    Email.Crate("testc1@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                    Email.Create("testc@bk.ru"),
+                    NameUser.Create("Иванов Иван Иванович"),
+                    Email.Create("men@bk.ru"),
+                    NameUser.Create("Петров Пётр Петрович"),
+                    Enumeration.FromValue<ClothingSizeType>(1),
                     new MerchPack(MerchTypeEnum.WelcomePack.Id,
                     MerchTypeEnum.WelcomePack.Id, "{}"),
                     new(SourceType.External.Id),
@@ -30,8 +34,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Act
             Order order = Order.Create(
                     new(orderDate),
-                    Email.Crate("testc@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                    Email.Create("testc@bk.ru"),
+                    NameUser.Create("Иванов Иван Иванович"),
+                    Email.Create("men@bk.ru"),
+                    NameUser.Create("Петров Пётр Петрович"),
+                    Enumeration.FromValue<ClothingSizeType>(1),
                     new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                     new(SourceType.External.Id), alreadyExistedOrders);
 
@@ -47,10 +54,13 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             {
                 new(1,
                     new(orderDate.AddYears(-1)),
-                    Email.Crate("testc@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                    Email.Create("testc@bk.ru"),
+                    NameUser.Create("Иванов Иван Иванович"),
+                    Email.Create("men@bk.ru"),
+                    NameUser.Create("Петров Пётр Петрович"),
+                    Enumeration.FromValue<ClothingSizeType>(1),
                     new MerchPack(MerchTypeEnum.WelcomePack.Id,
-                        MerchTypeEnum.WelcomePack.Id, "{}"),
+                    MerchTypeEnum.WelcomePack.Id, "{}"),
                     new(SourceType.External.Id),
                     new Status(StatusType.Done.Id),
                     DeliveryDate.Create(orderDate.AddYears(-1).AddDays(1)))
@@ -58,8 +68,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Act
             Order order = Order.Create(
                     new(orderDate),
-                    Email.Crate("testc@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                    Email.Create("testc@bk.ru"),
+                    NameUser.Create("Иванов Иван Иванович"),
+                    Email.Create("men@bk.ru"),
+                    NameUser.Create("Петров Пётр Петрович"),
+                    Enumeration.FromValue<ClothingSizeType>(1),
                     new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                     new(SourceType.External.Id), alreadyExistedOrders);
 
@@ -73,8 +86,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Arrange
             Order order = Order.Create(
                    new(orderDate),
-                   Email.Crate("testc@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                    Email.Create("testc@bk.ru"),
+                    NameUser.Create("Иванов Иван Иванович"),
+                    Email.Create("men@bk.ru"),
+                    NameUser.Create("Петров Пётр Петрович"),
+                    Enumeration.FromValue<ClothingSizeType>(1),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.External.Id), AlreadyExistedOrdersStub());
 
@@ -92,8 +108,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Arrange
             Order order = Order.Create(
                    new(orderDate),
-                   Email.Crate("testc@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                    Email.Create("testc@bk.ru"),
+                    NameUser.Create("Иванов Иван Иванович"),
+                    Email.Create("men@bk.ru"),
+                    NameUser.Create("Петров Пётр Петрович"),
+                    Enumeration.FromValue<ClothingSizeType>(1),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.External.Id), AlreadyExistedOrdersStub());
 
@@ -110,8 +129,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Arrange
             Order order = Order.Create(
                    new(orderDate),
-                   Email.Crate("testc@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                    Email.Create("testc@bk.ru"),
+                    NameUser.Create("Иванов Иван Иванович"),
+                    Email.Create("men@bk.ru"),
+                    NameUser.Create("Петров Пётр Петрович"),
+                    Enumeration.FromValue<ClothingSizeType>(1),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.External.Id), AlreadyExistedOrdersStub());
             order.GiveOut(false, orderDate);
@@ -129,8 +151,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Arrange
             Order order = Order.Create(
                    new(orderDate),
-                   Email.Crate("testc@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                    Email.Create("testc@bk.ru"),
+                    NameUser.Create("Иванов Иван Иванович"),
+                    Email.Create("men@bk.ru"),
+                    NameUser.Create("Петров Пётр Петрович"),
+                    Enumeration.FromValue<ClothingSizeType>(1),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.Internal.Id), AlreadyExistedOrdersStub());
 
@@ -147,8 +172,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Arrange
             Order order = Order.Create(
                    new(orderDate),
-                   Email.Crate("testc@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                    Email.Create("testc@bk.ru"),
+                    NameUser.Create("Иванов Иван Иванович"),
+                    Email.Create("men@bk.ru"),
+                    NameUser.Create("Петров Пётр Петрович"),
+                    Enumeration.FromValue<ClothingSizeType>(1),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.Internal.Id), AlreadyExistedOrdersStub());
             order.GiveOut(true, orderDate);
@@ -166,8 +194,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Arrange
             Order order = Order.Create(
                    new(orderDate),
-                   Email.Crate("testc@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                    Email.Create("testc@bk.ru"),
+                    NameUser.Create("Иванов Иван Иванович"),
+                    Email.Create("men@bk.ru"),
+                    NameUser.Create("Петров Пётр Петрович"),
+                    Enumeration.FromValue<ClothingSizeType>(1),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.External.Id), AlreadyExistedOrdersStub());
             order.GiveOut(false, orderDate);
@@ -188,8 +219,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Act
             void act() => Order.Create(
                    new(orderDate),
-                   Email.Crate("test1c@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                    Email.Create("testc@bk.ru"),
+                    NameUser.Create("Иванов Иван Иванович"),
+                    Email.Create("men@bk.ru"),
+                    NameUser.Create("Петров Пётр Петрович"),
+                    Enumeration.FromValue<ClothingSizeType>(1),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.External.Id), AlreadyExistedOrdersStub());
 
@@ -205,8 +239,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             {
                 new(1,
                     new(orderDate),
-                    Email.Crate("testc@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                    Email.Create("testc@bk.ru"),
+                    NameUser.Create("Иванов Иван Иванович"),
+                    Email.Create("men@bk.ru"),
+                    NameUser.Create("Петров Пётр Петрович"),
+                    Enumeration.FromValue<ClothingSizeType>(1),
                     new MerchPack(MerchTypeEnum.WelcomePack.Id,
                     MerchTypeEnum.WelcomePack.Id, "{}"),
                     new(SourceType.External.Id),
@@ -217,8 +254,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Act
             void act() => Order.Create(
                    new(orderDate.AddDays(10)),
-                   Email.Crate("testc@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                    Email.Create("testc@bk.ru"),
+                    NameUser.Create("Иванов Иван Иванович"),
+                    Email.Create("men@bk.ru"),
+                    NameUser.Create("Петров Пётр Петрович"),
+                    Enumeration.FromValue<ClothingSizeType>(1),
                    new MerchPack(MerchTypeEnum.WelcomePack.Id, MerchTypeEnum.WelcomePack.Id, "{}"),
                    new(SourceType.External.Id), alreadyExistedOrders);
 
@@ -232,8 +272,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 
             Order order1 = new(1,
                 new(orderDate),
-                Email.Crate("test1c@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                Email.Create("testc@bk.ru"),
+                NameUser.Create("Иванов Иван Иванович"),
+                Email.Create("men@bk.ru"),
+                NameUser.Create("Петров Пётр Петрович"),
+                Enumeration.FromValue<ClothingSizeType>(1),
                 new MerchPack(MerchTypeEnum.WelcomePack.Id,
                 MerchTypeEnum.WelcomePack.Id, "{}"),
                 new(SourceType.External.Id),
@@ -242,8 +285,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 
             Order order2 = new(1,
                 new(orderDate),
-                Email.Crate("test2c@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                Email.Create("testc@bk.ru"),
+                NameUser.Create("Иванов Иван Иванович"),
+                Email.Create("men@bk.ru"),
+                NameUser.Create("Петров Пётр Петрович"),
+                Enumeration.FromValue<ClothingSizeType>(1),
                 new MerchPack(MerchTypeEnum.WelcomePack.Id,
                 MerchTypeEnum.WelcomePack.Id, "{}"),
                 new(SourceType.External.Id),
@@ -252,8 +298,11 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 
             Order order3 = new(1,
                 new(orderDate),
-                Email.Crate("test3c@bk.ru"),
-                    Email.Crate("men@bk.ru"),
+                Email.Create("testc@bk.ru"),
+                NameUser.Create("Иванов Иван Иванович"),
+                Email.Create("men@bk.ru"),
+                NameUser.Create("Петров Пётр Петрович"),
+                Enumeration.FromValue<ClothingSizeType>(1),
                 new MerchPack(MerchTypeEnum.WelcomePack.Id,
                 MerchTypeEnum.WelcomePack.Id, "{}"),
                 new(SourceType.External.Id),

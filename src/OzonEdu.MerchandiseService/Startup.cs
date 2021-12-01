@@ -1,17 +1,15 @@
-using MediatR;
+using Jaeger;
+using Jaeger.Reporters;
+using Jaeger.Samplers;
+using Jaeger.Senders.Thrift;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
-using OzonEdu.MerchandiseService.ApplicationServices.Configuration;
-using OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate;
-using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementation;
-using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure;
-using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure.Interfaces;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
-using OzonEdu.MerchandiseService.Domain.Contracts;
+using Microsoft.Extensions.Logging;
+using OpenTracing;
+using OpenTracing.Contrib.NetCore.Configuration;
+using OzonEdu.MerchandiseService.Extensions;
 using OzonEdu.MerchandiseService.GrpcServices;
 
 namespace OzonEdu.MerchandiseService
@@ -26,24 +24,41 @@ namespace OzonEdu.MerchandiseService
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(Startup));
-            services.AddMediatR(typeof(GiveOutNewOrderCommandHandler).Assembly);
+            services.AddCustomOptions(Configuration)
+                  .AddHostedServices()
+                  .AddDatabaseConnection(Configuration)
+                  .AddRepositories()
+                  .AddApplicationServices()
+                  .AddExternalServices(Configuration)
+                  .AddKafkaServices(Configuration)
+                  .AddOpenTracing();
 
-            services.Configure<DatabaseConnectionOptions>(Configuration.GetSection(nameof(DatabaseConnectionOptions)));
-            services.AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IChangeTracker, ChangeTracker>();
+            services.AddSingleton<ITracer>(sp =>
+            {
+                var serviceName = sp.GetRequiredService<IWebHostEnvironment>().ApplicationName;
+                var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
+                var reporter = new RemoteReporter.Builder().WithLoggerFactory(loggerFactory).WithSender(new UdpSender())
+                    .Build();
+                var tracer = new Tracer.Builder(serviceName)
+                    // The constant sampler reports every span.
+                    .WithSampler(new ConstSampler(true))
+                    // LoggingReporter prints every reported span to the logging framework.
+                    .WithReporter(reporter)
+                    .Build();
+                return tracer;
+            });
 
-            services.AddScoped<IOrderRepository, OrderRepository>();
-            services.AddScoped<IMerchPackRepository, MerchPackRepository>();
+            services.Configure<HttpHandlerDiagnosticOptions>(options =>
+                 options.OperationNameResolver =
+                     request => $"{request.Method.Method}: {request?.RequestUri?.AbsoluteUri}");
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseRouting();
+            // app.UseRouting();
             app.UseEndpoints(endpoints =>
               {
-                  endpoints.MapGrpcService<MerchandiseGrpService>();
                   endpoints.MapControllers();
+                  endpoints.MapGrpcService<MerchandiseGrpService>();
               });
         }
     }

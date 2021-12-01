@@ -4,7 +4,7 @@ using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 
 namespace OzonEdu.MerchandiseService.Domain.Events
 {
-    public sealed record EmployeeNotificationAboutSupplyDomainEvent : INotification
+    public sealed record EmployeeNotificationMerchDeliveryDomainEvent : INotification
     {
         public Email EmployeeEmail { get; set; }
         public NameUser EmployeeName { get; set; }
