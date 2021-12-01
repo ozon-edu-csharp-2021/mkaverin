@@ -1,17 +1,16 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using CSharpCourse.Core.Lib.Events;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OzonEdu.MerchandiseService.ApplicationServices.Commands;
 using OzonEdu.MerchandiseService.ApplicationServices.Configuration;
+using System;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace OzonEdu.MerchandiseService.HostedServices
 {
@@ -22,7 +21,7 @@ namespace OzonEdu.MerchandiseService.HostedServices
         private readonly ILogger<StockReplenishedConsumerHostedService> _logger;
 
         protected string Topic { get; set; } = "stock_replenished_event";
-        
+
         public StockReplenishedConsumerHostedService(
             IOptions<KafkaConfiguration> config,
             IServiceScopeFactory scopeFactory,
@@ -50,30 +49,22 @@ namespace OzonEdu.MerchandiseService.HostedServices
                     {
                         using (var scope = _scopeFactory.CreateScope())
                         {
-                            var sw = new Stopwatch();
                             try
                             {
                                 //await Task.Yield();
-                                //sw.Start();
-                                //var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                                //var cr = c.Consume(stoppingToken);
-                                //if (cr != null)
-                                //{
-                                //    var message = JsonSerializer.Deserialize<SupplyShippedEvent>(cr.Message.Value);
-                                //    await mediator.Send(new ReplenishStockCommand()
-                                //    {
-                                //        SupplyId = message.SupplyId,
-                                //        Items = message.Items.Select(it => new StockItemQuantityDto()
-                                //        {
-                                //            Quantity = (int)it.Quantity,
-                                //            Sku = it.SkuId
-                                //        }).ToArray()
-                                //    }, stoppingToken);
-                                //}
+                                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                                var cr = c.Consume(stoppingToken);
+                                if (cr != null)
+                                {
+                                    var message = JsonSerializer.Deserialize<StockReplenishedEvent>(cr.Message.Value);
+                                    await mediator.Send(new NewMerchandiseAppearedCommand()
+                                    {
+                                        Items = message.Type
+                                    }, stoppingToken);
+                                }
                             }
                             catch (Exception ex)
                             {
-                                sw.Stop();
                                 _logger.LogError($"Error while get consume. Message {ex.Message}");
                             }
                         }

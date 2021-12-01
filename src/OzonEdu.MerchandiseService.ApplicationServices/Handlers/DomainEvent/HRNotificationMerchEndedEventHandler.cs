@@ -1,13 +1,12 @@
-﻿using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using CSharpCourse.Core.Lib.Enums;
 using CSharpCourse.Core.Lib.Events;
-using CSharpCourse.Core.Lib.Models;
 using MediatR;
 using OzonEdu.MerchandiseService.ApplicationServices.MessageBroker;
 using OzonEdu.MerchandiseService.Domain.Events;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.DomainEvent
 {
