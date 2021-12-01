@@ -24,7 +24,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.DomainEvent
             return _producerBuilderWrapper.Producer.ProduceAsync(_producerBuilderWrapper.EmployeeNotificationTopic,
                  new Message<string, string>()
                  {
-                     Key = notification.MerchType.Id.ToString(),
+                     Key = EmployeeEventType.MerchDelivery.ToString(),
                      Value = JsonSerializer.Serialize(new NotificationEvent()
                      {
                          EmployeeEmail = notification.EmployeeEmail.Value,
@@ -34,7 +34,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.DomainEvent
                          EventType = EmployeeEventType.MerchDelivery, //Тут нужен другой тип, но его пока нет на стороне инфраструктуры Озон
                          Payload = new MerchDeliveryEventPayload()
                          {
-                             MerchType = (MerchType)notification.MerchType.Id,
+                             MerchType = notification.MerchType,
                              ClothingSize = ClothingSize.XS
                          }
                      })

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using CSharpCourse.Core.Lib.Enums;
+using MediatR;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 

@@ -1,4 +1,5 @@
-﻿using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
+﻿using CSharpCourse.Core.Lib.Enums;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.Events;
 using OzonEdu.MerchandiseService.Domain.Exceptions.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.Models;
@@ -14,7 +15,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         /// Конструктор для Dapper
         /// </summary>
         public Order(long id, OrderDate date, Email employeeEmail, NameUser employeeName, Email managerEmail, NameUser managerName,
-               ClothingSizeType clothingSize, MerchPack merchPack, Source source, Status status, DeliveryDate deliveryDate)
+               ClothingSize clothingSize, MerchPack merchPack, Source source, Status status, DeliveryDate deliveryDate)
         {
             Id = id;
             CreationDate = date;
@@ -33,7 +34,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         {
             Id = id;
         }
-        private Order(OrderDate date, Email employeeEmail, NameUser employeeName, Email managerEmail, NameUser managerName, ClothingSizeType clothingSize, MerchPack merchPack, Source source)
+        private Order(OrderDate date, Email employeeEmail, NameUser employeeName, Email managerEmail, NameUser managerName, ClothingSize clothingSize, MerchPack merchPack, Source source)
         {
             CreationDate = date;
             EmployeeEmail = employeeEmail;
@@ -51,13 +52,13 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         public NameUser EmployeeName { get; private set; }
         public Email ManagerEmail { get; private set; }
         public NameUser ManagerName { get; private set; }
-        public ClothingSizeType ClothingSize { get; private set; }
+        public ClothingSize ClothingSize { get; private set; }
         public MerchPack MerchPack { get; private set; }
         public Source Source { get; private set; }
         public Status Status { get; private set; }
         public DeliveryDate DeliveryDate { get; private set; }
 
-        public static Order Create(OrderDate date, Email employeeEmail, NameUser employeeName, Email managerEmail, NameUser managerName, ClothingSizeType clothingSize, MerchPack merchPack, Source source,
+        public static Order Create(OrderDate date, Email employeeEmail, NameUser employeeName, Email managerEmail, NameUser managerName, ClothingSize clothingSize, MerchPack merchPack, Source source,
             IReadOnlyCollection<Order> alreadyExistedOrders)
         {
             Order newOrder = new(date, employeeEmail, employeeName, managerEmail, managerName, clothingSize, merchPack, source);

@@ -1,4 +1,5 @@
-﻿using OzonEdu.MerchandiseService.Domain.Exceptions.OrderAggregate;
+﻿using CSharpCourse.Core.Lib.Enums;
+using OzonEdu.MerchandiseService.Domain.Exceptions.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.Models;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -10,7 +11,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
         public MerchPack(long id, int merch_type_id, string merch_items)
         {
             Id = id;
-            MerchType = new(merch_type_id);
+            MerchType = (MerchType)merch_type_id;
             MerchItems = SetMerchItems(merch_items);
         }
         public MerchType MerchType { get; private set; }

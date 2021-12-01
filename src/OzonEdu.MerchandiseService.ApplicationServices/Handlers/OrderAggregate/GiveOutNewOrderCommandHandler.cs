@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using CSharpCourse.Core.Lib.Enums;
+using MediatR;
 using OzonEdu.MerchandiseService.ApplicationServices.Commands;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
@@ -30,14 +31,14 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
         public async Task<bool> Handle(GiveOutNewOrderCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.StartTransaction(cancellationToken);
-            MerchPack merchPack = await _merchPackRepository.FindByTypeAsync(new(request.MerchType), cancellationToken);
+            MerchPack merchPack = await _merchPackRepository.FindByTypeAsync((MerchType)request.MerchType, cancellationToken);
             IReadOnlyCollection<Order> orders = await _orderRepository.GetAllOrderByEmployeeAsync(request.EmployeeEmail, cancellationToken);
             Order requestMR = Order.Create(date: new(DateTimeOffset.UtcNow),
                                                 employeeEmail: Email.Create(request.EmployeeEmail),
                                                 employeeName: NameUser.Create(request.EmployeeEmail),
                                                 managerEmail: Email.Create(request.ManagerEmail),
                                                 managerName: NameUser.Create(request.ManagerEmail),
-                                                Enumeration.FromValue<ClothingSizeType>(request.ClothingSize),
+                                                (ClothingSize)request.ClothingSize,
                                                 merchPack: merchPack,
                                                 source: new(request.Source), orders);
 

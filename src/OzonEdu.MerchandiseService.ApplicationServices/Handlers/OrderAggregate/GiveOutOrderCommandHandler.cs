@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using CSharpCourse.Core.Lib.Enums;
+using MediatR;
 using OzonEdu.MerchandiseService.ApplicationServices.Commands;
 using OzonEdu.MerchandiseService.ApplicationServices.Exceptions;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
@@ -49,7 +50,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
             return resultGiveOut.Result == Result.Successful;
         }
 
-        private async Task<GiveOutItemsRequest> GetByItemTypeAsync(Dictionary<ItemTypeId, Quantity> merchItems, ClothingSizeType size, CancellationToken cancellationToken)
+        private async Task<GiveOutItemsRequest> GetByItemTypeAsync(Dictionary<ItemTypeId, Quantity> merchItems, ClothingSize size, CancellationToken cancellationToken)
         {
             /*
                 Не лучшее решение, так как по хорошему сервис StockApi должен нам вернуть (по типу мерча, размеру и кол-во) есть он или нет. 
@@ -61,7 +62,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
                 var requestGetByItemType = new IntIdModel() { Id = item.Key.Value };
                 var itemsOfRequiredType = await _stockApiGrpcClient.GetByItemTypeAsync(requestGetByItemType, cancellationToken: cancellationToken);
                 var itemOfRequiredSizeAndQuantity = itemsOfRequiredType.Items
-                    .FirstOrDefault(i => (i.SizeId == null || i.SizeId == size.Id) && i.Quantity >= item.Value.Value);
+                    .FirstOrDefault(i => (i.SizeId == null || i.SizeId == (int)size) && i.Quantity >= item.Value.Value);
                 if (itemOfRequiredSizeAndQuantity is null)
                 {
                     return null;

@@ -1,8 +1,8 @@
-﻿using Dapper;
+﻿using CSharpCourse.Core.Lib.Enums;
+using Dapper;
 using Npgsql;
 using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure.Interfaces;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,7 +28,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
 
             var parameters = new
             {
-                MerchTypeId = merchType.Id,
+                MerchTypeId = (int)merchType,
             };
             var commandDefinition = new CommandDefinition(
                 sql,

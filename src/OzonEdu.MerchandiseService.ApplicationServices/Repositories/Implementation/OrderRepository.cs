@@ -2,14 +2,12 @@
 using Dapper;
 using Npgsql;
 using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure.Interfaces;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ClothingSize = OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate.ClothingSize;
 
 namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementation
 {
@@ -81,7 +79,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
                     NameUser.Create(merchandiseOrder.employee_name),
                     Email.Create(merchandiseOrder.manager_email),
                     NameUser.Create(merchandiseOrder.manager_name),
-                    Enumeration.FromValue<ClothingSizeType>(merchandiseOrder.clothing_size),
+                    (ClothingSize)merchandiseOrder.clothing_size,
                     new(merchPack.id, merchPack.merch_type_id, merchPack.merch_items),
                     new(merchandiseOrder.source_id),
                     new(merchandiseOrder.status_id),
@@ -121,7 +119,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
                     NameUser.Create(merchandiseOrder.employee_name),
                     Email.Create(merchandiseOrder.manager_email),
                     NameUser.Create(merchandiseOrder.manager_name),
-                    Enumeration.FromValue<ClothingSizeType>(merchandiseOrder.clothing_size),
+                    (ClothingSize)merchandiseOrder.clothing_size,
                     new(merchPack.id, merchPack.merch_type_id, merchPack.merch_items),
                     new(merchandiseOrder.source_id),
                     new(merchandiseOrder.status_id),
