@@ -39,7 +39,7 @@ namespace OzonEdu.MerchandiseService.Controllers
             GetInfoGiveOutMerchQueryResponse result = await _mediator.Send(query, cancellationToken);
             if (result.DeliveryMerch.Length == 0)
                 return NotFound();
-            GetInfoMerchResponseDto response = _mapper.Map<GetInfoMerchResponseDto>(result);
+            GetInfoMerchResponseDto response = _mapper.Map<GetInfoMerchResponseDto>(result); 
             return Ok(response);
         }
     }

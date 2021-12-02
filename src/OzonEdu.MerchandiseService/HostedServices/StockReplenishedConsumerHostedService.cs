@@ -51,7 +51,7 @@ namespace OzonEdu.MerchandiseService.HostedServices
                         {
                             try
                             {
-                                //await Task.Yield();
+                                await Task.Yield();
                                 var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                                 var cr = c.Consume(stoppingToken);
                                 if (cr != null)

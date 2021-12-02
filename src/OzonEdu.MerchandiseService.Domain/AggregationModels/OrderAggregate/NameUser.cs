@@ -11,7 +11,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         private NameUser(string nameString) => Value = nameString;
         public static NameUser Create(string nameString)
         {
-            if (IsValidEmail(nameString))
+            if (IsValidName(nameString))
             {
                 return new NameUser(nameString);
             }
@@ -19,8 +19,8 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         }
         public override string ToString() => Value;
 
-        private static bool IsValidEmail(string emailString)
-            => Regex.IsMatch(emailString, "^[а-яА-Я][а-яА-Я0-9-]+$");
+        private static bool IsValidName(string nameString)
+            => nameString.Length < 150;
 
         protected override IEnumerable<object> GetEqualityComponents()
         {

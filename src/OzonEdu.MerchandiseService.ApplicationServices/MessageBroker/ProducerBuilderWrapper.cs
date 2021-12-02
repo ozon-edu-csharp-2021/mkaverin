@@ -25,7 +25,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.MessageBroker
             };
 
             Producer = new ProducerBuilder<string, string>(producerConfig).Build();
-            EmployeeNotificationTopic = "email_notification_event";//configValue.Topic;
+            EmployeeNotificationTopic = configValue.Topic;
         }
     }
 }

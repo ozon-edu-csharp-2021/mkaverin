@@ -30,12 +30,12 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
 
         public void AddToMerchItems(int itemTypeId, int quantity)
         {
-            ItemTypeId sku = new(itemTypeId);
-            var check = MerchItems.ContainsKey(sku);
+            ItemTypeId typeId = new(itemTypeId);
+            var check = MerchItems.ContainsKey(typeId);
             if (check)
             {
-                var value = MerchItems[sku].Value;
-                MerchItems[sku] = new(value += quantity);
+                var value = MerchItems[typeId].Value;
+                MerchItems[typeId] = new(value += quantity);
             }
             else
             {

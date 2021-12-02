@@ -1,7 +1,7 @@
 ﻿namespace OzonEdu.MerchandiseService.ApplicationServices.Configuration
 {
     /// <summary>
-    /// Конфигурации подключения к сервису supply
+    /// Конфигурации подключения к сервису StockApi
     /// </summary>
     public class StockApiGrpcServiceConfiguration
     {

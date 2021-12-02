@@ -30,7 +30,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             DeliveryDate = deliveryDate;
         }
         public Order(long id, Order or)
-            : this(or.CreationDate, or.EmployeeEmail, or.EmployeeName, or.ManagerEmail, or.ManagerName,or.ClothingSize, or.MerchPack, or.Source)
+            : this(or.CreationDate, or.EmployeeEmail, or.EmployeeName, or.ManagerEmail, or.ManagerName, or.ClothingSize, or.MerchPack, or.Source)
         {
             Id = id;
         }
@@ -61,17 +61,22 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
         public static Order Create(OrderDate date, Email employeeEmail, NameUser employeeName, Email managerEmail, NameUser managerName, ClothingSize clothingSize, MerchPack merchPack, Source source,
             IReadOnlyCollection<Order> alreadyExistedOrders)
         {
-            Order newOrder = new(date, employeeEmail, employeeName, managerEmail, managerName, clothingSize, merchPack, source);
-            if (CheckGiveOutMerchByEmployee(alreadyExistedOrders, newOrder))
+            var order = CheckOrderExists(alreadyExistedOrders, employeeEmail, merchPack, StatusType.New);
+            if (order is not null)
+            {
+                return order;
+            }
+            if (CheckOrderExists(alreadyExistedOrders, employeeEmail, merchPack, StatusType.InQueue) is not null)
+            {
+                throw new OrderException("The order is already awaiting delivery.");
+            }
+
+            if (CheckGiveOutMerchByEmployee(alreadyExistedOrders, employeeEmail, merchPack))
             {
                 throw new OrderException("Merch already issued this year");
             }
 
-            if (CheckOrderExists(alreadyExistedOrders, newOrder))
-            {
-                throw new OrderException("Order already");
-            }
-            return newOrder;
+            return new(date, employeeEmail, employeeName, managerEmail, managerName, clothingSize, merchPack, source);
         }
         public void GiveOut(bool isAvailable, DateTimeOffset date)
         {
@@ -95,17 +100,22 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             }
         }
 
-        private static bool CheckOrderExists(IReadOnlyCollection<Order> alreadyExistedOrders, Order newOrder)
+        private static Order CheckOrderExists(IReadOnlyCollection<Order> alreadyExistedOrders, Email employeeEmail, MerchPack merchPack, StatusType status)
         {
             var orders = alreadyExistedOrders
-              .Where(r => r.EmployeeEmail.Equals(newOrder.EmployeeEmail))
-              .Where(r => r.MerchPack.Equals(newOrder.MerchPack))
-              .Where(r => r.Status.Id == StatusType.New.Id || r.Status.Id == StatusType.InQueue.Id);
-            return orders.Any();
+              .Where(r => r.EmployeeEmail.Equals(employeeEmail))
+              .Where(r => r.MerchPack.Equals(merchPack))
+              .Where(r => r.Status.Id == status.Id);
+            return orders.FirstOrDefault();
         }
 
-        private static bool CheckGiveOutMerchByEmployee(IReadOnlyCollection<Order> alreadyExistedOrders, Order newOrder)
+        private static bool CheckGiveOutMerchByEmployee(IReadOnlyCollection<Order> alreadyExistedOrders, Email employeeEmail, MerchPack merchPack)
         {
+            //Сюда бы еще какую нибудь проверку на id конференции, чтобы на одну и туже конференцию небыло по 10 заякок от одного сотрудника.
+            if (merchPack.MerchType is MerchType.ConferenceListenerPack or MerchType.ConferenceSpeakerPack)
+            {
+                return false;
+            }
             static bool IsYearPassedBetweenDates(DateTimeOffset deliveryDate, DateTimeOffset today)
             {
                 var year = today.Month <= 2 ? deliveryDate.Year : today.Year;
@@ -114,9 +124,9 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
             }
 
             var checkGiveOut = alreadyExistedOrders
-                .Where(r => r.EmployeeEmail.Equals(newOrder.EmployeeEmail))
+                .Where(r => r.EmployeeEmail.Equals(employeeEmail))
                 .Where(r => r.Status.Id == StatusType.Done.Id)
-                .Where(r => r.MerchPack.Equals(newOrder.MerchPack))
+                .Where(r => r.MerchPack.Equals(merchPack))
                 .Where(r => IsYearPassedBetweenDates(r.DeliveryDate.Value, DateTimeOffset.UtcNow.Date)).ToList();
 
             return checkGiveOut.Any();

@@ -36,7 +36,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
                 requestGiveOut.Items.Add(new SkuQuantityItem()
                 {
                     Sku = itemOfRequiredSizeAndQuantity.Sku,
-                    Quantity = itemOfRequiredSizeAndQuantity.Quantity
+                    Quantity = item.Value.Value
                 });
             }
             return requestGiveOut;

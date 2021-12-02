@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using OpenTracing;
 using OpenTracing.Contrib.NetCore.Configuration;
 using OzonEdu.MerchandiseService.Extensions;
-using OzonEdu.MerchandiseService.GrpcServices;
 
 namespace OzonEdu.MerchandiseService
 {
@@ -54,12 +53,11 @@ namespace OzonEdu.MerchandiseService
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // app.UseRouting();
+            app.UseRouting();
             app.UseEndpoints(endpoints =>
-              {
-                  endpoints.MapControllers();
-                  endpoints.MapGrpcService<MerchandiseGrpService>();
-              });
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

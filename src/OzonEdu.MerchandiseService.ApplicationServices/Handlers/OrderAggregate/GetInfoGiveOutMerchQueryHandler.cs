@@ -13,7 +13,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
     public class GetInfoGiveOutMerchQueryHandler : IRequestHandler<GetInfoGiveOutMerchQuery, GetInfoGiveOutMerchQueryResponse>
     {
         private readonly IOrderRepository _orderRepository;
-        public GetInfoGiveOutMerchQueryHandler(IOrderRepository orderRepository, IUnitOfWork unitOfWork)
+        public GetInfoGiveOutMerchQueryHandler(IOrderRepository orderRepository)
         {
             _orderRepository = orderRepository;
         }

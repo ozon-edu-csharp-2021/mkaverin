@@ -36,6 +36,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
             bool isAvailable = await GiveOutItemsAsync(requestGiveOut, cancellationToken);
             request.order.GiveOut(isAvailable, DateTimeOffset.UtcNow);
             await _orderRepository.UpdateAsync(request.order, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
             return isAvailable;
         }
 

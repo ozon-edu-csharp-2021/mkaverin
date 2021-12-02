@@ -35,15 +35,15 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
             IReadOnlyCollection<Order> orders = await _orderRepository.GetAllOrderByEmployeeAsync(request.EmployeeEmail, cancellationToken);
             Order requestMR = Order.Create(date: new(DateTimeOffset.UtcNow),
                                                 employeeEmail: Email.Create(request.EmployeeEmail),
-                                                employeeName: NameUser.Create(request.EmployeeEmail),
+                                                employeeName: NameUser.Create(request.EmployeeName),
                                                 managerEmail: Email.Create(request.ManagerEmail),
-                                                managerName: NameUser.Create(request.ManagerEmail),
+                                                managerName: NameUser.Create(request.ManagerName),
                                                 (ClothingSize)request.ClothingSize,
                                                 merchPack: merchPack,
+
                                                 source: new(request.Source), orders);
 
             var createdOrderId = await _orderRepository.CreateAsync(requestMR, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var result = await _mediator.Send(new GiveOutOrderCommand { order = new(createdOrderId, requestMR) }, cancellationToken);
             return result;

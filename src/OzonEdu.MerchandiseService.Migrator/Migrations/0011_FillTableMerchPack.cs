@@ -10,11 +10,11 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
             if (TableExists(CommonConstants.NameTableMerchPack))
             {
                 Insert.IntoTable(CommonConstants.NameTableMerchPack)
-                    .Row(new { id = 10, merch_type_id = 10, merch_items = "{\"12341\":2,\"23722\":1}" })
-                    .Row(new { id = 20, merch_type_id = 20, merch_items = "{\"12341\":2,\"23722\":1}" })
-                    .Row(new { id = 30, merch_type_id = 30, merch_items = "{\"1141\":1,\"23722\":1}" })
-                    .Row(new { id = 40, merch_type_id = 40, merch_items = "{\"12341\":2,\"23722\":1}" })
-                    .Row(new { id = 50, merch_type_id = 50, merch_items = "{\"12\":3,\"12372\":1}" });
+                    .Row(new { id = 10, merch_type_id = 10, merch_items = "{\"1\":1,\"2\":1,\"3\":1}" })
+                    .Row(new { id = 20, merch_type_id = 20, merch_items = "{\"10\":1}" })
+                    .Row(new { id = 30, merch_type_id = 30, merch_items = "{\"7\":1}" })
+                    .Row(new { id = 40, merch_type_id = 40, merch_items = "{\"5\":2,\"6\":1}" })
+                    .Row(new { id = 50, merch_type_id = 50, merch_items = "{\"13\":2}" });
             }
         }
         public override void Down()
