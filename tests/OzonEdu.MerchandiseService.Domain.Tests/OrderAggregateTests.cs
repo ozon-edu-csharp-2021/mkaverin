@@ -39,7 +39,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
                     Email.Create("men@bk.ru"),
                     NameUser.Create("Петров Пётр Петрович"),
                     (ClothingSize)1,
-                    new MerchPack((int)MerchType.WelcomePack, (int)MerchType.WelcomePack, "{}"),
+                    new MerchPack((int)MerchType.ConferenceListenerPack, (int)MerchType.WelcomePack, "{}"),
                     new(SourceType.External.Id), alreadyExistedOrders);
 
             // Assert
@@ -218,7 +218,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
             //Act
             void act() => Order.Create(
                    new(orderDate),
-                    Email.Create("testc@bk.ru"),
+                    Email.Create("test2@bk.ru"),
                     NameUser.Create("Иванов Иван Иванович"),
                     Email.Create("men@bk.ru"),
                     NameUser.Create("Петров Пётр Петрович"),
@@ -270,7 +270,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 
             Order order1 = new(1,
                 new(orderDate),
-                Email.Create("testc@bk.ru"),
+                Email.Create("test1@bk.ru"),
                 NameUser.Create("Иванов Иван Иванович"),
                 Email.Create("men@bk.ru"),
                 NameUser.Create("Петров Пётр Петрович"),
@@ -282,7 +282,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 
             Order order2 = new(1,
                 new(orderDate),
-                Email.Create("testc@bk.ru"),
+                Email.Create("test2@bk.ru"),
                 NameUser.Create("Иванов Иван Иванович"),
                 Email.Create("men@bk.ru"),
                 NameUser.Create("Петров Пётр Петрович"),
@@ -294,7 +294,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 
             Order order3 = new(1,
                 new(orderDate),
-                Email.Create("testc@bk.ru"),
+                Email.Create("test3@bk.ru"),
                 NameUser.Create("Иванов Иван Иванович"),
                 Email.Create("men@bk.ru"),
                 NameUser.Create("Петров Пётр Петрович"),
