@@ -1,5 +1,6 @@
 ﻿using CSharpCourse.Core.Lib.Enums;
 using MediatR;
+using OpenTracing;
 using OzonEdu.MerchandiseService.ApplicationServices.Commands;
 using OzonEdu.MerchandiseService.ApplicationServices.HttpClients;
 using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
@@ -14,13 +15,17 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
     public class EmployeeVerificationQueryHandler : IRequestHandler<EmployeeVerificationQuery, GiveOutNewOrderCommand>
     {
         private readonly IEmployeesHttpClient _employeesHttpClient;
-        public EmployeeVerificationQueryHandler(IEmployeesHttpClient employeesHttp)
+        private readonly ITracer _tracer;
+
+        public EmployeeVerificationQueryHandler(IEmployeesHttpClient employeesHttp, ITracer tracer)
         {
             _employeesHttpClient = employeesHttp;
+            _tracer = tracer;
         }
 
         public async Task<GiveOutNewOrderCommand> Handle(EmployeeVerificationQuery request, CancellationToken cancellationToken)
         {
+            using var span = _tracer.BuildSpan("HandlerQuery.EmployeeVerification").StartActive();
             if (request.EventType == (int)EmployeeEventType.Dismissal)
             {
                 return null;

@@ -1,10 +1,10 @@
 ﻿using MediatR;
+using OpenTracing;
 using OzonEdu.MerchandiseService.ApplicationServices.Commands;
 using OzonEdu.MerchandiseService.ApplicationServices.Exceptions;
 using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.Contracts;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,18 +15,20 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
         private readonly IOrderRepository _orderRepository;
         private readonly IMediator _mediator;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITracer _tracer;
 
-        public NewMerchandiseAppearedCommandHandler(IMediator mediator, IOrderRepository orderRepository, IUnitOfWork unitOfWork)
+        public NewMerchandiseAppearedCommandHandler(IMediator mediator, ITracer tracer, IOrderRepository orderRepository, IUnitOfWork unitOfWork)
         {
             _orderRepository = orderRepository;
             _mediator = mediator;
             _unitOfWork = unitOfWork;
+            _tracer = tracer;
         }
 
         public async Task<Unit> Handle(NewMerchandiseAppearedCommand request, CancellationToken cancellationToken)
         {
+            using var span = _tracer.BuildSpan("HandlerCommand.NewMerchandiseAppeared").StartActive();
             var ordersInStatusInQueue = await _orderRepository.GetAllOrderInStatusAsync(new(StatusType.InQueue.Id), cancellationToken);
-            
 
             /*
                Не стал делать проверку того что пришло, а просто пытаюсь зарезервировать всех кто в очереди.
@@ -41,7 +43,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
                 switch (item.Source.Type.Id)
                 {
                     case 1:
-                        
+
                         var isAvailable = await _mediator.Send(new GetStockItemsAvailabilityQuery { MerchItems = item.MerchPack.MerchItems, Size = item.ClothingSize }, cancellationToken);
                         if (isAvailable is not null)
                         {

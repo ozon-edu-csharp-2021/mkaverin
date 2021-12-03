@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using OpenTracing;
 using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
 using OzonEdu.StockApi.Grpc;
 using System.Linq;
@@ -10,10 +11,12 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
     internal class GetStockItemsAvailabilityQueryHandle : IRequestHandler<GetStockItemsAvailabilityQuery, GiveOutItemsRequest>
     {
         private readonly StockApiGrpc.StockApiGrpcClient _stockApiGrpcClient;
+        private readonly ITracer _tracer;
 
-        public GetStockItemsAvailabilityQueryHandle(StockApiGrpc.StockApiGrpcClient stockApiGrpcClient)
+        public GetStockItemsAvailabilityQueryHandle(StockApiGrpc.StockApiGrpcClient stockApiGrpcClient, ITracer tracer)
         {
             _stockApiGrpcClient = stockApiGrpcClient;
+            _tracer = tracer;
         }
 
         public async Task<GiveOutItemsRequest> Handle(GetStockItemsAvailabilityQuery request, CancellationToken cancellationToken)
@@ -22,6 +25,8 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
                 Не лучшее решение, так как по хорошему сервис StockApi должен нам вернуть (по типу мерча, размеру и кол-во) есть он или нет. 
                 Но такого метода в ОЗОН не реализованно, а хранить у себя sku конкретных товаров это не корректно по бизнес логике.
              */
+            using var span = _tracer.BuildSpan("HandlerQuery.GetStockItemsAvailability").StartActive();
+
             var requestGiveOut = new GiveOutItemsRequest();
             foreach (var item in request.MerchItems)
             {

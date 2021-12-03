@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OpenTracing;
 using OzonEdu.MerchandiseService.ApplicationServices.Commands;
 using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
 using OzonEdu.MerchandiseService.HttpModels.DataTransferObjects;
@@ -16,15 +17,18 @@ namespace OzonEdu.MerchandiseService.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        public MerchandiseController(IMediator mediator, IMapper mapper)
+        private readonly ITracer _tracer;
+        public MerchandiseController(IMediator mediator, IMapper mapper, ITracer tracer)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _tracer = tracer;
         }
 
         [HttpPost("RequestMerch")]
         public async Task<ActionResult<RequestMerchResponseDto>> RequestMerch(RequestMerchRequestDto requestDto, CancellationToken cancellationToken)
         {
+            using var span = _tracer.BuildSpan("HttpPost.RequestMerch").StartActive();
             GiveOutNewOrderCommand giveOutNewOrderCommand = _mapper.Map<GiveOutNewOrderCommand>(requestDto);
             giveOutNewOrderCommand.Source = 1;
             var result = await _mediator.Send(giveOutNewOrderCommand, cancellationToken);
@@ -35,6 +39,7 @@ namespace OzonEdu.MerchandiseService.Controllers
         [HttpGet("InfoMerch")]
         public async Task<ActionResult<GetInfoMerchResponseDto>> GetInfoMerch([FromQuery] GetInfoMerchRequestDto requestDto, CancellationToken cancellationToken)
         {
+            using var span = _tracer.BuildSpan("HttpGet.InfoMerch").StartActive();
             GetInfoGiveOutMerchQuery query = _mapper.Map<GetInfoGiveOutMerchQuery>(requestDto);
             GetInfoGiveOutMerchQueryResponse result = await _mediator.Send(query, cancellationToken);
             if (result.DeliveryMerch.Length == 0)

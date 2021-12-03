@@ -1,6 +1,7 @@
 ﻿using CSharpCourse.Core.Lib.Enums;
 using Dapper;
 using Npgsql;
+using OpenTracing;
 using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure.Interfaces;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using System;
@@ -14,14 +15,17 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
     {
         private readonly IDbConnectionFactory<NpgsqlConnection> _dbConnectionFactory;
         private readonly IChangeTracker _changeTracker;
+        private readonly ITracer _tracer;
         private const int Timeout = 5;
-        public OrderRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IChangeTracker changeTracker)
+        public OrderRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, ITracer tracer, IChangeTracker changeTracker)
         {
             _dbConnectionFactory = dbConnectionFactory;
+            _tracer = tracer;
             _changeTracker = changeTracker;
         }
         public async Task<long> CreateAsync(Order itemToCreate, CancellationToken cancellationToken = default)
         {
+            using var span = _tracer.BuildSpan("OrderRepository.CreateAsync").StartActive();
             const string sql = @"
                 INSERT INTO merchandise_order (creation_date, employee_email,employee_name,manager_email,manager_name,clothing_size, merch_pack_id,source_id,status_id)
                 VALUES (@CreationDate, @EmployeeEmail, @EmployeeName,@ManagerEmail, @ManagerName, @ClothingSize, @MerchPackId, @SourceId, @StatusId) RETURNING id;";
@@ -53,6 +57,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
         }
         public async Task<Order> FindByIdAsync(long id, CancellationToken cancellationToken)
         {
+            using var span = _tracer.BuildSpan("OrderRepository.FindByIdAsync").StartActive();
             const string sql = @"
                 SELECT  merchandise_order.id, merchandise_order.creation_date, 
                         merchandise_order.employee_email,merchandise_order.employee_name,merchandise_order.manager_email,merchandise_order.manager_name,
@@ -93,6 +98,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
 
         public async Task<List<Order>> GetAllOrderByEmployeeAsync(string employeeEmail, CancellationToken cancellationToken = default)
         {
+            using var span = _tracer.BuildSpan("OrderRepository.GetAllOrderByEmployeeAsync").StartActive();
             string sql = @"
                 SELECT  merchandise_order.id, merchandise_order.creation_date, 
                         merchandise_order.employee_email,merchandise_order.employee_name,merchandise_order.manager_email,merchandise_order.manager_name,
@@ -134,6 +140,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
 
         public async Task<List<Order>> GetAllOrderInStatusAsync(Status status, CancellationToken cancellationToken)
         {
+            using var span = _tracer.BuildSpan("OrderRepository.GetAllOrderInStatusAsync").StartActive();
             string sql = @"
                 SELECT  merchandise_order.id, merchandise_order.creation_date, 
                         merchandise_order.employee_email,merchandise_order.employee_name,merchandise_order.manager_email,merchandise_order.manager_name,
@@ -178,6 +185,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
 
         public async Task<Order> UpdateAsync(Order itemToUpdate, CancellationToken cancellationToken)
         {
+            using var span = _tracer.BuildSpan("OrderRepository.UpdateAsync").StartActive();
             const string sql = @"
                 UPDATE merchandise_order
                 SET creation_date = @CreationDate, 

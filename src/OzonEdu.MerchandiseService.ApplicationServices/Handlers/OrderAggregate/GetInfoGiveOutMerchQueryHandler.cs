@@ -1,8 +1,7 @@
 ﻿using MediatR;
+using OpenTracing;
 using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
-using OzonEdu.MerchandiseService.Domain.Contracts;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -13,13 +12,17 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
     public class GetInfoGiveOutMerchQueryHandler : IRequestHandler<GetInfoGiveOutMerchQuery, GetInfoGiveOutMerchQueryResponse>
     {
         private readonly IOrderRepository _orderRepository;
-        public GetInfoGiveOutMerchQueryHandler(IOrderRepository orderRepository)
+        private readonly ITracer _tracer;
+
+        public GetInfoGiveOutMerchQueryHandler(IOrderRepository orderRepository, ITracer tracer)
         {
             _orderRepository = orderRepository;
+            _tracer = tracer;
         }
 
         public async Task<GetInfoGiveOutMerchQueryResponse> Handle(GetInfoGiveOutMerchQuery request, CancellationToken cancellationToken)
         {
+            using var span = _tracer.BuildSpan("HandlerCommand.GetInfoGiveOutMerch").StartActive();
             List<Order> orders = await _orderRepository.GetAllOrderByEmployeeAsync(request.EmployeeEmail, cancellationToken);
             List<Order> ordersDone = orders.Where(r => r.Status.Id == StatusType.Done.Id).ToList(); ;
 

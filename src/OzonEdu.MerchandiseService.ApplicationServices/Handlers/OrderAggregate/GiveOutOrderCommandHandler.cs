@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using OpenTracing;
 using OzonEdu.MerchandiseService.ApplicationServices.Commands;
 using OzonEdu.MerchandiseService.ApplicationServices.Exceptions;
 using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
@@ -18,17 +19,20 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMediator _mediator;
         private readonly StockApiGrpc.StockApiGrpcClient _stockApiGrpcClient;
+        private readonly ITracer _tracer;
 
-        public GiveOutOrderCommandHandler(IMediator mediator, IOrderRepository orderRepository, IUnitOfWork unitOfWork, StockApiGrpc.StockApiGrpcClient stockApiGrpcClient)
+        public GiveOutOrderCommandHandler(IMediator mediator, IOrderRepository orderRepository, ITracer tracer, IUnitOfWork unitOfWork, StockApiGrpc.StockApiGrpcClient stockApiGrpcClient)
         {
             _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
             _stockApiGrpcClient = stockApiGrpcClient;
             _mediator = mediator;
+            _tracer = tracer;
         }
 
         public async Task<bool> Handle(GiveOutOrderCommand request, CancellationToken cancellationToken)
         {
+            using var span = _tracer.BuildSpan("HandlerCommand.GiveOutOrder").StartActive();
             if (request.order?.Id is null or 0)
                 throw new NoOrderException($"No order");
 

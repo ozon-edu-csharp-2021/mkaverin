@@ -2,6 +2,7 @@
 using CSharpCourse.Core.Lib.Enums;
 using CSharpCourse.Core.Lib.Events;
 using MediatR;
+using OpenTracing;
 using OzonEdu.MerchandiseService.ApplicationServices.MessageBroker;
 using OzonEdu.MerchandiseService.Domain.Events;
 using System.Text.Json;
@@ -13,15 +14,17 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.DomainEvent
     public class EmployeeNotificationMerchDeliveryEventHandler : INotificationHandler<EmployeeNotificationMerchDeliveryDomainEvent>
     {
         private readonly IProducerBuilderWrapper _producerBuilderWrapper;
+        private readonly ITracer _tracer;
 
-        public EmployeeNotificationMerchDeliveryEventHandler(IProducerBuilderWrapper producerBuilderWrapper)
+        public EmployeeNotificationMerchDeliveryEventHandler(IProducerBuilderWrapper producerBuilderWrapper, ITracer tracer)
         {
+            _tracer = tracer;
             _producerBuilderWrapper = producerBuilderWrapper;
         }
 
         public Task Handle(EmployeeNotificationMerchDeliveryDomainEvent notification, CancellationToken cancellationToken)
         {
-            
+            using var span = _tracer.BuildSpan("EventHandler.EmployeeNotificationAboutSupply").StartActive();
             return _producerBuilderWrapper.Producer.ProduceAsync(_producerBuilderWrapper.EmployeeNotificationTopic,
                 new Message<string, string>()
                 {
