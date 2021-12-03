@@ -37,10 +37,12 @@ namespace WebApi.Infrastructure.Middlewares
                     var body = await GetRequestBody(context);
 
                     _logger.LogInformation($"Request logged:{Environment.NewLine}" +
-                                           $"Route: {context.Request.Path} {Environment.NewLine}" +
-                                           $"QueryString: {context.Request.QueryString} {Environment.NewLine}" +
-                                           $"Headers: {headers} " +
-                                           $"Body: {body} ");
+                                           "Route: {@Path} " +
+                                           $"{Environment.NewLine}" +
+                                           "QueryString: {@QueryString} " +
+                                           $"{Environment.NewLine}" +
+                                           "Headers: {@Headers} " +
+                                           "Body: {@Body} ", context.Request.Path, context.Request.QueryString, headers, body);
                 }
             }
             catch (Exception e)
@@ -68,11 +70,14 @@ namespace WebApi.Infrastructure.Middlewares
                     var headers = GetHeaders(context.Response.Headers);
 
                     _logger.LogInformation($"Response logged:{Environment.NewLine}" +
-                                           $"Route: {context.Request.Path} {Environment.NewLine}" +
-                                           $"QueryString: {context.Request.QueryString} {Environment.NewLine}" +
-                                           $"Elapsed: {sw.Elapsed.TotalMilliseconds:0.0000} ms {Environment.NewLine}" +
-                                           $"Headers: {headers} " +
-                                           $"Body: {responseBody}");
+                                           "Route: {@Path} " +
+                                           $"{Environment.NewLine}" +
+                                           "QueryString: {@QueryString} " +
+                                           $"{Environment.NewLine}" +
+                                           "Elapsed: {@Elapsed} ms " +
+                                           $"{Environment.NewLine}" +
+                                           "Headers: {@Headers} " +
+                                           "Body: {@ResponseBody}", context.Request.Path, context.Request.QueryString, $"{sw.Elapsed.TotalMilliseconds}:0.0000", headers, responseBody);
                 }
                 catch (Exception ex)
                 {

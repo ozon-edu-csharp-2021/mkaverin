@@ -1,10 +1,9 @@
-using System;
-using System.Diagnostics;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace WebApi.Interceptors
 {
@@ -20,22 +19,20 @@ namespace WebApi.Interceptors
             ServerCallContext context,
             UnaryServerMethod<TRequest, TResponse> continuation)
         {
-            var requestJson = JsonSerializer.Serialize(request);
             _logger.LogInformation($"Request rpc logged:{Environment.NewLine}" +
-                                       $"Route: {context.Method} " +
-                                       $"StatusCode: { context.Status.StatusCode} " +
-                                       $"Body: {requestJson} ");
+                                       "Route: {@Method} " +
+                                       "StatusCode: {@StatusCode} " +
+                                       "Body: {@Request} ", context.Method, context.Status.StatusCode, request);
 
             var sw = Stopwatch.StartNew();
             var response = base.UnaryServerHandler(request, context, continuation);
             sw.Stop();
 
-            var responseJson = JsonSerializer.Serialize(response);
             _logger.LogInformation($"Response rpc logged:{Environment.NewLine}" +
-                                         $"Route: {context.Method} " +
-                                         $"StatusCode: { context.Status.StatusCode} " +
-                                         $"Elapsed: {sw.Elapsed.TotalMilliseconds:0.0000} ms " +
-                                         $"Body: {responseJson} ");
+                                         "Route: {@Method} " +
+                                         "StatusCode: {@StatusCode} " +
+                                         "Elapsed: {@Elapsed} ms " +
+                                         "Body: {@ResponseJson} ", context.Method, context.Status.StatusCode, $"{sw.Elapsed.TotalMilliseconds:0.0000}", response);
             return response;
         }
     }
