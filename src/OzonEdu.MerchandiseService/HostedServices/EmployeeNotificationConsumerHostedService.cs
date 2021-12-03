@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OzonEdu.MerchandiseService.ApplicationServices.Commands;
 using OzonEdu.MerchandiseService.ApplicationServices.Configuration;
 using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
 using System;
@@ -57,20 +58,21 @@ namespace OzonEdu.MerchandiseService.HostedServices
                                 if (cr != null)
                                 {
                                     var message = JsonSerializer.Deserialize<NotificationEvent>(cr.Message.Value);
-
-                                    EmployeeVerificationQuery employeeVerificationQuery = new()
+                                    if (message.Payload is JsonElement json)
                                     {
-                                        EmployeeEmail = message.EmployeeEmail,
-                                        EmployeeName = message.EmployeeName,
-                                        ManagerEmail = message.ManagerEmail,
-                                        ManagerName = message.ManagerName,
-                                        EventType = (int)message.EventType,
-                                        Payload = message.Payload
-                                    };
+                                        var payload = JsonSerializer.Deserialize<MerchDeliveryEventPayload>(json.GetRawText());
+                                        GiveOutNewOrderCommand giveOutNewOrderCommand = new()
+                                        {
+                                            EmployeeEmail = message.EmployeeEmail,
+                                            EmployeeName = message.EmployeeName,
+                                            ManagerEmail = message.ManagerEmail,
+                                            ManagerName = message.ManagerName,
+                                            EventType = (int)message.EventType,
+                                            MerchType = (int)payload.MerchType,
+                                            ClothingSize = (int)payload.ClothingSize,
 
-                                    var giveOutNewOrderCommand = await mediator.Send(employeeVerificationQuery, stoppingToken);
-                                    if (giveOutNewOrderCommand is not null)
-                                    {
+                                        };
+                                        giveOutNewOrderCommand.Source = 2;
                                         await mediator.Send(giveOutNewOrderCommand, stoppingToken);
                                     }
                                 }

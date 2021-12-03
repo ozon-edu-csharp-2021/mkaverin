@@ -111,7 +111,6 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
 
         private static bool CheckGiveOutMerchByEmployee(IReadOnlyCollection<Order> alreadyExistedOrders, Email employeeEmail, MerchPack merchPack)
         {
-            //Сюда бы еще какую нибудь проверку на id конференции, чтобы на одну и туже конференцию небыло по 10 заякок от одного сотрудника.
             if (merchPack.MerchType is MerchType.ConferenceListenerPack or MerchType.ConferenceSpeakerPack)
             {
                 return false;
