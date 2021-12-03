@@ -24,6 +24,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OzonEdu.MerchandiseService.Domain\OzonEdu.MerchandiseService.Domain.csproj" />
+		<ProjectReference Include="..\OzonEdu.MerchandiseService.HttpModels\OzonEdu.MerchandiseService.HttpModels.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

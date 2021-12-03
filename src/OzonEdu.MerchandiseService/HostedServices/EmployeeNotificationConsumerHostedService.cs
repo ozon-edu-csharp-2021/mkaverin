@@ -5,8 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using OzonEdu.MerchandiseService.ApplicationServices.Commands;
 using OzonEdu.MerchandiseService.ApplicationServices.Configuration;
+using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
 using System;
 using System.Text.Json;
 using System.Threading;
@@ -58,17 +58,21 @@ namespace OzonEdu.MerchandiseService.HostedServices
                                 {
                                     var message = JsonSerializer.Deserialize<NotificationEvent>(cr.Message.Value);
 
-                                    GiveOutNewOrderCommand giveOutNewOrderCommand = new()
+                                    EmployeeVerificationQuery employeeVerificationQuery = new()
                                     {
                                         EmployeeEmail = message.EmployeeEmail,
                                         EmployeeName = message.EmployeeName,
                                         ManagerEmail = message.ManagerEmail,
                                         ManagerName = message.ManagerName,
-                                        MerchType = (int)((MerchDeliveryEventPayload)message.Payload).MerchType,
-                                        ClothingSize = (int)((MerchDeliveryEventPayload)message.Payload).ClothingSize
+                                        EventType = (int)message.EventType,
+                                        Payload = message.Payload
                                     };
-                                    giveOutNewOrderCommand.Source = 2;
-                                    await mediator.Send(giveOutNewOrderCommand, stoppingToken);
+
+                                    var giveOutNewOrderCommand = await mediator.Send(employeeVerificationQuery, stoppingToken);
+                                    if (giveOutNewOrderCommand is not null)
+                                    {
+                                        await mediator.Send(giveOutNewOrderCommand, stoppingToken);
+                                    }
                                 }
                             }
                             catch (Exception ex)

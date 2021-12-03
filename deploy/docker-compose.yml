@@ -15,6 +15,7 @@
     topic: "email_notification_event"
     groupId : "merchandise_service"
     StockApiGrpcServiceConfiguration__ServerAddress: "http://stock-api:5072"
+    EmployeesHttpServiceConfiguration__ServerAddress: "http://employees-service:8443"
    depends_on:
     - zookeeper
     - broker
