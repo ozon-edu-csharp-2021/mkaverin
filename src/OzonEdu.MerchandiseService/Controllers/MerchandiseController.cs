@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using OpenTracing;
 using OzonEdu.MerchandiseService.ApplicationServices.Commands;
 using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
@@ -18,11 +19,13 @@ namespace OzonEdu.MerchandiseService.Controllers
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
         private readonly ITracer _tracer;
-        public MerchandiseController(IMediator mediator, IMapper mapper, ITracer tracer)
+        private readonly ILogger<MerchandiseController> _logger;
+        public MerchandiseController(IMediator mediator, IMapper mapper, ITracer tracer, ILogger<MerchandiseController> logger)
         {
             _mediator = mediator;
             _mapper = mapper;
             _tracer = tracer;
+            _logger = logger;
         }
 
         [HttpPost("RequestMerch")]
@@ -44,7 +47,8 @@ namespace OzonEdu.MerchandiseService.Controllers
             GetInfoGiveOutMerchQueryResponse result = await _mediator.Send(query, cancellationToken);
             if (result.DeliveryMerch.Length == 0)
                 return NotFound();
-            GetInfoMerchResponseDto response = _mapper.Map<GetInfoMerchResponseDto>(result); 
+
+            GetInfoMerchResponseDto response = _mapper.Map<GetInfoMerchResponseDto>(result);
             return Ok(response);
         }
     }

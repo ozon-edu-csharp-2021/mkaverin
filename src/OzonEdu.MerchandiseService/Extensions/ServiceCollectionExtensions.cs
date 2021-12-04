@@ -1,8 +1,16 @@
 ﻿using Grpc.Net.Client;
+using Jaeger.Reporters;
+using Jaeger.Samplers;
+using Jaeger.Senders.Thrift;
+using Jaeger;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Npgsql;
+using OpenTracing.Contrib.NetCore.Configuration;
+using OpenTracing;
 using OzonEdu.MerchandiseService.ApplicationServices.Configuration;
 using OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate;
 using OzonEdu.MerchandiseService.ApplicationServices.MessageBroker;
@@ -15,6 +23,7 @@ using OzonEdu.MerchandiseService.Domain.Contracts;
 using OzonEdu.MerchandiseService.HostedServices;
 using OzonEdu.StockApi.Grpc;
 using System;
+using OpenTracing.Util;
 
 namespace OzonEdu.MerchandiseService.Extensions
 {
@@ -60,6 +69,37 @@ namespace OzonEdu.MerchandiseService.Extensions
 
             return services;
         }
+
+        public static IServiceCollection AddJaegerService(this IServiceCollection services, IConfiguration configuration)
+        {
+            var jaegerConfig = configuration.GetSection(nameof(JaegerConfiguration)).Get<JaegerConfiguration>();
+            if (string.IsNullOrWhiteSpace(jaegerConfig?.AgentHost))
+                jaegerConfig = configuration.Get<JaegerConfiguration>();
+
+            services.AddSingleton<ITracer>(serviceProvider =>
+            {
+                string serviceName = serviceProvider.GetRequiredService<IWebHostEnvironment>().ApplicationName;
+
+                var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+                var sampler = new ConstSampler(sample: true);
+                var reporter = new RemoteReporter.Builder()
+                     .WithLoggerFactory(loggerFactory)
+                     .WithSender(new UdpSender(jaegerConfig.AgentHost, jaegerConfig.AgentPort, 0))
+                     .Build();
+                var tracer = new Tracer.Builder(serviceName)
+                     .WithLoggerFactory(loggerFactory)
+                     .WithSampler(sampler)
+                     .WithReporter(reporter)
+                     .Build();
+                return tracer;
+            });
+
+            services.Configure<HttpHandlerDiagnosticOptions>(options =>
+                 options.OperationNameResolver =
+                     request => $"{request.Method.Method}: {request?.RequestUri?.AbsoluteUri}");
+
+            return services;
+        }
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IOrderRepository, OrderRepository>();
@@ -90,6 +130,6 @@ namespace OzonEdu.MerchandiseService.Extensions
 
             return services;
         }
-    
+
     }
 }
