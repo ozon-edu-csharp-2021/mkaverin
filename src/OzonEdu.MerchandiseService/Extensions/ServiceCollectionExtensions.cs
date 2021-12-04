@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using OzonEdu.MerchandiseService.ApplicationServices.Configuration;
 using OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate;
-using OzonEdu.MerchandiseService.ApplicationServices.HttpClients;
 using OzonEdu.MerchandiseService.ApplicationServices.MessageBroker;
 using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementation;
 using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure;
@@ -71,7 +70,6 @@ namespace OzonEdu.MerchandiseService.Extensions
             IConfiguration configuration)
         {
             services.AddStockGrpcServiceClient(configuration);
-            services.AddEmployeesHttpServiceClient(configuration);
             return services;
         }
 
@@ -92,16 +90,6 @@ namespace OzonEdu.MerchandiseService.Extensions
 
             return services;
         }
-        public static IServiceCollection AddEmployeesHttpServiceClient(this IServiceCollection services, IConfiguration configuration)
-        {
-            var connectionAddress = configuration.GetSection(nameof(EmployeesHttpServiceConfiguration))
-                .Get<EmployeesHttpServiceConfiguration>().ServerAddress;
-            if (string.IsNullOrWhiteSpace(connectionAddress))
-                connectionAddress = configuration
-                    .Get<EmployeesHttpServiceConfiguration>()
-                    .ServerAddress;
-            services.AddHttpClient<IEmployeesHttpClient, EmployeesHttpClient>(client => client.BaseAddress = new Uri(connectionAddress));
-            return services;
-        }
+    
     }
 }
