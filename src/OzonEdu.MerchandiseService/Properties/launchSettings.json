@@ -2,8 +2,8 @@
   "profiles": {
     "OzonEdu.MerchandiseService": {
       "commandName": "Project",
-      "dotnetRunMessages": "true",
-      "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:5002;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

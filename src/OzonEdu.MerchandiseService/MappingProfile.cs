@@ -14,12 +14,12 @@ namespace EncashmentService.Api
         {
             _ = CreateMap<GetInfoMerchRequestDto, GetInfoGiveOutMerchQuery>();
 
-            _ = CreateMap<KeyValuePair<Sku, Quantity>, Item>()
-                .ForMember(dest => dest.Sku, opt => opt.MapFrom(src => src.Key.Value))
+            _ = CreateMap<KeyValuePair<ItemTypeId, Quantity>, Item>()
+                .ForMember(dest => dest.ItemTypeId, opt => opt.MapFrom(src => src.Key.Value))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Value.Value));
 
             _ = CreateMap<MerchPack, Pack>()
-                .ForMember(dest => dest.MerchType, opt => opt.MapFrom(src => src.MerchType.Id)); ;
+                .ForMember(dest => dest.MerchType, opt => opt.MapFrom(src => (int)src.MerchType)); ;
             _ = CreateMap<DeliveryMerch, MerchDelivery>();
 
             _ = CreateMap<GetInfoGiveOutMerchQueryResponse, GetInfoMerchResponseDto>();

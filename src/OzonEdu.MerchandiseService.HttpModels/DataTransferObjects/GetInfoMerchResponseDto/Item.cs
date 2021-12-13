@@ -2,7 +2,7 @@
 {
     public class Item
     {
-        public long Sku { get; init; }
+        public long ItemTypeId { get; init; }
         public int Quantity { get; init; }
     }
 }

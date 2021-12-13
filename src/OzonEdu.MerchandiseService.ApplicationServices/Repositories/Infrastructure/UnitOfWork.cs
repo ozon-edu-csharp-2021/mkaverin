@@ -29,14 +29,14 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastruc
             _changeTracker = changeTracker;
         }
 
-        public async ValueTask StartTransaction(CancellationToken cancellationToken)
+        public async ValueTask StartTransaction(CancellationToken token)
         {
             if (_npgsqlTransaction is not null)
             {
                 return;
             }
-            var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            _npgsqlTransaction = await connection.BeginTransactionAsync(cancellationToken);
+            var connection = await _dbConnectionFactory.CreateConnection(token);
+            _npgsqlTransaction = await connection.BeginTransactionAsync(token);
         }
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken)
@@ -50,14 +50,16 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastruc
                 _changeTracker.TrackedEntities
                     .SelectMany(x =>
                     {
-                        var events = x.DomainEvents?.ToList();
-                        x.ClearDomainEvents();
+                        var events = x.Value.DomainEvents.ToList();
+                        x.Value.ClearDomainEvents();
                         return events;
                     }));
+
             // Можно отправлять все и сразу через Task.WhenAll.
             while (domainEvents.TryDequeue(out var notification))
             {
-                await _publisher.Publish(notification, cancellationToken);
+                dynamic not = (dynamic)notification;
+                await _publisher.Publish(not, cancellationToken);
             }
 
             await _npgsqlTransaction.CommitAsync(cancellationToken);

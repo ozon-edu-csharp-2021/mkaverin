@@ -1,8 +1,9 @@
-﻿using Dapper;
+﻿using CSharpCourse.Core.Lib.Enums;
+using Dapper;
 using Npgsql;
+using OpenTracing;
 using OzonEdu.MerchandiseService.ApplicationServices.Repositories.Infrastructure.Interfaces;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,15 +13,18 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
     {
         private readonly IDbConnectionFactory<NpgsqlConnection> _dbConnectionFactory;
         private readonly IChangeTracker _changeTracker;
+        private readonly ITracer _tracer;
         private const int Timeout = 5;
 
-        public MerchPackRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IChangeTracker changeTracker)
+        public MerchPackRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, ITracer tracer, IChangeTracker changeTracker)
         {
             _dbConnectionFactory = dbConnectionFactory;
+            _tracer = tracer;
             _changeTracker = changeTracker;
         }
         public async Task<MerchPack> FindByTypeAsync(MerchType merchType, CancellationToken cancellationToken)
         {
+            using var span = _tracer.BuildSpan("MerchPackRepository.FindByTypeAsync").StartActive();
             const string sql = @"
                 SELECT id,merch_type_id,merch_items
                 FROM merch_pack
@@ -28,7 +32,7 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Repositories.Implementa
 
             var parameters = new
             {
-                MerchTypeId = merchType.Id,
+                MerchTypeId = (int)merchType,
             };
             var commandDefinition = new CommandDefinition(
                 sql,

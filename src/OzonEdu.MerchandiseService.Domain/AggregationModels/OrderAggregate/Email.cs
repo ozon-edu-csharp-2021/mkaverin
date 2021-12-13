@@ -9,7 +9,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate
     {
         public string Value { get; }
         private Email(string emailString) => Value = emailString;
-        public static Email Crate(string emailString)
+        public static Email Create(string emailString)
         {
             if (IsValidEmail(emailString))
             {

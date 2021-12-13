@@ -1,13 +1,15 @@
 ﻿using MediatR;
+using OpenTracing;
 using OzonEdu.MerchandiseService.ApplicationServices.Commands;
 using OzonEdu.MerchandiseService.ApplicationServices.Exceptions;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
+using OzonEdu.MerchandiseService.ApplicationServices.Queries.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.OrderAggregate;
 using OzonEdu.MerchandiseService.Domain.Contracts;
+using OzonEdu.StockApi.Grpc;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using static OzonEdu.StockApi.Grpc.GiveOutItemsResponse.Types;
 
 namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
 {
@@ -15,28 +17,41 @@ namespace OzonEdu.MerchandiseService.ApplicationServices.Handlers.OrderAggregate
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
+        private readonly StockApiGrpc.StockApiGrpcClient _stockApiGrpcClient;
+        private readonly ITracer _tracer;
 
-        public GiveOutOrderCommandHandler(IOrderRepository orderRepository, IUnitOfWork unitOfWork)
+        public GiveOutOrderCommandHandler(IMediator mediator, IOrderRepository orderRepository, ITracer tracer, IUnitOfWork unitOfWork, StockApiGrpc.StockApiGrpcClient stockApiGrpcClient)
         {
             _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
+            _stockApiGrpcClient = stockApiGrpcClient;
+            _mediator = mediator;
+            _tracer = tracer;
         }
 
         public async Task<bool> Handle(GiveOutOrderCommand request, CancellationToken cancellationToken)
         {
+            using var span = _tracer.BuildSpan("HandlerCommand.GiveOutOrder").StartActive();
             if (request.order?.Id is null or 0)
                 throw new NoOrderException($"No order");
-            bool isAvailable = GiveOutItems(request.order.MerchPack.MerchItems);
 
+            var requestGiveOut = await _mediator.Send(new GetStockItemsAvailabilityQuery { MerchItems = request.order.MerchPack.MerchItems, Size = request.order.ClothingSize }, cancellationToken);
+            bool isAvailable = await GiveOutItemsAsync(requestGiveOut, cancellationToken);
             request.order.GiveOut(isAvailable, DateTimeOffset.UtcNow);
             await _orderRepository.UpdateAsync(request.order, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
             return isAvailable;
         }
 
-        // Обращаемся к сервису StockApi узнаем есть ли товар на складе
-        private bool GiveOutItems(Dictionary<Sku, Quantity> merchItems)
+        private async Task<bool> GiveOutItemsAsync(GiveOutItemsRequest requestGiveOut, CancellationToken cancellationToken)
         {
-            return true;
+            if (requestGiveOut is null)
+            {
+                return false;
+            }
+            var resultGiveOut = await _stockApiGrpcClient.GiveOutItemsAsync(requestGiveOut, cancellationToken: cancellationToken);
+            return resultGiveOut.Result == Result.Successful;
         }
     }
 }

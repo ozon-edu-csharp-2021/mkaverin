@@ -1,19 +1,18 @@
-﻿using System;
+﻿using OzonEdu.MerchandiseService.Domain.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using OzonEdu.MerchandiseService.Domain.Models;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
 {
-    public class Sku : ValueObject
+    public class ItemTypeId : ValueObject
     {
-        public long Value { get; }
-        
-        public Sku(long sku)
+        public int Value { get; }
+
+        public ItemTypeId(int id)
         {
-            if (sku <= 0)
-                throw new ArgumentException(nameof(Sku));
-            Value = sku;
+            if (id <= 0)
+                throw new ArgumentException(nameof(ItemTypeId));
+            Value = id;
         }
         protected override IEnumerable<object> GetEqualityComponents()
         {
